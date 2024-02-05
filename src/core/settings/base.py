@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 APPS = [
     'bot.apps.BotConfig',
+    # 'bot',
 ]
 
 DEV_APPS = [
@@ -193,5 +194,7 @@ CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = [HOST]
 
 AXES_LOCKOUT_URL = HOST + '/lockout/'
+
+TOKEN = config("TOKEN")
 
 from .jazzmin import JAZZMIN_UI_TWEAKS, JAZZMIN_SETTINGS

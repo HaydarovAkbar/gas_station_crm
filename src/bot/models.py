@@ -4,8 +4,8 @@ from django.utils.timezone import now
 
 
 class State(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Xolat to'liq nomi"))
-    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Xolat qisqacha nomi"))
+    title = models.CharField(max_length=255, verbose_name=_("to'liq nomi"))
+    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("qisqacha nomi"))
 
     objects = models.Manager()
 
@@ -19,8 +19,8 @@ class State(models.Model):
 
 
 class Organization(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Tashkilot nomi"))
-    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Tashkilot qisqacha nomi"))
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Qisqa nomi"))
     address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Manzil"))
     phone = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Telefon"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Tavsif"))
@@ -47,8 +47,8 @@ class Organization(models.Model):
         db_table = 'organization'
 
 class PaymentType(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("To'lov turi [to'liq nomi]"))
-    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("To'lov turi [qisqa nomi]"))
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Qisqa nomi"))
 
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
 
@@ -73,8 +73,8 @@ class PaymentType(models.Model):
 
 
 class FuelType(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Yoqilg'i turi [to'liq nomi]"))
-    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Yoqilg'i turi [qisqa nomi]"))
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Qisqa nomi"))
 
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
 
