@@ -15,13 +15,13 @@ from decouple import config
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', type=str)
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,25 +45,23 @@ APPS = [
 ]
 
 DEV_APPS = [
+    "corsheaders",
     'axes',
 ]
 
-INSTALLED_APPS += APPS
+INSTALLED_APPS += APPS + DEV_APPS
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'jazzmin.middleware.AdminMenuSearchBarMiddleware',
-    'jazzmin.middleware.AllowAnyUserMiddleware',
-    'jazzmin.middleware.HideModelPermissionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'axes.middleware.AxesMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -113,26 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-# DRF settings
-
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
-}
-
-# JWT settings
-
-SIMPLE_JWT = {
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-}
 
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesBackend',
@@ -144,7 +122,6 @@ AUTHENTICATION_BACKENDS = [
 
 # AXES settings
 
-# AXES_LOCKOUT_URL = '/account/lockout/'
 AXES_FAILURE_LIMIT = 3
 AXES_LOCKOUT_PARAMETERS = ["ip_address", ["username", "user_agent"]]
 AXES_COOLOFF_TIME = timedelta(minutes=1)
@@ -208,16 +185,13 @@ CORS_ALLOW_HEADERS = [
     'Access-Control-Allow-Credentials',
 ]
 
-HOST = 'https://2e0e-194-93-24-3.ngrok-free.app'
+HOST = 'https://aacf-194-93-24-3.ngrok-free.app'
 # HOST = 'http://172.17.17.68:8000'
 
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 CSRF_TRUSTED_ORIGINS = [HOST]
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-    }
-}
+AXES_LOCKOUT_URL = HOST + '/lockout/'
+
+from .jazzmin import JAZZMIN_UI_TWEAKS, JAZZMIN_SETTINGS
