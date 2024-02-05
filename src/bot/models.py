@@ -98,27 +98,52 @@ class FuelType(models.Model):
         db_table = 'fuel_type'
 
 
-# class Fuel(models.Model):
-#     title = models.CharField(max_length=255, verbose_name=_("Yoqilg'i nomi"))
-#     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
-#
-#     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
-#
-#     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-#     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
-#
-#     objects = models.Manager()
-#
-#     def __str__(self):
-#         return self.title
-#
-#     def save(self, *args, **kwargs):
-#         self.title = self.title.upper() if self.title else self.title
-#         self.updated_at = now()
-#         super(Fuel, self).save(*args, **kwargs)
-#         return self
-#
-#     class Meta:
-#         verbose_name_plural = _('Yoqilg\'i')
-#         verbose_name = _('Yoqilg\'i')
-#         db_table = 'fuel'
+class FuelColumn(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Qisqa nomi"))
+
+    state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.title = self.title.upper() if self.title else self.title
+        self.updated_at = now()
+        super(FuelColumn, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Yoqilg\'i ustunlari')
+        verbose_name = _('Yoqilg\'i ustuni')
+        db_table = 'fuel_column'
+
+class Fuel(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_("Yoqilg'i nomi"))
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+
+    state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.title = self.title.upper() if self.title else self.title
+        self.updated_at = now()
+        super(Fuel, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Yoqilg\'i')
+        verbose_name = _('Yoqilg\'i')
+        db_table = 'fuel'
