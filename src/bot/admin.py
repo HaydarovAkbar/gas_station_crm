@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import State, PaymentType, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, FuelColumnPointer
+from .models import State, PaymentType, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, FuelColumnPointer, User
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -25,4 +25,6 @@ admin.site.register(FuelStorage)
 admin.site.register(Fuel)
 admin.site.register(FuelPrice)
 admin.site.register(FuelColumnPointer)
+admin.site.register(User)
+
 # Compare this snippet from src/app/models.py:

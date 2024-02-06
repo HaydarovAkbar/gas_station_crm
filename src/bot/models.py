@@ -138,7 +138,7 @@ class FuelStorage(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.size
+        return str(self.size)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -165,7 +165,7 @@ class Fuel(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.day
+        return str(self.day)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -193,7 +193,7 @@ class FuelPrice(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.day
+        return str(self.day)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -218,7 +218,7 @@ class FuelColumnPointer(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.size_first
+        return str(self.size_first)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -229,3 +229,28 @@ class FuelColumnPointer(models.Model):
         verbose_name_plural = _('Yoqilg\'i ustuni ko\'rsatgichlari')
         verbose_name = _('Yoqilg\'i ustuni ko\'rsatgichlari')
         db_table = 'fuel_column_pointer'
+
+
+class User(models.Model):
+    username = models.CharField(max_length=255, verbose_name=_("Foydalanuvchi nomi"))
+    chat_id = models.BigIntegerField(verbose_name=_("Chat ID"))
+
+    state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.username
+
+    def save(self, *args, **kwargs):
+        self.updated_at = now()
+        super(User, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Foydalanuvchilar')
+        verbose_name = _('Foydalanuvchi')
+        db_table = 'user'
