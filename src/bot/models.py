@@ -270,6 +270,9 @@ class User(models.Model):
     def __str__(self):
         return self.username
 
+    def get_fullname(self):
+        return self.username + ' - ' + str(self.chat_id)
+
     def save(self, *args, **kwargs):
         self.updated_at = now()
         super(User, self).save(*args, **kwargs)

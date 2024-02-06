@@ -27,5 +27,3 @@ admin.site.register(FuelPrice)
 admin.site.register(FuelColumnPointer)
 admin.site.register(User)
 admin.site.register(UserTypes)
-
-# Compare this snippet from src/app/models.py:

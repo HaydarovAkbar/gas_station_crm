@@ -3,9 +3,16 @@ from telegram import Bot
 from telegram.ext import Dispatcher, CommandHandler, ConversationHandler
 
 from .methods import *
+import logging
 
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 def run():
+    print('started webhook')
     bot.set_webhook(settings.HOST + '/bot/')
 
 
