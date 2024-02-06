@@ -123,6 +123,7 @@ class FuelColumn(models.Model):
         verbose_name = _('Yoqilg\'i ustuni')
         db_table = 'fuel_column'
 
+
 class Fuel(models.Model):
     title = models.CharField(max_length=255, verbose_name=_("Yoqilg'i nomi"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
