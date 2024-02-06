@@ -25,8 +25,7 @@ class KeyboardsAdmin:
     def get_user_menu(lang='uz'):
         bt_txt = bt.adm_user_menu[lang]
         keyboard = [
-            [KeyboardButton(bt_txt[0])],
-            [KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[0]), KeyboardButton(bt_txt[1])],
             [KeyboardButton(bt_txt[2])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

@@ -1,8 +1,10 @@
-from django.conf import settings
+from django.conf import settings as django_settings
 from telegram import Bot
-from telegram.ext import Dispatcher, CommandHandler, ConversationHandler
+from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters
 
 from .methods import *
+from .static.base import Buttom as B
+from .states import States as S
 import logging
 
 # Enable logging
@@ -11,12 +13,16 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+
 def run():
     print('started webhook')
-    bot.set_webhook(settings.HOST + '/bot/')
+    bot.set_webhook(django_settings.HOST + '/bot/')
 
 
-bot: Bot = Bot(token=settings.TOKEN)
+B = B()
+S = S
+
+bot: Bot = Bot(token=django_settings.TOKEN)
 
 dispatcher = Dispatcher(bot, None)
 
@@ -27,10 +33,20 @@ handler = ConversationHandler(
         CommandHandler('leader', leader),
     ],
     states={
-        1: [CommandHandler('start', start),
-            CommandHandler('admin', admin),
-            CommandHandler('leader', leader),
-            ]
+        S.ADMIN: [CommandHandler('start', start),
+                  CommandHandler('admin', admin),
+                  CommandHandler('leader', leader),
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['uz'][0] + ')$'), get_users),
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['uz'][1] + ')$'), settings),
+                  ],
+        S.GET_USERS: [CommandHandler('start', start),
+                      CommandHandler('admin', admin),
+                      CommandHandler('leader', leader),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][1] + ')$'), settings),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][2] + ')$'), settings),
+                      ],
+
     },
     fallbacks=[
         CommandHandler('start', start),
