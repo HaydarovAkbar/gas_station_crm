@@ -1,32 +1,35 @@
 from django.conf import settings
-from telegram import Bot, Update
-from telegram.ext import Dispatcher, Updater, CommandHandler, ConversationHandler
+from telegram import Bot
+from telegram.ext import Dispatcher, CommandHandler, ConversationHandler
+
+from .methods import *
 
 
 def run():
     bot.set_webhook(settings.HOST + '/bot/')
 
+
 bot: Bot = Bot(token=settings.TOKEN)
 
 dispatcher = Dispatcher(bot, None)
 
+handler = ConversationHandler(
+    entry_points=[
+        CommandHandler('start', start),
+        CommandHandler('admin', admin),
+        CommandHandler('leader', leader),
+    ],
+    states={
+        1: [CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            CommandHandler('leader', leader),
+            ]
+    },
+    fallbacks=[
+        CommandHandler('start', start),
+        CommandHandler('admin', admin),
+        CommandHandler('leader', leader),
+    ]
+)
 
-def help(update: Update, context):
-    msg_txt = """
-<b>Botdan foydalanish bo'yicha qo'llanma 🆘</b>
-<i>
-1️⃣ Kanalga admin qilish
-2️⃣ Kanalga biriktirilgan guruhga admin qilish
-3️⃣ Guruhni <code>ommaviy guruh</code> qilish
-4️⃣ Kanal va guruh linklarini pr.sport.uz tizimiga kiritish
-</i>
-"""
-    update.message.reply_html(msg_txt)
-    return True
-
-
-# all_handler = MessageHandler(Filters.all, message)
-help_handler = CommandHandler('help', help)
-
-dispatcher.add_handler(help_handler)
-# dispatcher.add_handler(all_handler)
+dispatcher.add_handler(handler)

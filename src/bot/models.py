@@ -231,6 +231,30 @@ class FuelColumnPointer(models.Model):
         db_table = 'fuel_column_pointer'
 
 
+class UserTypes(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+
+    state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.title = self.title.upper() if self.title else self.title
+        self.updated_at = now()
+        super(UserTypes, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Foydalanuvchi turlari')
+        verbose_name = _('Foydalanuvchi turi')
+        db_table = 'user_types'
+
+
 class User(models.Model):
     username = models.CharField(max_length=255, verbose_name=_("Foydalanuvchi nomi"))
     chat_id = models.BigIntegerField(verbose_name=_("Chat ID"))
@@ -239,6 +263,7 @@ class User(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+    roles = models.ManyToManyField(UserTypes, verbose_name=_("Foydalanuvchi turlari"), related_name='user_roles')
 
     objects = models.Manager()
 
