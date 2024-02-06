@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import State, PaymentType, Organization, FuelType
+from .models import State, PaymentType, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, FuelColumnPointer
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -20,4 +20,9 @@ admin.site.register(State)
 admin.site.register(PaymentType)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(FuelType, FeulTypeAdmin)
-# admin.site.register(Fuel)
+admin.site.register(FuelColumn)
+admin.site.register(FuelStorage)
+admin.site.register(Fuel)
+admin.site.register(FuelPrice)
+admin.site.register(FuelColumnPointer)
+# Compare this snippet from src/app/models.py:
