@@ -14,6 +14,11 @@ class Buttom:
         'ru': ["Изменить язык 🌐", "Назад ⬅️"],
         'en': ["Change language 🌐", "Back ⬅️"]
     }
+    adm_roles = {
+        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻"],
+        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻"],
+        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻"]
+    }
 
 
 class AdmTexts:
@@ -44,4 +49,16 @@ class AdmTexts:
         'uz': "<code>Foydalanuvchi qo'shish uchun u yuborgan xabari yoki uning CHAT_ID sini yuboring</code>",
         'ru': "<code>Для добавления пользователя отправьте сообщение, которое он отправил или его CHAT_ID</code>",
         'en': "<code>To add a user, send the message he sent or his CHAT_ID</code>"
+    }
+
+    user_already_exists = {
+        'uz': '<code>Bu foydalanuvchi allaqachon ro\'yxatdan o\'tgan!</code>',
+        'ru': '<code>Этот пользователь уже зарегистрирован!</code>',
+        'en': '<code>This user is already registered!</code>'
+    }
+
+    user_added = {
+        'uz': '<code>Foydalanuvchi ro\'yxatga qo\'shildi!</code>\n\n<b>Qo\'shilgan foydalanuvchi guruhga kiradi</b>',
+        'ru': '<code>Пользователь добавлен в список!</code> \n\n<b>Добавленный пользователь войдет в группу</b>',
+        'en': '<code>User added to the list!</code> \n\n<b>The added user will enter the group</b>'
     }

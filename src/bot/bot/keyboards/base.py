@@ -56,3 +56,12 @@ class KeyboardsAdmin:
             [KeyboardButton(bt_txt[1])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def roles(lang='uz'):
+        bt_txt = bt.adm_roles[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[0])],
+            [KeyboardButton(bt_txt[1])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

@@ -48,15 +48,15 @@ handler = ConversationHandler(
         S.GET_USERS: [CommandHandler('start', start),
                       CommandHandler('admin', admin),
                       CommandHandler('leader', leader),
-                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][0] + ')$'), add_user),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][1] + ')$'), settings),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][2] + ')$'), back),
 
-                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][0] + ')$'), add_user),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][1] + ')$'), settings),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][2] + ')$'), back),
 
-                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][0] + ')$'), add_user),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][1] + ')$'), settings),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][2] + ')$'), back),
                       ],
@@ -78,6 +78,18 @@ handler = ConversationHandler(
                         CommandHandler('leader', leader),
                         CallbackQueryHandler(get_lang),
                         ],
+
+        S.ADD_USER: [CommandHandler('start', start),
+                     CommandHandler('admin', admin),
+                     CommandHandler('leader', leader),
+                     MessageHandler(Filters.text, get_user_id),
+                     ],
+
+        S.USER_ROLE: [CommandHandler('start', start),
+                      CommandHandler('admin', admin),
+                      CommandHandler('leader', leader),
+                      MessageHandler(Filters.text, get_user_id),
+                      ],
 
     },
     fallbacks=[
