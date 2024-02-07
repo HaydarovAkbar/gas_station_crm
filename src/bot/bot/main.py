@@ -38,6 +38,12 @@ handler = ConversationHandler(
                   CommandHandler('leader', leader),
                   MessageHandler(Filters.regex('^(' + B.adm_menu['uz'][0] + ')$'), get_users),
                   MessageHandler(Filters.regex('^(' + B.adm_menu['uz'][1] + ')$'), settings),
+
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['ru'][0] + ')$'), get_users),
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['ru'][1] + ')$'), settings),
+
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['en'][0] + ')$'), get_users),
+                  MessageHandler(Filters.regex('^(' + B.adm_menu['en'][1] + ')$'), settings),
                   ],
         S.GET_USERS: [CommandHandler('start', start),
                       CommandHandler('admin', admin),
@@ -45,6 +51,14 @@ handler = ConversationHandler(
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][0] + ')$'), get_users),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][1] + ')$'), settings),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][2] + ')$'), back),
+
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][1] + ')$'), settings),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['ru'][2] + ')$'), back),
+
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][0] + ')$'), get_users),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][1] + ')$'), settings),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['en'][2] + ')$'), back),
                       ],
 
         S.ADMIN_SETTINGS: [CommandHandler('start', start),
@@ -52,6 +66,12 @@ handler = ConversationHandler(
                            CommandHandler('leader', leader),
                            MessageHandler(Filters.regex('^(' + B.adm_settings['uz'][0] + ')$'), change_language),
                            MessageHandler(Filters.regex('^(' + B.adm_settings['uz'][1] + ')$'), back),
+
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['ru'][0] + ')$'), change_language),
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['ru'][1] + ')$'), back),
+
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['en'][0] + ')$'), change_language),
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['en'][1] + ')$'), back),
                            ],
         S.CHANGE_LANG: [CommandHandler('start', start),
                         CommandHandler('admin', admin),
