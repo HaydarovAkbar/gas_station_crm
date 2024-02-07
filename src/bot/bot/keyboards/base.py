@@ -48,3 +48,11 @@ class KeyboardsAdmin:
             [InlineKeyboardButton('🇬🇧 English', callback_data='en')],
         ])
         return keyboard
+
+    @staticmethod
+    def back(lang='uz'):
+        bt_txt = bt.adm_settings[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[1])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

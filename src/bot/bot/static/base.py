@@ -39,3 +39,9 @@ class AdmTexts:
         'ru': '<b>Выберите язык!</b>',
         'en': '<b>Choose language!</b>'
     }
+
+    add_user = {
+        'uz': "<code>Foydalanuvchi qo'shish uchun u yuborgan xabari yoki uning CHAT_ID sini yuboring</code>",
+        'ru': "<code>Для добавления пользователя отправьте сообщение, которое он отправил или его CHAT_ID</code>",
+        'en': "<code>To add a user, send the message he sent or his CHAT_ID</code>"
+    }
