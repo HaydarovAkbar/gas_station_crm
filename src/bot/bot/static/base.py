@@ -9,3 +9,8 @@ class Buttom:
         'ru': ["✳️ Добавить", "⛔️ Удалить", "⬅️ Назад"],
         'en': ["✳️ Add", "⛔️ Delete", "⬅️ Back"]
     }
+    adm_settings = {
+        'uz': ["Tilni o'zgartirish 🌐", "Orqaga ⬅️"],
+        'ru': ["Изменить язык 🌐", "Назад ⬅️"],
+        'en': ["Change language 🌐", "Back ⬅️"]
+    }

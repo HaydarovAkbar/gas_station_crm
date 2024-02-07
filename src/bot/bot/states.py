@@ -5,6 +5,8 @@ class States(Enum):
     START = auto()
     ADMIN = auto()
     GET_USERS = auto()
+    ADMIN_SETTINGS = auto()
+    CHANGE_LANG = auto()
     LEADER = auto()
     WAITING_FOR_NAME = auto()
     WAITING_FOR_EMAIL = auto()

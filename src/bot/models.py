@@ -2,6 +2,12 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
+LANGUAGES = (
+    ('uz', _('O\'zbek')),
+    ('ru', _('Русский')),
+    ('en', _('English')),
+)
+
 
 class State(models.Model):
     title = models.CharField(max_length=255, verbose_name=_("to'liq nomi"))
@@ -260,7 +266,7 @@ class User(models.Model):
     chat_id = models.BigIntegerField(verbose_name=_("Chat ID"))
 
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
-
+    language = models.CharField(max_length=2, default='uz', verbose_name=_("Til"), choices=LANGUAGES)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
     roles = models.ManyToManyField(UserTypes, verbose_name=_("Foydalanuvchi turlari"), related_name='user_roles')

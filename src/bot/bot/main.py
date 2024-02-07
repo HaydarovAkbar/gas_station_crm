@@ -1,6 +1,6 @@
 from django.conf import settings as django_settings
 from telegram import Bot
-from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters
+from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 
 from .methods import *
 from .static.base import Buttom as B
@@ -44,8 +44,20 @@ handler = ConversationHandler(
                       CommandHandler('leader', leader),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][0] + ')$'), get_users),
                       MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][1] + ')$'), settings),
-                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][2] + ')$'), settings),
+                      MessageHandler(Filters.regex('^(' + B.adm_user_menu['uz'][2] + ')$'), back),
                       ],
+
+        S.ADMIN_SETTINGS: [CommandHandler('start', start),
+                           CommandHandler('admin', admin),
+                           CommandHandler('leader', leader),
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['uz'][0] + ')$'), change_language),
+                           MessageHandler(Filters.regex('^(' + B.adm_settings['uz'][1] + ')$'), back),
+                           ],
+        S.CHANGE_LANG: [CommandHandler('start', start),
+                        CommandHandler('admin', admin),
+                        CommandHandler('leader', leader),
+                        CallbackQueryHandler(get_lang),
+                        ],
 
     },
     fallbacks=[
