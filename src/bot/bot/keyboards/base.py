@@ -61,7 +61,45 @@ class KeyboardsAdmin:
     def roles(lang='uz'):
         bt_txt = bt.adm_roles[lang]
         keyboard = [
-            [KeyboardButton(bt_txt[0])],
-            [KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[0]), KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[2])],
+            [KeyboardButton(bt_txt[3])],
         ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def user_list(users, lang='uz'):
+        keyboard, txt = [], bt.inline_back[lang]
+        for user in users:
+            keyboard.append([InlineKeyboardButton(user.get_user(), callback_data=f'{user.chat_id}')])
+        keyboard.append([InlineKeyboardButton(txt, callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def user_change(user_roles, lang='uz'):
+        bt_txt = bt.adm_roles[lang]
+        if "ADMIN" in user_roles and "KASSIR" in user_roles:
+            keyboard = [
+                [KeyboardButton(bt_txt[4]), KeyboardButton(bt_txt[0])],
+                [KeyboardButton(bt_txt[2] + "- ✅"), KeyboardButton(bt_txt[1])],
+                [KeyboardButton(bt_txt[3])],
+            ]
+        elif "KASSIR" in user_roles:
+            keyboard = [
+                [KeyboardButton(bt_txt[4]), KeyboardButton(bt_txt[0])],
+                [KeyboardButton(bt_txt[2]), KeyboardButton(bt_txt[1] + "- ✅")],
+                [KeyboardButton(bt_txt[3])],
+            ]
+        elif "ADMIN" in user_roles:
+            keyboard = [
+                [KeyboardButton(bt_txt[4]), KeyboardButton(bt_txt[0] + "- ✅")],
+                [KeyboardButton(bt_txt[2]), KeyboardButton(bt_txt[1])],
+                [KeyboardButton(bt_txt[3])],
+            ]
+        else:
+            keyboard = [
+                [KeyboardButton(bt_txt[4]), KeyboardButton(bt_txt[0])],
+                [KeyboardButton(bt_txt[2]), KeyboardButton(bt_txt[1])],
+                [KeyboardButton(bt_txt[3])],
+            ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

@@ -5,21 +5,26 @@ class Buttom:
         'en': ["👤 Users", "⚙️ Settings"]
     }
     adm_user_menu = {
-        'uz': ["✳️ Kiritish", "⛔️ O'chirish", "⬅️ Orqaga"],
-        'ru': ["✳️ Добавить", "⛔️ Удалить", "⬅️ Назад"],
-        'en': ["✳️ Add", "⛔️ Delete", "⬅️ Back"]
+        'uz': ["✳️ Aktivlashtirish", "⛔️ Tahrirlash", "⬅️ Orqaga"],
+        'ru': ["✳️ Активировать", "⛔️ Редактировать", "⬅️ Назад"],
+        'en': ["✳️ Activate", "⛔️ Edit", "⬅️ Back"]
     }
     adm_settings = {
-        'uz': ["Tilni o'zgartirish 🌐", "Orqaga ⬅️"],
-        'ru': ["Изменить язык 🌐", "Назад ⬅️"],
-        'en': ["Change language 🌐", "Back ⬅️"]
+        'uz': ["Tilni o'zgartirish 🌐", "⬅️ Orqaga"],
+        'ru': ["Изменить язык 🌐", "⬅️ Orqaga"],
+        'en': ["Change language 🌐", "⬅️ Orqaga"]
     }
     adm_roles = {
-        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻"],
-        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻"],
-        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻"]
+        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻", "Admin va Kassir", "⬅️ Orqaga", "O'chirish 🪓"],
+        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻", "Админ️ и Кассир", "⬅️ Назад", "Удалить 🪓"],
+        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻", "Admin and Cashier", "⬅️ Back", "Delete 🪓"]
     }
 
+    inline_back = {
+        'uz': "⬅️ Orqaga",
+        'ru': "⬅️ Назад",
+        'en': "⬅️ Back"
+    }
 
 class AdmTexts:
     start = {
@@ -46,9 +51,9 @@ class AdmTexts:
     }
 
     add_user = {
-        'uz': "<code>Foydalanuvchi qo'shish uchun u yuborgan xabari yoki uning CHAT_ID sini yuboring</code>",
-        'ru': "<code>Для добавления пользователя отправьте сообщение, которое он отправил или его CHAT_ID</code>",
-        'en': "<code>To add a user, send the message he sent or his CHAT_ID</code>"
+        'uz': "<code>O'zgartirmoqchi bo'lgan foydalanuvchini tanlang</code>",
+        'ru': "<code>Выберите пользователя, которого хотите изменить</code>",
+        'en': "<code>Choose the user you want to change</code>"
     }
 
     user_already_exists = {
@@ -61,4 +66,22 @@ class AdmTexts:
         'uz': '<code>Foydalanuvchi ro\'yxatga qo\'shildi!</code>\n\n<b>Qo\'shilgan foydalanuvchi guruhga kiradi</b>',
         'ru': '<code>Пользователь добавлен в список!</code> \n\n<b>Добавленный пользователь войдет в группу</b>',
         'en': '<code>User added to the list!</code> \n\n<b>The added user will enter the group</b>'
+    }
+
+    adm_roles = {
+        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻", "Admin 👮‍♀️ va Kassir 👨🏻‍💻", "⬅️ Orqaga", "O'chirish 🪓"],
+        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻", "Админ 👮‍♀️ и Кассир 👨🏻‍💻", "⬅️ Назад", "Удалить 🪓"],
+        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻", "Admin 👮‍♀️ and Cashier 👨🏻‍💻", "⬅️ Back", "Delete 🪓"]
+    }
+
+    roles = {
+        'uz': 'Foydalanuvchi rolini tanlang',
+        'ru': 'Выберите роль пользователя',
+        'en': 'Choose user role'
+    }
+
+    change_user = {
+        'uz': "{} - foydalanuvchisini qaysi parametrlarini o'zgartirmoqchisiz tanlang",
+        'ru': "Выберите, какие параметры пользователя {} хотите изменить",
+        'en': "Choose which parameters of user {} you want to change"
     }

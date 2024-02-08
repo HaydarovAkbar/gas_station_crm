@@ -9,6 +9,8 @@ class States(Enum):
     CHANGE_LANG = auto()
     ADD_USER = auto()
     USER_ROLE = auto()
+    CHANGED_USER = auto()
+    USER_CONF = auto()
     LEADER = auto()
     WAITING_FOR_NAME = auto()
     WAITING_FOR_EMAIL = auto()

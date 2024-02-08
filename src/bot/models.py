@@ -264,12 +264,14 @@ class UserTypes(models.Model):
 class User(models.Model):
     username = models.CharField(max_length=255, verbose_name=_("Foydalanuvchi nomi"))
     chat_id = models.BigIntegerField(verbose_name=_("Chat ID"))
-
+    fullname = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("To'liq ismi"))
     state = models.ForeignKey(State, on_delete=models.SET_NULL, null=True, verbose_name=_("Xolat"))
     language = models.CharField(max_length=2, default='uz', verbose_name=_("Til"), choices=LANGUAGES)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
     roles = models.ManyToManyField(UserTypes, verbose_name=_("Foydalanuvchi turlari"), related_name='user_roles')
+
+    organization = models.ManyToManyField(Organization, verbose_name=_("Tashkilotlar"), related_name='user_organization')
 
     objects = models.Manager()
 
@@ -277,7 +279,10 @@ class User(models.Model):
         return self.username
 
     def get_fullname(self):
-        return self.username + ' - ' + str(self.chat_id)
+        return self.fullname + ' - ' + str(self.chat_id)
+
+    def get_user(self):
+        return self.fullname + ' - ' + str(self.created_at.strftime('%d-%m-%Y %H:%M'))
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
