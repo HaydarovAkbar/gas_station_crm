@@ -1,4 +1,4 @@
-class Buttom:
+class Button:
     adm_menu = {
         'uz': ["👤 Foydalanuvchilar", "⚙️ Sozlamalar"],
         'ru': ["👤 Пользователи", "⚙️ Настройки"],
@@ -25,6 +25,7 @@ class Buttom:
         'ru': "⬅️ Назад",
         'en': "⬅️ Back"
     }
+
 
 class AdmTexts:
     start = {
@@ -84,4 +85,18 @@ class AdmTexts:
         'uz': "{} - foydalanuvchisini qaysi parametrlarini o'zgartirmoqchisiz tanlang",
         'ru': "Выберите, какие параметры пользователя {} хотите изменить",
         'en': "Choose which parameters of user {} you want to change"
+    }
+
+
+class KButtons:
+    manu = {
+        'uz': ["👤 Foydalanuvchilar", "⚙️ Sozlamalar"],
+    }
+
+
+class KTexts:
+    start = {
+        'uz': 'Assalom alaykum, {}!\n\nBotdan foydalanishingiz mumkin!',
+        'ru': 'Здравствуйте, {}!\n\nВы можете использовать бота!',
+        'en': 'Hello, {}!\n\nYou can use the bot!'
     }

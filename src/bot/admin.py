@@ -24,7 +24,6 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-
 admin.site.register(State)
 admin.site.register(PaymentType)
 admin.site.register(Organization, OrganizationAdmin)

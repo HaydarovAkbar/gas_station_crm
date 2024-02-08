@@ -3,7 +3,7 @@ from telegram import Bot
 from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 
 from .methods import *
-from .static.base import Buttom as B
+from .static.base import Button as B
 from .states import States as S
 import logging
 
@@ -20,7 +20,6 @@ def run():
 
 
 B = B()
-S = S
 
 bot: Bot = Bot(token=django_settings.TOKEN)
 

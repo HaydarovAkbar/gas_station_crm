@@ -1,7 +1,10 @@
 from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
-from ..static.base import Buttom as B
+
+from ..static.base import Button as B
+from ..static.base import KButtons as KB
 
 bt = B()
+kb = KB()
 
 
 class KeyboardsAdmin:
@@ -102,4 +105,34 @@ class KeyboardsAdmin:
                 [KeyboardButton(bt_txt[2]), KeyboardButton(bt_txt[1])],
                 [KeyboardButton(bt_txt[3])],
             ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+
+class KeyboardsUser:
+    # ...
+    @staticmethod
+    def get_menu(lang='uz'):
+        bt_txt = kb.manu[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[0])],
+            [KeyboardButton(bt_txt[1])],
+            # [KeyboardButton(bt_txt[2])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def get_lang():
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton('🇺🇿 O\'zbekcha', callback_data='uz')],
+            [InlineKeyboardButton('🇷🇺 Русский', callback_data='ru')],
+            [InlineKeyboardButton('🇬🇧 English', callback_data='en')],
+        ])
+        return keyboard
+
+    @staticmethod
+    def back(lang='uz'):
+        bt_txt = bt.inline_back[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt)],
+        ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
