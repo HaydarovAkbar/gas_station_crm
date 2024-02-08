@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext
 
 from ..static.base import KTexts as T
 from ..keyboards.base import KeyboardsUser as K
+from ..states import States as S
 
 from bot.models import User, UserTypes
 
@@ -15,9 +16,10 @@ def start(update: Update, context: CallbackContext):
         return 1
     user = user.first()
     user_type = UserTypes.objects.get(title='KASSIR')
-    if user_type.id in user.roles.vales_list('id', flat=True):
+    if user_type.id in user.roles.values_list('id', flat=True):
         user_lang = user.language
         update.message.reply_html(T().start[user_lang].format(user.fullname), reply_markup=K().get_menu(user_lang))
+        return S.START
 
 
 def k_manu(update: Update, context: CallbackContext):
