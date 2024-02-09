@@ -217,8 +217,8 @@ class FuelPrice(models.Model):
 class FuelColumnPointer(models.Model):
     fuel_column = models.ForeignKey(FuelColumn, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i ustuni"))
     day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
-    size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"))
-    size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"))
+    size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"), null=True, blank=True)
+    size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))

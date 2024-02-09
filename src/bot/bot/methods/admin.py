@@ -125,29 +125,33 @@ def get_user_id(update: Update, context: CallbackContext):
 
 def get_user_role(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
-    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
-    if not user.exists():
+    tg_user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not tg_user.exists():
         return 1
-    user = user.first()
+    tg_user = tg_user.first()
     user_type = UserTypes.objects.get(title='ADMIN')
-    if user_type.id in user.roles.values_list('id', flat=True):
-        user_lang = user.language if user.language else 'uz'
+    if user_type.id in tg_user.roles.values_list('id', flat=True):
+        user_lang = tg_user.language if tg_user.language else 'uz'
         user_id = context.chat_data['user_id']
         user = User.objects.get(chat_id=user_id)
+        organization = tg_user.organization.first()
         if update.message.text == T().adm_roles[user_lang][0]:
             user.roles.add(UserTypes.objects.get(title='ADMIN'))
             user.state = State.objects.get(id=1)
+            user.organization.set([organization])
             user.save()
             update.message.reply_text('Admin roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
         elif update.message.text == T().adm_roles[user_lang][1]:
             user.roles.add(UserTypes.objects.get(title='KASSIR'))
             user.state = State.objects.get(id=1)
+            user.organization.set([organization])
             user.save()
             update.message.reply_text('Kassir roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
         elif update.message.text == T().adm_roles[user_lang][2]:
             user.roles.add(UserTypes.objects.get(title='KASSIR'))
             user.roles.add(UserTypes.objects.get(title='ADMIN'))
             user.state = State.objects.get(id=1)
+            user.organization.set([organization])
             user.save()
             update.message.reply_text('Admin va Kassir roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
         else:
@@ -164,7 +168,6 @@ def change_user(update: Update, context: CallbackContext):
     user_type = UserTypes.objects.get(title='ADMIN')
     if user_type.id in user.roles.values_list('id', flat=True):
         user_lang = user.language if user.language else 'uz'
-        # organization = user.organization
         user_list = User.objects.filter(state__id=1).order_by('-created_at')[0:20]
         update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())
         update.message.reply_html(T().add_user[user_lang], reply_markup=K().user_list(user_list))

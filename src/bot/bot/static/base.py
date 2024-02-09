@@ -135,3 +135,24 @@ class KTexts:
         'ru': "<b>Вы выбрали топливо для типа <code> {} </code>!</b>",
         'en': "<b>You have chosen fuel for the type <code> {} </code>!</b>"
     }
+    column_num_already_exist_1 = {
+        'uz': "<b>Bu vaqt uchun bu raqamli kalonka allaqachon kiritilgan!\n\nKun boshidagi ko'rsatgich: {}</b>",
+        'ru': "<b>Этот номер колонки уже введен для этого времени!\n\nКолонка на начало дня: {}</b>",
+        'en': "<b>This column number has already been entered for this time!\n\nColumn at the beginning of the day: {}</b>"
+    }
+    column_num_already_exist_2 = {
+        'uz': "<b>Bu vaqt uchun bu raqamli kalonka allaqachon kiritilgan!\n\nKun oxiridagi ko'rsatgich: {}</b>",
+        'ru': "<b>Этот номер колонки уже введен для этого времени!\n\nКолонка на конец дня: {}</b>",
+        'en': "<b>This column number has already been entered for this time!\n\nColumn at the end of the day: {}</b>"
+    }
+    column_num_success = {
+        'uz': "<b>Kalonka raqami muvaffaqiyatli kiritildi!</b>",
+        'ru': "<b>Номер колонки успешно введен!</b>",
+        'en': "<b>Column number entered successfully!</b>"
+    }
+
+    column_num_error = {
+        'uz': "<b>Kalonka raqami raqam bo'lishi kerak!</b>",
+        'ru': "<b>Номер колонки должен быть числом!</b>",
+        'en': "<b>Column number must be a number!</b>"
+    }

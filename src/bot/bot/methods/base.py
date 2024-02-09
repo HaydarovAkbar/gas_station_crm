@@ -7,7 +7,7 @@ from ..states import States as S
 
 from datetime import datetime
 
-from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType
+from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType, FuelStorage
 
 
 def start(update: Update, context: CallbackContext):
@@ -115,8 +115,14 @@ def k_change_column_first(update: Update, context: CallbackContext):
     user_lang = user.language
     user_type = UserTypes.objects.get(title='KASSIR')
     if user_type.id in user.roles.values_list('id', flat=True):
-        update.message.reply_html(T().fuel_column_numbers[user_lang], reply_markup=K().back(user_lang))
-        return S.CHANGE_COLUMN_NUM
+        column = context.chat_data['column']
+        column_pointer = FuelColumnPointer.objects.filter(fuel_column=column, created_at__date=datetime.now().date())
+        if column_pointer.exists() and column_pointer.first().size_first:
+            update.message.reply_html(T().column_num_already_exist_1[user_lang].format(column_pointer.first().size_first), reply_markup=K().back(user_lang))
+            return S.CHANGE_COLUMN_NUM
+        else:
+            update.message.reply_html(T().fuel_column_numbers[user_lang], reply_markup=K().back(user_lang))
+            return S.CHANGE_COLUMN_NUM
 
 
 def k_input_column_num(update: Update, context: CallbackContext):
@@ -130,9 +136,69 @@ def k_input_column_num(update: Update, context: CallbackContext):
     if user_type.id in user.roles.values_list('id', flat=True):
         column_num = update.message.text
         if column_num.isdigit():
-            fuel_column = FuelColumn.objects.get(id=context.chat_data['column'])
+            fuel_column = context.chat_data['column']
             fuel_type = context.chat_data['fuel_type']
-            today_fuel = Fuel.objects.filter(created__date=datetime.now().date())
-
+            today_fuel = Fuel.objects.filter(created_at__date=datetime.now().date())
+            if not today_fuel.exists():
+                fuelstorage = FuelStorage.objects.filter(fuel_type=fuel_type, organization=user.organization.first()).last()
+                fuel = Fuel()
+                fuel.fuel_column = fuel_column
+                fuel.fuel_type = fuel_type
+                fuel.purchase = fuelstorage.input_price
+                fuel.sale = fuelstorage.output_price
+                fuel.balance = fuelstorage.output_price - fuelstorage.input_price
+                fuel.day = datetime.now().date()
+                fuel.save()
+                fuel_column_pointer = FuelColumnPointer()
+                fuel_column_pointer.fuel_column = fuel_column
+                fuel_column_pointer.day = fuel
+                fuel_column_pointer.size_first = column_num
+                fuel_column_pointer.save()
+                update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
+                return S.CHANGE_COLUMN_NUM
+            else:
+                today_fuel = today_fuel.first()
+                fuel_column_pointer = FuelColumnPointer.objects.filter(fuel_column=context.chat_data['column'], day=today_fuel)
+                if fuel_column_pointer.exists():
+                    update.message.reply_html(T().column_num_already_exist_1[user_lang].format(fuel_column_pointer.first().size_first), reply_markup=K().back(user_lang))
+                    return S.CHANGE_COLUMN_NUM
+                else:
+                    fuel_column_pointer = FuelColumnPointer()
+                    fuel_column_pointer.fuel_column = fuel_column
+                    fuel_column_pointer.day = today_fuel
+                    fuel_column_pointer.size_first = column_num
+                    fuel_column_pointer.save()
+                    update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
+                    return S.CHANGE_COLUMN_NUM
         update.message.reply_html(T().column_num_error[user_lang], reply_markup=K().back(user_lang))
         return S.CHANGE_COLUMN_NUM
+
+
+def k_change_column_last(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_lang = user.language
+    user_type = UserTypes.objects.get(title='KASSIR')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        column = context.chat_data['column']
+        column_pointer = FuelColumnPointer.objects.filter(fuel_column=column, created_at__date=datetime.now().date())
+        if column_pointer.exists() and column_pointer.first().size_last:
+            update.message.reply_html(T().column_num_already_exist_2[user_lang].format(column_pointer.first().size_last), reply_markup=K().back(user_lang))
+            return S.CHANGE_COLUMN_NUM
+        else:
+            update.message.reply_html(T().fuel_column_numbers[user_lang], reply_markup=K().back(user_lang))
+            return S.CHANGE_COLUMN_NUM
+
+
+def k_back(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_lang = user.language
+    update.message.reply_html(T().start[user_lang].format(user.fullname), reply_markup=K().get_menu(user_lang))
+    return S.START

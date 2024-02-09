@@ -144,20 +144,24 @@ handler = ConversationHandler(
                           CommandHandler('leader', leader),
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][0] + ')$'), k_change_column_first),
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][1] + ')$'), settings),
-                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][2] + ')$'), settings),
+                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][2] + ')$'), k_back),
 
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][0] + ')$'), k_change_column_first),
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][1] + ')$'), settings),
-                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][2] + ')$'), settings),
+                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][2] + ')$'), k_back),
 
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][0] + ')$'), k_change_column_first),
                           MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][1] + ')$'), settings),
-                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][2] + ')$'), settings),
+                          MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][2] + ')$'), k_back),
                           ],
         S.CHANGE_COLUMN_NUM: [CommandHandler('start', start),
                               CommandHandler('admin', admin),
                               CommandHandler('leader', leader),
-                              MessageHandler(Filters.text, k_change_column_first),
+                              MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][2] + ')$'), k_back),
+                              MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][2] + ')$'), k_back),
+                              MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][2] + ')$'), k_back),
+
+                              MessageHandler(Filters.text, k_input_column_num),
                               ],
     },
     fallbacks=[
