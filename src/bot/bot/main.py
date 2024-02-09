@@ -3,7 +3,7 @@ from telegram import Bot
 from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 
 from .methods import *
-from .static.base import Button as B
+from .static.base import Button as B, KButtons as KB
 from .states import States as S
 import logging
 
@@ -20,6 +20,7 @@ def run():
 
 
 B = B()
+KB = KB()
 
 bot: Bot = Bot(token=django_settings.TOKEN)
 
@@ -105,7 +106,21 @@ handler = ConversationHandler(
                       MessageHandler(Filters.regex('^(' + B.adm_settings['en'][1] + ')$'), back),
                       MessageHandler(Filters.text, change_user_role),
                       ],
+        S.START: [CommandHandler('start', start),
+                  CommandHandler('admin', admin),
+                  CommandHandler('leader', leader),
+                  MessageHandler(Filters.regex('^(' + KB.manu['uz'][0] + ')$'), k_fuel_column),
+                  MessageHandler(Filters.regex('^(' + KB.manu['uz'][1] + ')$'), settings),
+                  MessageHandler(Filters.regex('^(' + KB.manu['uz'][1] + ')$'), settings),
 
+                  MessageHandler(Filters.regex('^(' + KB.manu['ru'][0] + ')$'), k_fuel_column),
+                  MessageHandler(Filters.regex('^(' + KB.manu['ru'][1] + ')$'), settings),
+                  MessageHandler(Filters.regex('^(' + KB.manu['ru'][1] + ')$'), settings),
+
+                  MessageHandler(Filters.regex('^(' + KB.manu['en'][0] + ')$'), k_fuel_column),
+                  MessageHandler(Filters.regex('^(' + KB.manu['en'][1] + ')$'), settings),
+                  MessageHandler(Filters.regex('^(' + KB.manu['en'][1] + ')$'), settings),
+                  ],
     },
     fallbacks=[
         CommandHandler('start', start),

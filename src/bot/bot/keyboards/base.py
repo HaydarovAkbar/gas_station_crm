@@ -116,23 +116,13 @@ class KeyboardsUser:
         keyboard = [
             [KeyboardButton(bt_txt[0])],
             [KeyboardButton(bt_txt[1])],
-            # [KeyboardButton(bt_txt[2])],
+            [KeyboardButton(bt_txt[2])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     @staticmethod
-    def get_lang():
-        keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton('🇺🇿 O\'zbekcha', callback_data='uz')],
-            [InlineKeyboardButton('🇷🇺 Русский', callback_data='ru')],
-            [InlineKeyboardButton('🇬🇧 English', callback_data='en')],
-        ])
-        return keyboard
-
-    @staticmethod
-    def back(lang='uz'):
-        bt_txt = bt.inline_back[lang]
-        keyboard = [
-            [KeyboardButton(bt_txt)],
-        ]
+    def fuel_columns(columns, lang='uz'):
+        keyboard = []
+        for column in columns:
+            keyboard.append([KeyboardButton(column.title)])
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

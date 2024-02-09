@@ -271,7 +271,11 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
     roles = models.ManyToManyField(UserTypes, verbose_name=_("Foydalanuvchi turlari"), related_name='user_roles')
 
-    organization = models.ManyToManyField(Organization, verbose_name=_("Tashkilotlar"), related_name='user_organization')
+    phone = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Telefon"))
+    position = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Lavozimi"))
+
+    organization = models.ManyToManyField(Organization, verbose_name=_("Tashkilotlar"),
+                                          related_name='user_organization')
 
     objects = models.Manager()
 
@@ -282,7 +286,10 @@ class User(models.Model):
         return self.fullname + ' - ' + str(self.chat_id)
 
     def get_user(self):
-        return self.fullname + ' - ' + str(self.created_at.strftime('%d-%m-%Y %H:%M'))
+        try:
+            return self.fullname + ' - ' + str(self.created_at.strftime('%d-%m-%Y %H:%M'))
+        except:
+            return str(self.chat_id) + ' - ' + str(self.created_at.strftime('%d-%m-%Y %H:%M'))
 
     def save(self, *args, **kwargs):
         self.updated_at = now()

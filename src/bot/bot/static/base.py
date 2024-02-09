@@ -1,8 +1,8 @@
 class Button:
     adm_menu = {
-        'uz': ["👤 Foydalanuvchilar", "⚙️ Sozlamalar"],
-        'ru': ["👤 Пользователи", "⚙️ Настройки"],
-        'en': ["👤 Users", "⚙️ Settings"]
+        'uz': ["👤 Foydalanuvchi Boshqaruvi", "⚙️ Sozlamalar"],
+        'ru': ["👤 Управление Пользователями", "⚙️ Настройки"],
+        'en': ["👤 User Management", "⚙️ Settings"]
     }
     adm_user_menu = {
         'uz': ["✳️ Aktivlashtirish", "⛔️ Tahrirlash", "⬅️ Orqaga"],
@@ -70,15 +70,15 @@ class AdmTexts:
     }
 
     adm_roles = {
-        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻", "Admin 👮‍♀️ va Kassir 👨🏻‍💻", "⬅️ Orqaga", "O'chirish 🪓"],
-        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻", "Админ 👮‍♀️ и Кассир 👨🏻‍💻", "⬅️ Назад", "Удалить 🪓"],
-        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻", "Admin 👮‍♀️ and Cashier 👨🏻‍💻", "⬅️ Back", "Delete 🪓"]
+        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻", "Admin va Kassir", "⬅️ Orqaga", "O'chirish 🪓"],
+        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻", "Админ️ и Кассир", "⬅️ Назад", "Удалить 🪓"],
+        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻", "Admin and Cashier", "⬅️ Back", "Delete 🪓"]
     }
 
     roles = {
-        'uz': 'Foydalanuvchi rolini tanlang',
-        'ru': 'Выберите роль пользователя',
-        'en': 'Choose user role'
+        'uz': 'Foydalanuvchini qaysi rolga qo\'shmoqchisiz tanlang',
+        'ru': 'Выберите, в какую роль добавить пользователя',
+        'en': 'Choose which role to add the user'
     }
 
     change_user = {
@@ -90,7 +90,9 @@ class AdmTexts:
 
 class KButtons:
     manu = {
-        'uz': ["👤 Foydalanuvchilar", "⚙️ Sozlamalar"],
+        'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "⚙️ Sozlamalar"],
+        'ru': ["🔢 Кассовый аппарат", "💰 Текущая продажа", "⚙️ Настройки"],
+        'en': ["🔢 Cash register", "💰 Current sale", "⚙️ Settings"]
     }
 
 
@@ -99,4 +101,9 @@ class KTexts:
         'uz': 'Assalom alaykum, {}!\n\nBotdan foydalanishingiz mumkin!',
         'ru': 'Здравствуйте, {}!\n\nВы можете использовать бота!',
         'en': 'Hello, {}!\n\nYou can use the bot!'
+    }
+    fuel_column = {
+        'uz': "<b>Qaysi kalonka ko'rsatgichini tanlamoqchisiz?</b>",
+        'ru': "<b>Какой колонки вы хотите выбрать?</b>",
+        'en': "<b>Which fuel column do you want to choose?</b>"
     }

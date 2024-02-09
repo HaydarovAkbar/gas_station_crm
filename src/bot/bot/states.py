@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 class States(Enum):
     START = auto()
+    FUEL_COLUMN = auto()
     ADMIN = auto()
     GET_USERS = auto()
     ADMIN_SETTINGS = auto()

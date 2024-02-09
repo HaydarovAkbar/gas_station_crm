@@ -111,7 +111,7 @@ def get_user_id(update: Update, context: CallbackContext):
     query = update.callback_query
     user_id = query.data
     user_db = User.objects.get(chat_id=query.from_user.id)
-    query.delete_message(timeout=1)
+    query.delete_message()
     if user_id == 'back':
         context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
                                  reply_markup=K().get_menu(user_db.language))
