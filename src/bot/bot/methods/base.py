@@ -273,11 +273,5 @@ def add_today_fuel_price(update: Update, context: CallbackContext):
         fuel.balance = fuelstorage.output_price - fuelstorage.input_price
         fuel.day = datetime.now().date()
         fuel.save()
-        column_pointer = FuelColumnPointer()
-        column_pointer.fuel_column = context.chat_data['column']
-        column_pointer.day = fuel
-        column_pointer.size_first = context.chat_data['size_first']
-        column_pointer.size_last = context.chat_data['size_last']
-        column_pointer.save()
         update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
         return S.CHANGE_COLUMN_NUM_LAST
