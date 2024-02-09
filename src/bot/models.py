@@ -135,6 +135,8 @@ class FuelColumn(models.Model):
 
 class FuelStorage(models.Model):
     size = models.IntegerField(verbose_name=_("Hajmi [litr]"))
+    input_price = models.FloatField(verbose_name=_("Kirim narxi"))
+    output_price = models.FloatField(verbose_name=_("Chiqim narxi"))
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
 

@@ -95,6 +95,12 @@ class KButtons:
         'en': ["🔢 Cash register", "💰 Current sale", "⚙️ Settings"]
     }
 
+    fuel_columns = {
+        'uz': ["🕑 Kun boshiga", "Kun oxiriga 🕘", "⬅️ Orqaga"],
+        'ru': ["🕑 На начало дня", "На конец дня 🕘", "⬅️ Назад"],
+        'en': ["🕑 At the beginning of the day", "At the end of the day 🕘", "⬅️ Back"]
+    }
+
 
 class KTexts:
     start = {
@@ -106,4 +112,26 @@ class KTexts:
         'uz': "<b>Qaysi kalonka ko'rsatgichini tanlamoqchisiz?</b>",
         'ru': "<b>Какой колонки вы хотите выбрать?</b>",
         'en': "<b>Which fuel column do you want to choose?</b>"
+    }
+    column_chosen = {
+        'uz': "<b>Siz <code>{}</code> yoqilg'i uchun <code> {} </code> kalonkasini tanladingiz!\n\nKalonka ko'rsatgichini qaysi vaqt uchun kiritmoqchisiz tanlang va kiriting</b>",
+        'ru': "<b>Вы выбрали колонку <code> {} </code> для топлива <code>{}</code>!\n\nВыберите и введите время для колонки</b>",
+        'en': "<b>You have chosen column <code> {} </code> for fuel <code>{}</code>!\n\nChoose and enter the time for the column</b>"
+    }
+    fuel_column_numbers = {
+        'uz': "Kalonka ko'rsatgichini kiriting",
+        'ru': "Введите номер колонки",
+        'en': "Enter the column number"
+    }
+
+    fuel_type = {
+        'uz': "<b>Qaysi turdagi yoqilg'i uchun kiritmoqchisiz tanlang</b>",
+        'ru': "<b>Выберите, для какого типа топлива вы хотите ввести данные</b>",
+        'en': "<b>Choose for which type of fuel you want to enter data</b>"
+    }
+
+    fuel_type_chosen = {
+        'uz': "<b>Siz <code> {} </code> turdagi yoqilg'i uchun tanladingiz!</b>",
+        'ru': "<b>Вы выбрали топливо для типа <code> {} </code>!</b>",
+        'en': "<b>You have chosen fuel for the type <code> {} </code>!</b>"
     }

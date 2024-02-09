@@ -124,5 +124,30 @@ class KeyboardsUser:
     def fuel_columns(columns, lang='uz'):
         keyboard = []
         for column in columns:
-            keyboard.append([KeyboardButton(column.title)])
+            keyboard.append([InlineKeyboardButton(column.title, callback_data=f'{column.id}')])
+        keyboard.append([InlineKeyboardButton(bt.inline_back[lang], callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def fuel_types(fuel_types, lang='uz'):
+        keyboard = []
+        for fuel_type in fuel_types:
+            keyboard.append([InlineKeyboardButton(fuel_type.title, callback_data=f'{fuel_type.id}')])
+        keyboard.append([InlineKeyboardButton(bt.inline_back[lang], callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def change_fuel_columns(lang='uz'):
+        bt_txt = kb.fuel_columns[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[0]), KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[2])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def back(lang='uz'):
+        keyboard = [
+            [KeyboardButton(bt.inline_back[lang])],
+        ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
