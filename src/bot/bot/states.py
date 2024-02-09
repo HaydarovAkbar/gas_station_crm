@@ -6,6 +6,7 @@ class States(Enum):
     FUEL_COLUMN = auto()
     CHANGE_COLUMN = auto()
     CHANGE_COLUMN_NUM = auto()
+    CHANGE_COLUMN_NUM_LAST = auto()
     FUEL_TYPE = auto()
     ADMIN = auto()
     GET_USERS = auto()

@@ -156,3 +156,14 @@ class KTexts:
         'ru': "<b>Номер колонки должен быть числом!</b>",
         'en': "<b>Column number must be a number!</b>"
     }
+    column_num_add_first = {
+        'uz': "<b>Avvalo kun boshidagi ko'rsatgichlarni kiritishingiz kerak bo'ladi!</b>",
+        'ru': "<b>Сначала нужно ввести колонки на начало дня!</b>",
+        'en': "<b>First you need to enter columns at the beginning of the day!</b>"
+    }
+
+    column_pointer_already_exist = {
+        'uz': "<b>Bu vaqt uchun bu raqamli ko'rsatgich allaqachon kiritilgan!\n\nKun boshida: {}\nKun oxirida: {}</b>",
+        'ru': "<b>Этот номер указателя уже введен для этого времени!\n\nНа начало дня: {}\nНа конец дня: {}</b>",
+        'en': "<b>This column number has already been entered for this time!\n\nAt the beginning of the day: {}\nAt the end of the day: {}</b>"
+    }
