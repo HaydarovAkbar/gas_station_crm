@@ -259,3 +259,25 @@ def add_today_fuel_price(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=tg_user.id, state__id=1)
     if not user.exists():
         return 1
+    user = user.first()
+    user_lang = user.language
+    user_type = UserTypes.objects.get(title='KASSIR')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        fuelstorage = FuelStorage.objects.filter(fuel_type=context.chat_data['fuel_type'],
+                                                 organization=user.organization.first()).last()
+        fuel = Fuel()
+        fuel.fuel_column = context.chat_data['column']
+        fuel.fuel_type = context.chat_data['fuel_type']
+        fuel.purchase = fuelstorage.input_price
+        fuel.sale = fuelstorage.output_price
+        fuel.balance = fuelstorage.output_price - fuelstorage.input_price
+        fuel.day = datetime.now().date()
+        fuel.save()
+        column_pointer = FuelColumnPointer()
+        column_pointer.fuel_column = context.chat_data['column']
+        column_pointer.day = fuel
+        column_pointer.size_first = context.chat_data['size_first']
+        column_pointer.size_last = context.chat_data['size_last']
+        column_pointer.save()
+        update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
+        return S.CHANGE_COLUMN_NUM_LAST
