@@ -185,6 +185,11 @@ class KTexts:
         'en': "<b>Fuel volume entered successfully!</b>"
     }
 
+    fuel_already_added = {
+        'uz': "<b>Bu vaqt uchun bu turdagi yoqilg'i allaqachon kiritilgan!</b>",
+        'ru': "<b>Этот тип топлива уже введен для этого времени!</b>",
+        'en': "<b>This type of fuel has already been entered for this time!</b>"
+    }
     choose_payment_type = {
         'uz': "<b>Qaysi to'lov turida savdo hajmini kiritmoqchisiz tanlang</b>",
         'ru': "<b>Выберите тип оплаты, для которого хотите ввести объем продажи</b>",

@@ -7,7 +7,8 @@ from ..states import States as S
 
 from datetime import datetime
 
-from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType, FuelStorage, PaymentType, SaleFuel
+from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType, FuelStorage, PaymentType, \
+    SaleFuel
 
 
 def start(update: Update, context: CallbackContext):
@@ -332,11 +333,14 @@ def k_fuel_sale(update: Update, context: CallbackContext):
             fuel_type = context.chat_data['fuel_type']
             payment_type = context.chat_data['payment_type']
             today_fuel = Fuel.objects.filter(created_at__date=datetime.now().date())
-            print(today_fuel, 'today_fuel')
             if today_fuel.exists():
                 fuel = today_fuel.first()
-                print(fuel, 'fuel2')
-                SaleFuel.objects.create(day=fuel, fuel_type=fuel_type, payment_type=payment_type, size=float(fuel_size))
+                sale_fuel, _ = SaleFuel.objects.get_or_create(day=fuel, fuel_type=fuel_type, payment_type=payment_type)
+                if _:
+                    update.message.reply_html(T().fuel_already_added[user_lang], reply_markup=K().back(user_lang))
+                    return S.FUEL_SALE_SIZE
+                sale_fuel.size = float(fuel_size)
+                sale_fuel.save()
                 update.message.reply_html(T().fuel_size_added_success[user_lang], reply_markup=K().back(user_lang))
                 return S.FUEL_SALE_SIZE
             else:

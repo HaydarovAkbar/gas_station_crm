@@ -305,7 +305,7 @@ class User(models.Model):
 
 
 class SaleFuel(models.Model):
-    day = models.DateField(verbose_name=_("Kun"))
+    day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
     size = models.FloatField(verbose_name=_("Hajmi [litr]"), null=True, blank=True)
     payment_type = models.ForeignKey(PaymentType, on_delete=models.SET_NULL, null=True, verbose_name=_("To'lov turi"))
