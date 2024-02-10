@@ -287,7 +287,7 @@ def k_sale_fuel_type(update: Update, context: CallbackContext):
         context.chat_data['fuel_type'] = fuel_type
         query.message.delete()
         payment_type = PaymentType.objects.filter(state__id=1)
-        context.bot.send_message(chat_id=tg_user.id, text=T().fuel_column[user_lang], parse_mode="HTML",
+        context.bot.send_message(chat_id=tg_user.id, text=T().choose_payment_type[user_lang], parse_mode="HTML",
                                  reply_markup=K().fuel_columns(payment_type, user_lang))
         return S.FUEL_COLUMN_SALE_PT
 
@@ -332,18 +332,16 @@ def k_fuel_sale(update: Update, context: CallbackContext):
             fuel_type = context.chat_data['fuel_type']
             payment_type = context.chat_data['payment_type']
             today_fuel = Fuel.objects.filter(created_at__date=datetime.now().date())
+            print(today_fuel, 'today_fuel')
             if today_fuel.exists():
                 fuel = today_fuel.first()
-                sale_fuel = SaleFuel()
-                sale_fuel.day = fuel
-                sale_fuel.fuel_type = fuel_type
-                sale_fuel.payment_type = payment_type
-                sale_fuel.size = fuel_size
-                sale_fuel.save()
+                print(fuel, 'fuel2')
+                SaleFuel.objects.create(day=fuel, fuel_type=fuel_type, payment_type=payment_type, size=float(fuel_size))
                 update.message.reply_html(T().fuel_size_added_success[user_lang], reply_markup=K().back(user_lang))
                 return S.FUEL_SALE_SIZE
             else:
-                fuel = Fuel()
+                fuel = Fuel.objects.create(fuel_type=fuel_type, day=datetime.now().date())
+                print(fuel, 'fuel')
                 fuel.fuel_type = fuel_type
                 fuel.day = datetime.now().date()
                 fuel.save()
@@ -351,7 +349,7 @@ def k_fuel_sale(update: Update, context: CallbackContext):
                 sale_fuel.day = fuel
                 sale_fuel.fuel_type = fuel_type
                 sale_fuel.payment_type = payment_type
-                sale_fuel.size = fuel_size
+                sale_fuel.size = float(fuel_size)
                 sale_fuel.save()
                 update.message.reply_html(T().fuel_size_added_success[user_lang], reply_markup=K().back(user_lang))
                 return S.FUEL_SALE_SIZE

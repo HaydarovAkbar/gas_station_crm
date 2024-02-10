@@ -184,3 +184,9 @@ class KTexts:
         'ru': "<b>Объем топлива успешно введен!</b>",
         'en': "<b>Fuel volume entered successfully!</b>"
     }
+
+    choose_payment_type = {
+        'uz': "<b>Qaysi to'lov turida savdo hajmini kiritmoqchisiz tanlang</b>",
+        'ru': "<b>Выберите тип оплаты, для которого хотите ввести объем продажи</b>",
+        'en': "<b>Choose the type of payment for which you want to enter the sales volume</b>"
+    }

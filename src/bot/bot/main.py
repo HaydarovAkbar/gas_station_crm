@@ -145,7 +145,7 @@ handler = ConversationHandler(
                            MessageHandler(Filters.regex('^(' + KB.fuel_columns['uz'][2] + ')$'), k_back),
                            MessageHandler(Filters.regex('^(' + KB.fuel_columns['ru'][2] + ')$'), k_back),
                            MessageHandler(Filters.regex('^(' + KB.fuel_columns['en'][2] + ')$'), k_back),
-                           MessageHandler(Filters.text, k_sale_fuel),
+                           MessageHandler(Filters.text, k_fuel_sale),
                            ],
         S.FUEL_TYPE: [CommandHandler('start', start),
                       CommandHandler('admin', admin),

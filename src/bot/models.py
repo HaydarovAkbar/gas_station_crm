@@ -163,9 +163,9 @@ class Fuel(models.Model):
     day = models.DateField(verbose_name=_("Kun"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
 
-    purchase = models.FloatField(verbose_name=_("Xarid"))
-    sale = models.FloatField(verbose_name=_("Sotish"))
-    balance = models.FloatField(verbose_name=_("Qoldiq"))
+    purchase = models.FloatField(verbose_name=_("Xarid"), null=True, blank=True)
+    sale = models.FloatField(verbose_name=_("Sotish"), null=True, blank=True)
+    balance = models.FloatField(verbose_name=_("Qoldiq"), null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
@@ -307,9 +307,9 @@ class User(models.Model):
 class SaleFuel(models.Model):
     day = models.DateField(verbose_name=_("Kun"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
-    size = models.FloatField(verbose_name=_("Hajmi [litr]"))
+    size = models.FloatField(verbose_name=_("Hajmi [litr]"), null=True, blank=True)
     payment_type = models.ForeignKey(PaymentType, on_delete=models.SET_NULL, null=True, verbose_name=_("To'lov turi"))
-    price = models.FloatField(verbose_name=_("Narxi"))
+    price = models.FloatField(verbose_name=_("Narxi"), null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
