@@ -302,3 +302,32 @@ class User(models.Model):
         verbose_name_plural = _('Foydalanuvchilar')
         verbose_name = _('Foydalanuvchi')
         db_table = 'user'
+
+
+class SaleFuel(models.Model):
+    day = models.DateField(verbose_name=_("Kun"))
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+    size = models.FloatField(verbose_name=_("Hajmi [litr]"))
+    payment_type = models.ForeignKey(PaymentType, on_delete=models.SET_NULL, null=True, verbose_name=_("To'lov turi"))
+    price = models.FloatField(verbose_name=_("Narxi"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return str(self.day)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = now()
+        super(SaleFuel, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Sotilgan yoqilg\'i')
+        verbose_name = _('Sotilgan yoqilg\'i')
+        db_table = 'sale_fuel'
+        indexes = [
+            models.Index(fields=['day', 'fuel_type', 'payment_type']),
+        ]

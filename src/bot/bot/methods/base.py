@@ -7,7 +7,7 @@ from ..states import States as S
 
 from datetime import datetime
 
-from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType, FuelStorage, PaymentType
+from bot.models import User, UserTypes, FuelColumn, FuelColumnPointer, Fuel, FuelType, FuelStorage, PaymentType, SaleFuel
 
 
 def start(update: Update, context: CallbackContext):
@@ -319,7 +319,6 @@ def k_fuel_column_sale(update: Update, context: CallbackContext):
 
 
 def k_fuel_sale(update: Update, context: CallbackContext):
-    """Ertaga shu ishni davom ettirish kerak!!!"""
     tg_user = update.message.from_user
     user = User.objects.filter(chat_id=tg_user.id, state__id=1)
     if not user.exists():
@@ -331,43 +330,30 @@ def k_fuel_sale(update: Update, context: CallbackContext):
         fuel_size = update.message.text
         if fuel_size.isdigit():
             fuel_type = context.chat_data['fuel_type']
-            fuel_column = context.chat_data['column']
             payment_type = context.chat_data['payment_type']
             today_fuel = Fuel.objects.filter(created_at__date=datetime.now().date())
-            if not today_fuel.exists():
-                fuelstorage = FuelStorage.objects.filter(fuel_type=fuel_type,
-                                                         organization=user.organization.first()).last()
-                fuel = Fuel()
-                fuel.fuel_column = fuel_column
-                fuel.fuel_type = fuel_type
-                fuel.purchase = fuelstorage.input_price
-                fuel.sale = fuelstorage.output_price
-                fuel.balance = fuelstorage.output_price - fuelstorage.input_price
-                fuel.day = datetime.now().date()
-                fuel.save()
-                fuel_column_pointer = FuelColumnPointer()
-                fuel_column_pointer.fuel_column = fuel_column
-                fuel_column_pointer.day = fuel
-                fuel_column_pointer.size_first = fuel_size
-                fuel_column_pointer.save()
-                update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
+            if today_fuel.exists():
+                fuel = today_fuel.first()
+                sale_fuel = SaleFuel()
+                sale_fuel.day = fuel
+                sale_fuel.fuel_type = fuel_type
+                sale_fuel.payment_type = payment_type
+                sale_fuel.size = fuel_size
+                sale_fuel.save()
+                update.message.reply_html(T().fuel_size_added_success[user_lang], reply_markup=K().back(user_lang))
                 return S.FUEL_SALE_SIZE
             else:
-                today_fuel = today_fuel.first()
-                fuel_column_pointer = FuelColumnPointer.objects.filter(fuel_column=context.chat_data['column'],
-                                                                       day=today_fuel)
-                if fuel_column_pointer.exists():
-                    update.message.reply_html(
-                        T().column_num_already_exist_1[user_lang].format(fuel_column_pointer.first().size_first),
-                        reply_markup=K().back(user_lang))
-                    return S.FUEL_SALE_SIZE
-                else:
-                    fuel_column_pointer = FuelColumnPointer()
-                    fuel_column_pointer.fuel_column = fuel_column
-                    fuel_column_pointer.day = today_fuel
-                    fuel_column_pointer.size_first = fuel_size
-                    fuel_column_pointer.save()
-                    update.message.reply_html(T().column_num_success[user_lang], reply_markup=K().back(user_lang))
-                    return S.FUEL_SALE_SIZE
-        update.message.reply_html(T().column_num_error[user_lang], reply_markup=K().back(user_lang))
+                fuel = Fuel()
+                fuel.fuel_type = fuel_type
+                fuel.day = datetime.now().date()
+                fuel.save()
+                sale_fuel = SaleFuel()
+                sale_fuel.day = fuel
+                sale_fuel.fuel_type = fuel_type
+                sale_fuel.payment_type = payment_type
+                sale_fuel.size = fuel_size
+                sale_fuel.save()
+                update.message.reply_html(T().fuel_size_added_success[user_lang], reply_markup=K().back(user_lang))
+                return S.FUEL_SALE_SIZE
+        update.message.reply_html(T().fuel_size_error[user_lang], reply_markup=K().back(user_lang))
         return S.FUEL_SALE_SIZE

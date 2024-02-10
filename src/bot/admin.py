@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import State, PaymentType, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, \
-    FuelColumnPointer, User, UserTypes
+    FuelColumnPointer, User, UserTypes, SaleFuel
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -35,3 +35,4 @@ admin.site.register(FuelPrice)
 admin.site.register(FuelColumnPointer)
 admin.site.register(User, UserAdmin)
 admin.site.register(UserTypes)
+admin.site.register(SaleFuel)

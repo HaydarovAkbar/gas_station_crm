@@ -173,3 +173,14 @@ class KTexts:
         'ru': "<b>Введите объем топлива</b>",
         'en': "<b>Enter the fuel volume</b>"
     }
+
+    fuel_size_error = {
+        'uz': "<b>Yoqilg'i hajmi raqam bo'lishi kerak! \n\nQaytadan urinib ko'ring</b>",
+        'ru': "<b>Объем топлива должен быть числом! \n\nПопробуйте еще раз</b>",
+        'en': "<b>Fuel volume must be a number! \n\nTry again</b>"
+    }
+    fuel_size_added_success = {
+        'uz': "<b>Yoqilg'i hajmi muvaffaqiyatli kiritildi!</b>",
+        'ru': "<b>Объем топлива успешно введен!</b>",
+        'en': "<b>Fuel volume entered successfully!</b>"
+    }
