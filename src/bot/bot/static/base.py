@@ -167,3 +167,9 @@ class KTexts:
         'ru': "<b>Этот номер указателя уже введен для этого времени!\n\nНа начало дня: {}\nНа конец дня: {}</b>",
         'en': "<b>This column number has already been entered for this time!\n\nAt the beginning of the day: {}\nAt the end of the day: {}</b>"
     }
+
+    fuel_size_input = {
+        'uz': "<b>Yoqilg'i hajmini kiriting</b>",
+        'ru': "<b>Введите объем топлива</b>",
+        'en': "<b>Enter the fuel volume</b>"
+    }
