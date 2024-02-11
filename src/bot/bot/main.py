@@ -3,7 +3,7 @@ from telegram import Bot
 from telegram.ext import Dispatcher, CommandHandler, ConversationHandler, MessageHandler, Filters, CallbackQueryHandler
 
 from .methods import *
-from .static.base import Button as B, KButtons as KB
+from .static.base import Button as B, KButtons as KB, LeaderKeyboardText as LB
 from .states import States as S
 import logging
 
@@ -225,7 +225,23 @@ handler = ConversationHandler(
         S.LEADER: [CommandHandler('start', start),
                    CommandHandler('admin', admin),
                    CommandHandler('leader', leader),
+                   MessageHandler(Filters.regex('^(' + LB.menu['uz'][0] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['uz'][1] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['uz'][2] + ')$'), input_fuel),
+
+                   MessageHandler(Filters.regex('^(' + LB.menu['ru'][0] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['ru'][1] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['ru'][2] + ')$'), input_fuel),
+
+                   MessageHandler(Filters.regex('^(' + LB.menu['en'][0] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['en'][1] + ')$'), input_fuel),
+                   MessageHandler(Filters.regex('^(' + LB.menu['en'][2] + ')$'), input_fuel),
                    ],
+        S.L_FUEL_TYPE: [CommandHandler('start', start),
+                        CommandHandler('admin', admin),
+                        CommandHandler('leader', leader),
+                        CallbackQueryHandler(input_fuel),
+                        ],
     },
     fallbacks=[
         CommandHandler('start', start),
