@@ -115,8 +115,8 @@ class KeyboardsUser:
         bt_txt = kb.manu[lang]
         keyboard = [
             [KeyboardButton(bt_txt[0])],
-            [KeyboardButton(bt_txt[1])],
-            [KeyboardButton(bt_txt[2])],
+            [KeyboardButton(bt_txt[1]), KeyboardButton(bt_txt[2])],
+            [KeyboardButton(bt_txt[3])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 

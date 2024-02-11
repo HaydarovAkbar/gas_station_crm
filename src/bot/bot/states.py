@@ -11,6 +11,8 @@ class States(Enum):
     FUEL_TYPE_SALE = auto()
     FUEL_COLUMN_SALE_PT = auto()
     FUEL_SALE_SIZE = auto()
+    FUEL_TYPE_PRICE = auto()
+    FUEL_PRICE_INPUT = auto()
     FUEL_COLUMN_SALE = auto()
     ADMIN = auto()
     GET_USERS = auto()

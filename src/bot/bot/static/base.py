@@ -90,9 +90,9 @@ class AdmTexts:
 
 class KButtons:
     manu = {
-        'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "⚙️ Sozlamalar"],
-        'ru': ["🔢 Кассовый аппарат", "💰 Текущая продажа", "⚙️ Настройки"],
-        'en': ["🔢 Cash register", "💰 Current sale", "⚙️ Settings"]
+        'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "Bugungi narxlar 💵", "⚙️ Sozlamalar"],
+        'ru': ["🔢 Указатель колонки", "💰 Сегодняшняя продажа", "Сегодняшние цены 💵", "⚙️ Настройки"],
+        'en': ["🔢 Column pointer", "💰 Today's sale", "Today's prices 💵", "⚙️ Settings"]
     }
 
     fuel_columns = {
@@ -194,4 +194,19 @@ class KTexts:
         'uz': "<b>Qaysi to'lov turida savdo hajmini kiritmoqchisiz tanlang</b>",
         'ru': "<b>Выберите тип оплаты, для которого хотите ввести объем продажи</b>",
         'en': "<b>Choose the type of payment for which you want to enter the sales volume</b>"
+    }
+    input_fuel_price = {
+        'uz': "<b>Bugungi yoqilg'ining sotilgan narxini kiriting!</b>",
+        'ru': "<b>Введите цену проданного топлива сегодня!</b>",
+        'en': "<b>Enter the price of the fuel sold today!</b>"
+    }
+    fuel_price_added_success = {
+        'uz': "<b>Yoqilg'ining sotilgan narxi muvaffaqiyatli kiritildi!</b>",
+        'ru': "<b>Цена проданного топлива успешно введена!</b>",
+        'en': "<b>The price of the fuel sold was entered successfully!</b>"
+    }
+    fuel_price_error = {
+        'uz': "<b>Yoqilg'ining sotilgan narxi raqam bo'lishi kerak! \n\nQaytadan urinib ko'ring</b>",
+        'ru': "<b>Цена проданного топлива должна быть числом! \n\nПопробуйте еще раз</b>",
+        'en': "<b>The price of the fuel sold must be a number! \n\nTry again</b>"
     }
