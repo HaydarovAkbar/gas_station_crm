@@ -191,3 +191,10 @@ class LeaderKeyboard:
             keyboard.append([InlineKeyboardButton(fuel_type.title, callback_data=f'{fuel_type.id}')])
         keyboard.append([InlineKeyboardButton(bt.inline_back[lang], callback_data='back')])
         return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def back(lang='uz'):
+        keyboard = [
+            [KeyboardButton(bt.inline_back[lang])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

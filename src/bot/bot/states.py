@@ -34,3 +34,4 @@ class States(Enum):
 
     LEADER = auto()
     L_FUEL_TYPE = auto()
+    L_FUEL_SIZE = auto()

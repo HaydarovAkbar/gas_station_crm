@@ -244,6 +244,11 @@ class LeaderTexts:
         'ru': "<b>Выберите, для какого типа топлива вы хотите ввести данные</b>",
         'en': "<b>Choose for which type of fuel you want to enter data</b>"
     }
+    fuel_size_input = {
+        'uz': "<b>Yoqilg'i hajmini kiriting</b>",
+        'ru': "<b>Введите объем топлива</b>",
+        'en': "<b>Enter the fuel volume</b>"
+    }
 
 
 class LeaderKeyboardText:
