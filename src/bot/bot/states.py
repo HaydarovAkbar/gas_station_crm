@@ -24,7 +24,6 @@ class States(Enum):
     USER_ROLE = auto()
     CHANGED_USER = auto()
     USER_CONF = auto()
-    LEADER = auto()
     WAITING_FOR_NAME = auto()
     WAITING_FOR_EMAIL = auto()
     WAITING_FOR_PHONE = auto()
@@ -32,3 +31,5 @@ class States(Enum):
     WAITING_FOR_CONFIRMATION = auto()
     FINISHED = auto()
     CANCELLED = auto()
+
+    LEADER = auto()

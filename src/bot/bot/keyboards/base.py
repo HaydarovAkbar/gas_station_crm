@@ -2,9 +2,11 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, 
 
 from ..static.base import Button as B
 from ..static.base import KButtons as KB
+from ..static.base import LeaderKeyboardText as LB
 
 bt = B()
 kb = KB()
+lb = LB()
 
 
 class KeyboardsAdmin:
@@ -112,7 +114,7 @@ class KeyboardsUser:
     # ...
     @staticmethod
     def get_menu(lang='uz'):
-        bt_txt = kb.manu[lang]
+        bt_txt = kb.menu[lang]
         keyboard = [
             [KeyboardButton(bt_txt[0])],
             [KeyboardButton(bt_txt[1]), KeyboardButton(bt_txt[2])],
@@ -167,5 +169,17 @@ class KeyboardsUser:
         keyboard = [
             [KeyboardButton(bt_txt[0])],
             [KeyboardButton(bt_txt[1])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+
+class LeaderKeyboard:
+    @staticmethod
+    def get_menu(lang='uz'):
+        bt_txt = lb.menu[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[0])],
+            [KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[2])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

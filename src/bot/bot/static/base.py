@@ -89,7 +89,7 @@ class AdmTexts:
 
 
 class KButtons:
-    manu = {
+    menu = {
         'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "Bugungi narxlar 💵", "⚙️ Sozlamalar"],
         'ru': ["🔢 Указатель колонки", "💰 Сегодняшняя продажа", "Сегодняшние цены 💵", "⚙️ Настройки"],
         'en': ["🔢 Column pointer", "💰 Today's sale", "Today's prices 💵", "⚙️ Settings"]
@@ -240,10 +240,9 @@ class LeaderTexts:
     }
 
 
-
 class LeaderKeyboardText:
-    manu = {
-        'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "Bugungi narxlar 💵", "⚙️ Sozlamalar"],
-        'ru': ["🔢 Указатель колонки", "💰 Сегодняшняя продажа", "Сегодняшние цены 💵", "⚙️ Настройки"],
-        'en': ["🔢 Column pointer", "💰 Today's sale", "Today's prices 💵", "⚙️ Settings"]
+    menu = {
+        'uz': ["📥 Yoqilg'i kirim qilish", "Hisobot olish 📤", "⚙️ Sozlamalar"],
+        'ru': ["📥 Ввод топлива", "Получить отчет 📤", "⚙️ Настройки"],
+        'en': ["📥 Fuel input", "Get report 📤", "⚙️ Settings"]
     }
