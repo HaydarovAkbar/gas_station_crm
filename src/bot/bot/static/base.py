@@ -239,6 +239,12 @@ class LeaderTexts:
         'en': 'Hello, {}!\n\nYou can use the bot!'
     }
 
+    input_fuel_type = {
+        'uz': "<b>Qaysi turdagi yoqilg'i uchun kiritmoqchisiz tanlang</b>",
+        'ru': "<b>Выберите, для какого типа топлива вы хотите ввести данные</b>",
+        'en': "<b>Choose for which type of fuel you want to enter data</b>"
+    }
+
 
 class LeaderKeyboardText:
     menu = {

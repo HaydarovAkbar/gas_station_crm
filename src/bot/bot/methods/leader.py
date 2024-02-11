@@ -7,7 +7,7 @@ from ..states import States as S
 
 from datetime import datetime
 
-from bot.models import User, UserTypes
+from bot.models import User, UserTypes, FuelType
 
 
 def leader(update: Update, context: CallbackContext):
@@ -26,6 +26,6 @@ def input_fuel(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.message.from_user.id)
     user_type = UserTypes.objects.get(title='RAHBAR')
     if user_type.id in user.roles.values_list('id', flat=True):
-        
-        update.message.reply_text(T().input_fuel[user.language], reply_markup=K().fuel_columns(user.fuel_columns.all(), user.language))
+        fuel_types = FuelType.objects.filter(state__id=1)
+        update.message.reply_text(T().input_fuel_type[user.language], reply_markup=K().fuel_columns(user.fuel_columns.all(), user.language))
         return S.FUEL_COLUMN
