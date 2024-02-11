@@ -183,3 +183,11 @@ class LeaderKeyboard:
             [KeyboardButton(bt_txt[2])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def fuel_types(fuel_types, lang='uz'):
+        keyboard = []
+        for fuel_type in fuel_types:
+            keyboard.append([InlineKeyboardButton(fuel_type.title, callback_data=f'{fuel_type.id}')])
+        keyboard.append([InlineKeyboardButton(bt.inline_back[lang], callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)

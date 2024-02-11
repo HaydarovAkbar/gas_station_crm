@@ -33,3 +33,4 @@ class States(Enum):
     CANCELLED = auto()
 
     LEADER = auto()
+    L_FUEL_TYPE = auto()

@@ -27,5 +27,5 @@ def input_fuel(update: Update, context: CallbackContext):
     user_type = UserTypes.objects.get(title='RAHBAR')
     if user_type.id in user.roles.values_list('id', flat=True):
         fuel_types = FuelType.objects.filter(state__id=1)
-        update.message.reply_text(T().input_fuel_type[user.language], reply_markup=K().fuel_columns(user.fuel_columns.all(), user.language))
-        return S.FUEL_COLUMN
+        update.message.reply_text(T().input_fuel_type[user.language], reply_markup=K().fuel_types(fuel_types, user.language))
+        return S.L_FUEL_TYPE
