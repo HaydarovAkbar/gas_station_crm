@@ -412,6 +412,9 @@ def k_input_fuel_price(update: Update, context: CallbackContext):
             fuel = Fuel.objects.filter(fuel_type=fuel_type, day=datetime.now().date())
             if fuel.exists():
                 fuel = fuel.first()
+                if fuel.sale:
+                    update.message.reply_html(T().fuel_price_already_added[user_lang], reply_markup=K().back(user_lang))
+                    return S.FUEL_PRICE_INPUT
                 fuel.sale = fuel_price
                 fuel.save()
                 update.message.reply_html(T().fuel_price_added_success[user_lang], reply_markup=K().back(user_lang))
@@ -424,3 +427,44 @@ def k_input_fuel_price(update: Update, context: CallbackContext):
                 return S.FUEL_PRICE_INPUT
         update.message.reply_html(T().fuel_price_error[user_lang], reply_markup=K().back(user_lang))
         return S.FUEL_PRICE_INPUT
+
+
+def k_settings(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='KASSIR')
+
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_html(T().get_user[user_lang], reply_markup=K().k_settings(user_lang))
+        return S.KASSIR_SETTINGS
+
+
+def k_change_language(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='KASSIR')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_html(T().change_language[user_lang], reply_markup=K().get_lang())
+        return S.KASSIR_SETTINGS_CHANGE
+
+
+def k_get_lang(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer(text="Til o'zgartirildi: {}".format(query.data))
+    change_lang = query.data
+    user = User.objects.get(chat_id=query.from_user.id)
+    user.language = change_lang
+    user.save()
+    query.message.delete(timeout=1)
+    tg_user = query.from_user
+    context.bot.send_message(chat_id=query.from_user.id, text=T().start[change_lang].format(tg_user.full_name),
+                             reply_markup=K().get_menu(change_lang))
+    return S.START

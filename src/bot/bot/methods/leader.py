@@ -14,5 +14,3 @@ def leader(update: Update, context: CallbackContext):
     user_type = UserTypes.objects.get(title='RAHBAR')
     if user_type.id in user.roles.values_list('id', flat=True):
         update.message.reply_text('Rahbar Salom')
-    else:
-        update.message.reply_text('siz Rahbar emassiz')

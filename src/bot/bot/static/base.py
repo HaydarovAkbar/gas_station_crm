@@ -100,6 +100,11 @@ class KButtons:
         'ru': ["🕑 На начало дня", "На конец дня 🕘", "⬅️ Назад"],
         'en': ["🕑 At the beginning of the day", "At the end of the day 🕘", "⬅️ Back"]
     }
+    k_settings = {
+        'uz': ["Tilni o'zgartirish 🌐", "⬅️ Orqaga"],
+        'ru': ["Изменить язык 🌐", "⬅️ Orqaga"],
+        'en': ["Change language 🌐", "⬅️ Orqaga"]
+    }
 
 
 class KTexts:
@@ -209,4 +214,36 @@ class KTexts:
         'uz': "<b>Yoqilg'ining sotilgan narxi raqam bo'lishi kerak! \n\nQaytadan urinib ko'ring</b>",
         'ru': "<b>Цена проданного топлива должна быть числом! \n\nПопробуйте еще раз</b>",
         'en': "<b>The price of the fuel sold must be a number! \n\nTry again</b>"
+    }
+    get_user = {
+        'uz': '<b>Foydalanuvchi buyruqlaridan birini tanlang!</b>',
+        'ru': '<b>Выберите одну из команд пользователей!</b>',
+        'en': '<b>Choose one of the user commands!</b>'
+    }
+    change_language = {
+        'uz': "<b>Tilni tanlang!</b>",
+        'ru': "<b>Выберите язык!</b>",
+        'en': "<b>Choose language!</b>"
+    }
+    fuel_price_already_added = {
+        'uz': "<b>Bu vaqt uchun bu turdagi yoqilg'i narxi allaqachon kiritilgan!</b>",
+        'ru': "<b>Цена проданного топлива этого типа уже введена для этого времени!</b>",
+        'en': "<b>The price of the fuel sold of this type has already been entered for this time!</b>"
+    }
+
+
+class LeaderTexts:
+    start = {
+        'uz': 'Assalom alaykum, {}!\n\nBotdan foydalanishingiz mumkin!',
+        'ru': 'Здравствуйте, {}!\n\nВы можете использовать бота!',
+        'en': 'Hello, {}!\n\nYou can use the bot!'
+    }
+
+
+
+class LeaderKeyboardText:
+    manu = {
+        'uz': ["🔢 Kalonka ko'rsatkichi", "💰 Bugungi savdo", "Bugungi narxlar 💵", "⚙️ Sozlamalar"],
+        'ru': ["🔢 Указатель колонки", "💰 Сегодняшняя продажа", "Сегодняшние цены 💵", "⚙️ Настройки"],
+        'en': ["🔢 Column pointer", "💰 Today's sale", "Today's prices 💵", "⚙️ Settings"]
     }

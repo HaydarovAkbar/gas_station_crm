@@ -151,3 +151,21 @@ class KeyboardsUser:
             [KeyboardButton(bt.inline_back[lang])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def get_lang():
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton('🇺🇿 O\'zbekcha', callback_data='uz')],
+            [InlineKeyboardButton('🇷🇺 Русский', callback_data='ru')],
+            [InlineKeyboardButton('🇬🇧 English', callback_data='en')],
+        ])
+        return keyboard
+
+    @staticmethod
+    def k_settings(lang='uz'):
+        bt_txt = kb.k_settings[lang]
+        keyboard = [
+            [KeyboardButton(bt_txt[0])],
+            [KeyboardButton(bt_txt[1])],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

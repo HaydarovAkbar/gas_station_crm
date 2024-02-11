@@ -14,6 +14,8 @@ class States(Enum):
     FUEL_TYPE_PRICE = auto()
     FUEL_PRICE_INPUT = auto()
     FUEL_COLUMN_SALE = auto()
+    KASSIR_SETTINGS = auto()
+    KASSIR_SETTINGS_CHANGE = auto()
     ADMIN = auto()
     GET_USERS = auto()
     ADMIN_SETTINGS = auto()
