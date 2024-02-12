@@ -240,7 +240,7 @@ handler = ConversationHandler(
         S.L_FUEL_TYPE: [CommandHandler('start', start),
                         CommandHandler('admin', admin),
                         CommandHandler('leader', leader),
-                        CallbackQueryHandler(input_fuel),
+                        CallbackQueryHandler(input_fuel_type),
                         ],
     },
     fallbacks=[

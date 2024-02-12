@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
 
 from ..static.base import LeaderTexts as T
@@ -28,7 +28,8 @@ def input_fuel(update: Update, context: CallbackContext):
     user_type = UserTypes.objects.get(title='RAHBAR')
     if user_type.id in user.roles.values_list('id', flat=True):
         fuel_types = FuelType.objects.filter(state__id=1)
-        update.message.reply_text(T().input_fuel_type[user.language],
+        update.message.reply_text('👇👇', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_html(T().input_fuel_type[user.language],
                                   reply_markup=K().fuel_types(fuel_types, user.language))
         return S.L_FUEL_TYPE
 
@@ -41,5 +42,6 @@ def input_fuel_type(update: Update, context: CallbackContext):
         context.user_data['fuel_type'] = FuelType.objects.get(id=update.callback_query.data)
         update.callback_query.delete_message()
         context.bot.send_message(tg_user.id, T().fuel_size_input[user.language],
+                                 parse_mode='HTML',
                                  reply_markup=K().back(user.language))
         return S.L_FUEL_SIZE
