@@ -183,7 +183,7 @@ CORS_ALLOW_HEADERS = [
     'Access-Control-Allow-Credentials',
 ]
 
-HOST = 'https://b6aa-194-93-24-3.ngrok-free.app'
+HOST = 'https://156a-194-93-24-3.ngrok-free.app'
 # HOST = 'http://172.17.17.68:8000'
 
 SESSION_COOKIE_SECURE = False
@@ -196,7 +196,7 @@ TOKEN = config("TOKEN")
 
 try:
     from .jazzmin import JAZZMIN_UI_TWEAKS, JAZZMIN_SETTINGS
-    print('jazzmin settings imported successfully')
+    # print('jazzmin settings imported successfully')
 except ImportError:
     from jazzmin.settings import JAZZMIN_UI_TWEAKS, JAZZMIN_SETTINGS
     print('jazzmin settings imported don\'t successfully')
