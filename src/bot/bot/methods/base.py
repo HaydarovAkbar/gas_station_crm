@@ -292,7 +292,6 @@ def k_sale_fuel_type(update: Update, context: CallbackContext):
                                  reply_markup=K().fuel_columns(payment_type, user_lang))
         return S.FUEL_COLUMN_SALE_PT
 
-
 def k_fuel_column_sale(update: Update, context: CallbackContext):
     tg_user = update.callback_query.from_user
     user = User.objects.filter(chat_id=tg_user.id, state__id=1)
