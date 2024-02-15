@@ -1,4 +1,4 @@
-from ..core import celery_app
+from core import celery_app
 from .models import User
 
 

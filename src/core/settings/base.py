@@ -48,6 +48,8 @@ APPS = [
 DEV_APPS = [
     "corsheaders",
     'axes',
+    "django_celery_results",
+    "django_celery_beat",
 ]
 
 INSTALLED_APPS += APPS + DEV_APPS
@@ -149,6 +151,30 @@ LOGGING = {
     },
 }
 
+# CACHES
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"{config('REDIS_URL', 'redis://localhost:6379/0')}",
+        "KEY_PREFIX": "boilerplate",  # todo: you must change this with your project name or something else
+    }
+}
+
+# Auditlog
+AUDITLOG_INCLUDE_ALL_MODELS = True
+
+# CELERY CONFIGURATION
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", "redis://localhost:6379")
+CELERY_RESULT_BACKEND = config("CELERY_BROKER_URL", "redis://localhost:6379")
+
+CELERY_TIMEZONE = "Asia/Tashkent"
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
