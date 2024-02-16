@@ -12,10 +12,10 @@ app.autodiscover_tasks()
 # app.conf.timezone = "Asia/Tashkent"
 
 app.conf.beat_schedule = {
-    "check_all_users_result": {
-        "task": "bot.tasks.check_all_users_result",
-        "schedule": 10.0,
-        # 'every': 10.0,
+    # "check_all_users_result": {
+    #     "task": "bot.tasks.check_all_users_result",
+    #     "schedule": 10.0,
+    #     # 'every': 10.0,}
 }
 
 
