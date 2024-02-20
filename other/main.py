@@ -10,37 +10,56 @@ import django
 django.setup()
 from decouple import config
 # Import your models for use in your script
-import logging
+import logging, pytz
 
 TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
-from methods.core.views import start, get_fullname
-from methods.admin.views import admin
+from methods.core.views import start
+from methods.kassir.views import send_night_notification
 from states import States as st
+from datetime import datetime, time
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
-update = Updater(token=TOKEN, use_context=True, workers=500)
-app = update.dispatcher
+updater = Updater(token=TOKEN, use_context=True, workers=500)
+app = updater.dispatcher
+
+job = updater.job_queue
+
+
+def send_message(context):
+    context.bot.send_message(chat_id=758934089, text=f"Hello World {datetime.now()}")
+    return 1
+
+
+job.run_daily(send_message, days=(0, 1, 2, 3, 4, 5, 6),
+              time=time(hour=17, minute=33, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+
+job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
+              time=time(hour=18, minute=21, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
-    entry_points=[CommandHandler('start', start),
-                  CommandHandler('admin', admin)
-                  ],
+    entry_points=[
+        CommandHandler('start', start),
+        # CommandHandler('admin', admin)
+    ],
     states={
-        st.get_fullname: [
+        1: [
             CommandHandler('start', start),
-            CommandHandler('admin', admin),
-            MessageHandler(Filters.text, get_fullname)],
+            # CommandHandler('admin', admin),
+            MessageHandler(Filters.text, start)
+        ],
     },
-    fallbacks=[CommandHandler('start', start),
-               CommandHandler('admin', admin), ]
+    fallbacks=[
+        CommandHandler('start', start),
+        #        CommandHandler('admin', admin),
+    ]
 )
 
 app.add_handler(handler=handler)
 
-update.start_polling()
+updater.start_polling()
 print('started polling')
-update.idle()
+updater.idle()

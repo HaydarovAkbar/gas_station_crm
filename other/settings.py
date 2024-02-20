@@ -17,3 +17,5 @@ DATABASES = {
 }
 
 INSTALLED_APPS = ("db",)
+
+timezone = 'Asia/Tashkent'
