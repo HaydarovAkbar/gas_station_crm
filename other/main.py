@@ -13,11 +13,13 @@ from decouple import config
 import logging, pytz
 
 TOKEN = config('TOKEN')
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
-from methods.kassir.views import send_night_notification
+from methods.kassir.views import send_night_notification, get_start, get_fuel_type
 from states import States as st
 from datetime import datetime, time
+
+from methods.kassir.texts import KeyboardsTexts as kas_txt
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -28,33 +30,37 @@ app = updater.dispatcher
 
 job = updater.job_queue
 
-
-def send_message(context):
-    context.bot.send_message(chat_id=758934089, text=f"Hello World {datetime.now()}")
-    return 1
-
-
-job.run_daily(send_message, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=17, minute=33, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
-
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=18, minute=21, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=19, minute=17, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
         CommandHandler('start', start),
         # CommandHandler('admin', admin)
+        MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
+        MessageHandler(Filters.regex('^(' + kas_txt.start['ru'] + ')$'), get_start),
+        MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
     ],
     states={
-        1: [
+        st.NOTSTART: [
             CommandHandler('start', start),
             # CommandHandler('admin', admin),
-            MessageHandler(Filters.text, start)
+            MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
+            MessageHandler(Filters.regex('^(' + kas_txt.start['ru'] + ')$'), get_start),
+            MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
+        ],
+        st.ADD_TODAY_DATA: [
+            CommandHandler('start', start),
+            CallbackQueryHandler(get_fuel_type),
         ],
     },
     fallbacks=[
         CommandHandler('start', start),
         #        CommandHandler('admin', admin),
+
+        MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
+        MessageHandler(Filters.regex('^(' + kas_txt.start['ru'] + ')$'), get_start),
+        MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
     ]
 )
 

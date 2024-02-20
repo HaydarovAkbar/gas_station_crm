@@ -12,11 +12,13 @@ CHANNEL_ID = config('CHANNEL_ID')
 def start(update: Update, context: CallbackContext):
     user, _ = User.objects.get_or_create(chat_id=update.effective_user.id,
                                          defaults={'username': update.effective_user.username,
-                                                   'fullname': update.effective_user.full_name
-                                                   })
+                                                   'fullname': update.effective_user.full_name,
+                                                   'is_active': True,
+                                                   }
+                                         )
     print(user, _)
     if user and user.is_active:
-        update.message.reply_html(text="<b>Assalomu alaykum:</b>",)
+        update.message.reply_html(text="<b>Assalomu alaykum:</b>", )
         return 1
 
 
