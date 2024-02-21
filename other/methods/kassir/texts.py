@@ -22,8 +22,8 @@ class KeyboardsTexts:
 
     data_types = {
         'uz': ["Bugungi savdo", "Kalonka ko'rsatgichlari"],
-        'ru': [],
-        'en': []
+        'ru': ["Bugungi savdo", "Kalonka ko'rsatgichlari"],
+        'en': ["Bugungi savdo", "Kalonka ko'rsatgichlari"]
     }
 
 
