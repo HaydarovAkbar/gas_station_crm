@@ -33,3 +33,20 @@ class KassirKeyboards:
             keyboard.append([InlineKeyboardButton(column.title, callback_data=f'{column.id}')])
         keyboard.append([InlineKeyboardButton(txt.back[lang], callback_data='back')])
         return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def back_to_menu(lang='uz'):
+        text = txt.back_to_menu[lang]
+        keyboard = [
+            [KeyboardButton(text)]
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def data_types(lang='uz'):
+        text = txt.data_types[lang]
+        keyboard = [
+            text[0],
+            text[1],
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

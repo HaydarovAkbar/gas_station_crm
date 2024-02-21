@@ -39,3 +39,4 @@ class States(Enum):
     NOTSTART = auto()
     ADD_TODAY_DATA = auto()
     ADD_FUEL_COLUMN_NUM = auto()
+    DATA_TYPE = auto()

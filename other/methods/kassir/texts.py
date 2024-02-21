@@ -16,6 +16,16 @@ class KeyboardsTexts:
         'en': "🚀 Start"
     }
 
+    back_to_menu = {
+        'uz': "Asosiy sahifa ♻️",
+    }
+
+    data_types = {
+        'uz': ["Bugungi savdo", "Kalonka ko'rsatgichlari"],
+        'ru': [],
+        'en': []
+    }
+
 
 class MessageTexts:
     start_notification = {
@@ -39,4 +49,12 @@ class MessageTexts:
         'uz': "Kalonkalardan birini tanlang!",
         'ru': "Выберите одну из колонок!",
         'en': "Choose one of the columns!"
+    }
+    back_to_menu = {
+        'uz': "Asosiy sahifaga qaytish",
+        'ru': ""
+    }
+
+    data_types = {
+        'uz': "Qaysi turdagi ma'lumotni kiritmoqchisiz?",
     }

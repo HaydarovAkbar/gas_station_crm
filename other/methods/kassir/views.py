@@ -38,11 +38,18 @@ def get_fuel_type(update: Update, context: CallbackContext):
     context.user_data['fuel_type'] = fuel_type
     query.delete_message()
     user = User.objects.get(chat_id=update.effective_chat.id)
-    fuel_column = FuelColumn.objects.filter(is_active=True)
-    context.bot.send_message(chat_id=user.chat_id,
-                             text=msg_txt.add_fuel_column[user.language],
-                             reply_markup=kb.fuel_columns(fuel_column, user.language))
-    return st.ADD_FUEL_COLUMN_NUM
+    # fuel_column = FuelColumn.objects.filter(is_active=True)
+    # context.bot.send_message(chat_id=user.chat_id,
+    #                          text=msg_txt.add_fuel_column[user.language],
+    #                          reply_markup=kb.fuel_columns(fuel_column, user.language))
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=msg_txt.data_types,
+                             reply_markup=kb.data_types(user.language))
+    return st.DATA_TYPE
+
+
+def get_data_type(update: Update, context: CallbackContext):
+    print("as")
 
 
 def get_fuel_column_numbers_first(update: Update, context: CallbackContext):
