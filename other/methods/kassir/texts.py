@@ -58,3 +58,14 @@ class MessageTexts:
     data_types = {
         'uz': "Qaysi turdagi ma'lumotni kiritmoqchisiz?",
     }
+    choose_payment_type = {
+        'uz': "Qaysi to'lov turida kiritmoqchisiz!",
+        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
+        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+    }
+
+    fuel_price_today = {
+        'uz': "Bugungi yoqilg'i narxini kiriting (Misol uchun 8500)",
+        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
+        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+    }

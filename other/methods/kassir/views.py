@@ -43,12 +43,29 @@ def get_fuel_type(update: Update, context: CallbackContext):
     #                          text=msg_txt.add_fuel_column[user.language],
     #                          reply_markup=kb.fuel_columns(fuel_column, user.language))
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text=msg_txt.data_types,
+                             text=msg_txt.data_types.get(user.language),
                              reply_markup=kb.data_types(user.language))
     return st.DATA_TYPE
 
 
-def get_data_type(update: Update, context: CallbackContext):
+def get_data_type_first(update: Update, context: CallbackContext):
+    print("demak shutta")
+    user = User.objects.get(chat_id=update.effective_user.id)
+    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
+                              reply_markup=kb.back_to_menu(user.language))
+    return st.CHOOSE_PAYMENT_TYPE
+
+
+def get_payment_type(update: Update, context: CallbackContext):
+    query = update.callback_query
+    context.chat_data['payment_type'] = query.data
+    query.delete_message()
+    user = User.objects.get(chat_id=update.effective_user.id)
+    context.bot.send_message(chat_id=update.effective_user.id,
+                             text=msg_txt.fuel_price_today.get(user.language))
+    return st.ADD_FUEL_PRICE_TODAY
+
+def get_data_type_last(update: Update, context: CallbackContext):
     print("as")
 
 

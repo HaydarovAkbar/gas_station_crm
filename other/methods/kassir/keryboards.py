@@ -46,7 +46,7 @@ class KassirKeyboards:
     def data_types(lang='uz'):
         text = txt.data_types[lang]
         keyboard = [
-            text[0],
-            text[1],
+            [text[0]],
+            [text[1]],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
