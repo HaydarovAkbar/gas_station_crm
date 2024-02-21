@@ -38,10 +38,15 @@ def get_fuel_type(update: Update, context: CallbackContext):
     context.user_data['fuel_type'] = fuel_type
     query.delete_message()
     user = User.objects.get(chat_id=update.effective_chat.id)
-    # fuel_column = FuelColumn.objects.filter(is_active=True)
-    # context.bot.send_message(chat_id=user.chat_id,
-    #                          text=msg_txt.add_fuel_column[user.language],
-    #                          reply_markup=kb.fuel_columns(fuel_column, user.language))
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=msg_txt.data_types.get(user.language),
+                             reply_markup=kb.data_types(user.language))
+    return st.DATA_TYPE
+
+
+def back_to_data_type(update: Update, context: CallbackContext):
+    user = User.objects.get(chat_id=update.effective_chat.id)
+
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text=msg_txt.data_types.get(user.language),
                              reply_markup=kb.data_types(user.language))
@@ -88,8 +93,12 @@ def get_sell_fuel_size(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
     if size.isdigit() and int(size) > 0:
         context.chat_data['size'] = int(size)
+        update.message.reply_html(
+            text="<code>Yuborgan ma'lumotlaringiz saqlab qo'yildi</code>"
+        )
         update.message.reply_text(
-            msg_txt.sell_fuel_size_today.get(user.language)
+            msg_txt.choose_back_type.get(user.language),
+            reply_markup=kb.back_types(user.language)
         )
         return st.SUCCES
     else:
@@ -98,7 +107,7 @@ def get_sell_fuel_size(update: Update, context: CallbackContext):
     return st.SELL_FUEL_SIZE
 
 
-def
+# def back_type
 
 
 def get_data_type_last(update: Update, context: CallbackContext):

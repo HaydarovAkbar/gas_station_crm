@@ -25,6 +25,11 @@ class KeyboardsTexts:
         'ru': ["Bugungi savdo", "Kalonka ko'rsatgichlari"],
         'en': ["Bugungi savdo", "Kalonka ko'rsatgichlari"]
     }
+    back_types = {
+        'uz': ["Yoqilg'i turi", "Ma'lumot turi", "To'lov turi"],
+        'ru': ["Yoqilg'i turi", "Ma'lumot turi", "To'lov turi"],
+        'en': ["Yoqilg'i turi", "Ma'lumot turi", "To'lov turi"],
+    }
 
 
 class MessageTexts:
@@ -72,6 +77,13 @@ class MessageTexts:
 
     sell_fuel_size_today = {
         'uz': "Bugungi sotilgan yoqilg'i miqdorini kiriting (Misol uchun 96)",
+
+        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
+        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+    }
+
+    choose_back_type = {
+        'uz': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
 
         'ru': "Qaysi to'lov turida kiritmoqchisiz!",
         'en': "Qaysi to'lov turida kiritmoqchisiz!",
