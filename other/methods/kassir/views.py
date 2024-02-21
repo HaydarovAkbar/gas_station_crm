@@ -4,7 +4,7 @@ from telegram import Update, ReplyKeyboardRemove
 from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 
-from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType
+from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType, PaymentType
 from states import States as st
 
 
@@ -49,10 +49,12 @@ def get_fuel_type(update: Update, context: CallbackContext):
 
 
 def get_data_type_first(update: Update, context: CallbackContext):
-    print("demak shutta")
     user = User.objects.get(chat_id=update.effective_user.id)
-    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
+    update.message.reply_text('-_-',
                               reply_markup=kb.back_to_menu(user.language))
+    payment_types = PaymentType.objects.filter(is_active=True)
+    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
+                              reply_markup=kb.fuel_columns(payment_types, user.language))
     return st.CHOOSE_PAYMENT_TYPE
 
 
@@ -64,6 +66,40 @@ def get_payment_type(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_user.id,
                              text=msg_txt.fuel_price_today.get(user.language))
     return st.ADD_FUEL_PRICE_TODAY
+
+
+def get_fuel_price_today(update: Update, context: CallbackContext):
+    price = update.message.text
+    user = User.objects.get(chat_id=update.effective_user.id)
+    if price.isdigit() and int(price) > 0:
+        context.chat_data['price'] = int(price)
+        update.message.reply_text(
+            msg_txt.sell_fuel_size_today.get(user.language)
+        )
+        return st.SELL_FUEL_SIZE
+    else:
+        update.message.reply_text(
+            text=msg_txt.fuel_price_today.get(user.language))
+    return st.ADD_FUEL_PRICE_TODAY
+
+
+def get_sell_fuel_size(update: Update, context: CallbackContext):
+    size = update.message.text
+    user = User.objects.get(chat_id=update.effective_user.id)
+    if size.isdigit() and int(size) > 0:
+        context.chat_data['size'] = int(size)
+        update.message.reply_text(
+            msg_txt.sell_fuel_size_today.get(user.language)
+        )
+        return st.SUCCES
+    else:
+        update.message.reply_text(
+            text=msg_txt.fuel_price_today.get(user.language))
+    return st.SELL_FUEL_SIZE
+
+
+def
+
 
 def get_data_type_last(update: Update, context: CallbackContext):
     print("as")

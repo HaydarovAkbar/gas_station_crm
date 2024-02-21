@@ -65,7 +65,14 @@ class MessageTexts:
     }
 
     fuel_price_today = {
-        'uz': "Bugungi yoqilg'i narxini kiriting (Misol uchun 8500)",
+        'uz': "Bugungi sotilgan yoqilg'i narxini kiriting (Misol uchun 8500)",
+        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
+        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+    }
+
+    sell_fuel_size_today = {
+        'uz': "Bugungi sotilgan yoqilg'i miqdorini kiriting (Misol uchun 96)",
+
         'ru': "Qaysi to'lov turida kiritmoqchisiz!",
         'en': "Qaysi to'lov turida kiritmoqchisiz!",
     }
