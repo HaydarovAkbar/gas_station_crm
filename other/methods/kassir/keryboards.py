@@ -25,3 +25,11 @@ class KassirKeyboards:
         for fuel_type in fuel_types:
             keyboard.append([InlineKeyboardButton(fuel_type.title, callback_data=f'{fuel_type.id}')])
         return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def fuel_columns(columns, lang='uz'):
+        keyboard = []
+        for column in columns:
+            keyboard.append([InlineKeyboardButton(column.title, callback_data=f'{column.id}')])
+        keyboard.append([InlineKeyboardButton(txt.back[lang], callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)

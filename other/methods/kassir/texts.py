@@ -23,9 +23,20 @@ class MessageTexts:
         'ru': "Начните вводить данные за сегодня!",
         'en': "Start entering data for today!"
     }
+    lets_start = {
+        'uz': "Boshladik!",
+        'ru': "Начнем!",
+        'en': "Let's start!"
+    }
 
     add_fuel_type = {
         'uz': "<b>Assalomu alaykum {}!</b>\n\nQaysi turdagi yoqilg'i ma'lumotlarini kiritmoqchisiz!",
         'ru': "<b>Здравствуйте {}!</b>\n\nКакие данные по топливу вы хотите ввести!",
         'en': "<b>Hello {}!</b>\n\nWhat kind of fuel data do you want to enter!"
+    }
+
+    add_fuel_column = {
+        'uz': "Kalonkalardan birini tanlang!",
+        'ru': "Выберите одну из колонок!",
+        'en': "Choose one of the columns!"
     }
