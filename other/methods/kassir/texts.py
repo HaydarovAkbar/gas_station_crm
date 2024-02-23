@@ -30,6 +30,11 @@ class KeyboardsTexts:
         'ru': ["Yoqilg'i turi", "Ma'lumot turi", "To'lov turi"],
         'en': ["Yoqilg'i turi", "Ma'lumot turi", "To'lov turi"],
     }
+    back_types2 = {
+        'uz': ["Yoqilg'i turi", "Ma'lumot turi", "Kalonka turi"],
+        'ru': ["Yoqilg'i turi", "Ma'lumot turi", "Kalonka turi"],
+        'en': ["Yoqilg'i turi", "Ma'lumot turi", "Kalonka turi"],
+    }
 
 
 class MessageTexts:
@@ -38,6 +43,7 @@ class MessageTexts:
         'ru': "Начните вводить данные за сегодня!",
         'en': "Start entering data for today!"
     }
+
     lets_start = {
         'uz': "Boshladik!",
         'ru': "Начнем!",
@@ -55,6 +61,7 @@ class MessageTexts:
         'ru': "Выберите одну из колонок!",
         'en': "Choose one of the columns!"
     }
+
     back_to_menu = {
         'uz': "Asosiy sahifaga qaytish",
         'ru': ""
@@ -63,6 +70,7 @@ class MessageTexts:
     data_types = {
         'uz': "Qaysi turdagi ma'lumotni kiritmoqchisiz?",
     }
+
     choose_payment_type = {
         'uz': "Qaysi to'lov turida kiritmoqchisiz!",
         'ru': "Qaysi to'lov turida kiritmoqchisiz!",
@@ -78,13 +86,18 @@ class MessageTexts:
     sell_fuel_size_today = {
         'uz': "Bugungi sotilgan yoqilg'i miqdorini kiriting (Misol uchun 96)",
 
-        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
-        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+        'ru': "Bugungi sotilgan yoqilg'i miqdorini kiriting (Misol uchun 96)",
+        'en': "Bugungi sotilgan yoqilg'i miqdorini kiriting (Misol uchun 96)",
     }
 
     choose_back_type = {
         'uz': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+        'ru': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+        'en': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+    }
 
-        'ru': "Qaysi to'lov turida kiritmoqchisiz!",
-        'en': "Qaysi to'lov turida kiritmoqchisiz!",
+    add_the_column_numbers = {
+        'uz': "Kalonka raqamlarini kiriting",
+        'ru': "Введите номера колонок",
+        'en': "Enter the column numbers"
     }

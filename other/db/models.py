@@ -244,6 +244,7 @@ class User(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
 
     is_active = models.BooleanField(default=True, verbose_name=_("Faol"))
+    is_admin = models.BooleanField(default=False, verbose_name=_("Admin"))
 
     objects = models.Manager()
 

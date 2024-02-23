@@ -56,7 +56,7 @@ def back_to_data_type(update: Update, context: CallbackContext):
 def get_data_type_first(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
     update.message.reply_text('-_-',
-                              reply_markup=kb.back_to_menu(user.language))
+                              reply_markup=ReplyKeyboardRemove())
     payment_types = PaymentType.objects.filter(is_active=True)
     update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
                               reply_markup=kb.fuel_columns(payment_types, user.language))
@@ -65,6 +65,13 @@ def get_data_type_first(update: Update, context: CallbackContext):
 
 def get_payment_type(update: Update, context: CallbackContext):
     query = update.callback_query
+    user = User.objects.get(chat_id=update.effective_chat.id)
+    if query.data == 'back':
+        query.delete_message()
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text=msg_txt.data_types.get(user.language),
+                                 reply_markup=kb.data_types(user.language))
+        return st.DATA_TYPE
     context.chat_data['payment_type'] = query.data
     query.delete_message()
     user = User.objects.get(chat_id=update.effective_user.id)
@@ -107,17 +114,43 @@ def get_sell_fuel_size(update: Update, context: CallbackContext):
     return st.SELL_FUEL_SIZE
 
 
-# def back_type
-
-
 def get_data_type_last(update: Update, context: CallbackContext):
-    print("as")
-
-
-def get_fuel_column_numbers_first(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
-    user.fuel_column_numbers = update.message.text
-    user.save()
-    update.message.reply_html(text=msg_txt.add_fuel_columns.format(user.fullname),
-                              reply_markup=kb.back(user.language))
+    update.message.reply_text('-_-',
+                              reply_markup=ReplyKeyboardRemove())
+    columns = FuelColumn.objects.filter(is_active=True)
+    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
+                              reply_markup=kb.fuel_columns(columns, user.language))
+    return st.CHOOSE_FUEL_COLUMN
+
+
+def get_fuel_column(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user = User.objects.get(chat_id=update.effective_chat.id)
+    if query.data == 'back':
+        query.delete_message()
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text=msg_txt.data_types.get(user.language),
+                                 reply_markup=kb.data_types(user.language))
+        return st.DATA_TYPE
+    column = FuelColumn.objects.get(id=query.data)
+    context.user_data['column'] = column
+    query.delete_message()
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text=msg_txt.add_the_column_numbers.get(user.language))
     return st.ADD_FUEL_COLUMN_NUM
+
+
+def get_fuel_column_num(update: Update, context: CallbackContext):
+    user = User.objects.get(chat_id=update.effective_user.id)
+    msg = update.message.text
+    if msg.isdigit() and int(msg) > 0:
+        context.user_data['column_num'] = int(msg)
+        update.message.reply_html(
+            text=msg_txt.choose_back_type.get(user.language),
+            reply_markup=kb.back_types2(user.language)
+        )
+        return st.SUCCES
+    else:
+        update.message.reply_text(
+            text=msg_txt.add_the_column_numbers.get(user.language))

@@ -13,7 +13,7 @@ def start(update: Update, context: CallbackContext):
     user, _ = User.objects.get_or_create(chat_id=update.effective_user.id,
                                          defaults={'username': update.effective_user.username,
                                                    'fullname': update.effective_user.full_name,
-                                                   'is_active': True,
+                                                   'is_active': False,
                                                    }
                                          )
     print(user, _)

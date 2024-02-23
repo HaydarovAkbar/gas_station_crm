@@ -59,3 +59,12 @@ class KassirKeyboards:
             [text[2]]
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def back_types2(lang='uz'):
+        text = txt.back_types2[lang]
+        keyboard = [
+            [text[0], text[1]],
+            [text[2]]
+        ]
+        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)

@@ -1,178 +1,219 @@
-from telegram import Update
+from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
-from states import States as st
-from db.models import User, Admin, Message, Country, Reklama
-from methods.admin.keyboards import AdminKeyboards as adm_key
+from states import States as S
+from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, FuelColumnPointer
+from methods.admin.keyboards import AdminKeyboards as K
+from ..dictionary import AdmTexts as T
 
 
 def admin(update: Update, context: CallbackContext):
-    if Admin.objects.filter(chat_id=update.message.chat_id).exists():
-        update.message.reply_html(text="<code>Admin xush kelibsiz!</code>",
-                                  reply_markup=adm_key.base())
-        return st.admin_menu
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    update.message.reply_text(T().start[user_lang].format(tg_user.full_name), reply_markup=K().get_menu(user_lang))
+    return S.ADMIN
+
+
+def get_users(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_html(T().get_user[user_lang],
+                                  reply_markup=K().get_user_menu(user_lang))
+        return S.GET_USERS
+
+
+def settings(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_html(T().get_user[user_lang], reply_markup=K().adm_settings(user_lang))
+        return S.ADMIN_SETTINGS
+
+
+def change_language(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_html(T().change_language[user_lang], reply_markup=K().get_lang())
+        return S.CHANGE_LANG
+
+
+def get_lang(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer(text="Til o'zgartirildi: {}".format(query.data))
+    change_lang = query.data
+    user = User.objects.get(chat_id=query.from_user.id)
+    user.language = change_lang
+    user.save()
+    query.message.delete(timeout=1)
+    tg_user = query.from_user
+    context.bot.send_message(chat_id=query.from_user.id, text=T().start[change_lang].format(tg_user.full_name),
+                             reply_markup=K().get_menu(change_lang))
+    return S.ADMIN
 
 
 def back(update: Update, context: CallbackContext):
-    if Admin.objects.filter(chat_id=update.message.chat_id).exists():
-        update.message.reply_html(text="<code>Admin xush kelibsiz!</code>",
-                                  reply_markup=adm_key.base())
-        return st.admin_menu
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        update.message.reply_text(T().start[user_lang].format(tg_user.full_name), reply_markup=K().get_menu(user_lang))
+        return S.ADMIN
 
 
-def add_admin(update: Update, context: CallbackContext):
-    update.message.reply_html(text="<b>Yangi adminni telegram id-sini kiriting:</b>", reply_markup=adm_key.back())
-    return st.add_admin
+def add_user(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        user_list = User.objects.filter(state__id=2).order_by('-created_at')[0:10]
+        update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_html(T().add_user[user_lang], reply_markup=K().user_list(user_list))
+        return S.ADD_USER
 
 
-def add_admin_succesfuly(update: Update, context: CallbackContext):
-    admin_id = update.message.text
-    if admin_id.isdigit():
-        Admin.objects.create(
-            chat_id=admin_id,
-            username=admin_id
-        )
-        update.message.reply_html(text="<b>Admin muvaffaqiyatli qo'shildi!</b>", reply_markup=adm_key.base())
-        return st.admin_menu
-    else:
-        error_msg = f"<u>{update.message.text}</u> telegram id raqam emas! Iltimos qaytadan kiriting! (Ma'lumot uchun telegram id faqat raqamlardan iborat bo'ladi)"
-        update.message.reply_html(text=error_msg, reply_markup=adm_key.back())
+def get_user_id(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_id = query.data
+    user_db = User.objects.get(chat_id=query.from_user.id)
+    query.delete_message()
+    if user_id == 'back':
+        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
+                                 reply_markup=K().get_menu(user_db.language))
+        return S.ADMIN
+    context.chat_data['user_id'] = user_id
+    context.bot.send_message(chat_id=query.from_user.id,
+                             text=T().roles[user_db.language],
+                             reply_markup=K().roles())
+    return S.USER_ROLE
 
 
-def del_admin(update: Update, context: CallbackContext):
-    admins = Admin.objects.all()
-    adm_msg = f"<b>Adminlar ro'yxati:</b>\n\n"
-    for i in range(len(admins)):
-        adm_msg += f"{i + 1}. {admins[i].username}    [<code>{admins[i].chat_id}</code>]\n"
-    update.message.reply_html(text=adm_msg)
-    update.message.reply_html(text="<b>O'chiriladigan adminni telegram id-sini kiriting:</b>",
-                              reply_markup=adm_key.back())
-    return st.del_admin
-
-
-def del_admin_confirm(update: Update, context: CallbackContext):
-    admin_id = update.message.text
-    if admin_id.isdigit():
-        if Admin.objects.filter(chat_id=admin_id).exists():
-            Admin.objects.filter(chat_id=admin_id).delete()
-            update.message.reply_html(text="<b>Admin muvaffaqiyatli o'chirildi!</b>", reply_markup=adm_key.base())
+def get_user_role(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    tg_user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not tg_user.exists():
+        return 1
+    tg_user = tg_user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in tg_user.roles.values_list('id', flat=True):
+        user_lang = tg_user.language if tg_user.language else 'uz'
+        user_id = context.chat_data['user_id']
+        user = User.objects.get(chat_id=user_id)
+        organization = tg_user.organization.first()
+        if update.message.text == T().adm_roles[user_lang][0]:
+            user.roles.add(UserTypes.objects.get(title='ADMIN'))
+            user.state = State.objects.get(id=1)
+            user.organization.set([organization])
+            user.save()
+            update.message.reply_text('Admin roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
+        elif update.message.text == T().adm_roles[user_lang][1]:
+            user.roles.add(UserTypes.objects.get(title='KASSIR'))
+            user.state = State.objects.get(id=1)
+            user.organization.set([organization])
+            user.save()
+            update.message.reply_text('Kassir roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
+        elif update.message.text == T().adm_roles[user_lang][2]:
+            user.roles.add(UserTypes.objects.get(title='KASSIR'))
+            user.roles.add(UserTypes.objects.get(title='ADMIN'))
+            user.state = State.objects.get(id=1)
+            user.organization.set([organization])
+            user.save()
+            update.message.reply_text('Admin va Kassir roliga qo\'shildi', reply_markup=K().get_menu(user_lang))
         else:
-            update.message.reply_html(text="<b>Bunday admin topilmadi!</b>", reply_markup=adm_key.base())
-        return st.admin_menu
-    else:
-        error_msg = f"<u>{update.message.text}</u> telegram id raqam emas! Iltimos qaytadan kiriting! (Ma'lumot uchun telegram id faqat raqamlardan iborat bo'ladi)"
-        update.message.reply_html(text=error_msg, reply_markup=adm_key.back())
+            update.message.reply_text('Xatolik')
+        return S.ADMIN
 
 
-def message(update: Update, context: CallbackContext):
-    update.message.reply_html(text="<b>Xabarni qaysi malumotini o'zgartirmoqchisiz tanlang</b>",
-                              reply_markup=adm_key.message())
-    return st.message
+def change_user(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        user_list = User.objects.filter(state__id=1).order_by('-created_at')[0:20]
+        update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())
+        update.message.reply_html(T().add_user[user_lang], reply_markup=K().user_list(user_list))
+        return S.CHANGED_USER
 
 
-def message_text(update: Update, context: CallbackContext):
-    old_msg = Message.objects.last()
-    if old_msg:
-        update.message.reply_html(text=f"<b>Eski xabar:</b>\n\n{old_msg.text}")
-    update.message.reply_html(text="<b>Yangi xabarni kiriting:</b>", reply_markup=adm_key.back())
-    return st.message_text
+def change_user_id(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_id = query.data
+    user_db = User.objects.get(chat_id=query.from_user.id)
+    query.delete_message()
+    if user_id == 'back':
+        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
+                                 reply_markup=K().get_menu(user_db.language))
+        return S.ADMIN
+    context.chat_data['user_id'] = user_id
+    user_fullname = User.objects.get(chat_id=user_id).fullname
+    user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
+    user_lang = User.objects.get(chat_id=query.from_user.id).language
+    context.bot.send_message(chat_id=query.from_user.id,
+                             text=T().change_user[user_lang].format(user_fullname),
+                             reply_markup=K().user_change(user_roles, user_lang))
+    return S.USER_CONF
 
 
-def message_text_confirm(update: Update, context: CallbackContext):
-    text = update.message.text
-    last_msg = Message.objects.last()
-    if last_msg:
-        last_msg.text = text
-        last_msg.save()
-    else:
-        Message.objects.create(text=text)
-    update.message.reply_html(text="<b>Xabar texti muvaffaqiyatli o'zgartirildi!</b>", reply_markup=adm_key.base())
-    return st.admin_menu
-
-
-def message_photo(update: Update, context: CallbackContext):
-    old_msg = Message.objects.last()
-    if old_msg.photo:
-        update.message.reply_photo(caption=f"<b>Eski rasm:</b>", photo=old_msg.photo, parse_mode="HTML")
-    update.message.reply_html(text="<b>Yangi rasmda yuboring:</b>", reply_markup=adm_key.back())
-    return st.message_photo
-
-
-def message_photo_confirm(update: Update, context: CallbackContext):
-    photo = update.message.photo[-1].file_id
-    last_msg = Message.objects.last()
-    if last_msg:
-        last_msg.photo = photo
-        last_msg.save()
-    else:
-        Message.objects.create(photo=photo)
-    update.message.reply_html(text="<b>Xabar rasmi muvaffaqiyatli o'zgartirildi!</b>", reply_markup=adm_key.base())
-    return st.admin_menu
-
-
-def message_location(update: Update, context: CallbackContext):
-    old_msg = Message.objects.last()
-    if old_msg.longitude:
-        update.message.reply_location(latitude=old_msg.latitude, longitude=old_msg.longitude)
-    update.message.reply_html(text="<b>Yangi joylashuvni yuboring:</b>", reply_markup=adm_key.back())
-    return st.message_location
-
-
-def message_location_confirm(update: Update, context: CallbackContext):
-    location = update.message.location
-    last_msg = Message.objects.last()
-    if last_msg:
-        last_msg.latitude = location.latitude
-        last_msg.longitude = location.longitude
-        last_msg.save()
-    else:
-        Message.objects.create(latitude=location.latitude, longitude=location.longitude)
-    update.message.reply_html(text="<b>Xabar joylashuvi muvaffaqiyatli o'zgartirildi!</b>", reply_markup=adm_key.base())
-    return st.admin_menu
-
-
-def add_country(update: Update, context: CallbackContext):
-    all_country = Country.objects.all()
-    msg = f"<b>Davlatlar ro'yxati:</b>\n\n"
-    for i in range(len(all_country)):
-        msg += f"{i + 1}. {all_country[i].icon} {all_country[i].name}\n"
-    update.message.reply_html(text=msg)
-    update.message.reply_html(text="<b>Qo'shiladigan davlat nomini kiriting:</b>", reply_markup=adm_key.back())
-    return st.add_country
-
-
-def add_country_icon(update: Update, context: CallbackContext):
-    country_name = update.message.text
-    if Country.objects.filter(name=country_name).exists():
-        update.message.reply_html(text="<b>Bunday davlat ro'yxatda mavjud!</b>", reply_markup=adm_key.base())
-        return st.admin_menu
-    context.user_data['country_name'] = country_name
-    update.message.reply_html(text="<b>Davlat bayrog'ini yuboring:</b>", reply_markup=adm_key.back())
-    return st.add_country_icon
-
-
-def add_country_confirm(update: Update, context: CallbackContext):
-    country_icon = update.message.text
-    country_name = context.user_data['country_name']
-    Country.objects.create(
-        name=country_name,
-        icon=country_icon
-    )
-    update.message.reply_html(text="<b>Davlat muvaffaqiyatli qo'shildi!</b>", reply_markup=adm_key.base())
-    return st.admin_menu
-
-
-def reklama(update: Update, context: CallbackContext):
-    update.message.reply_html(text="<b>Reklama xabarini yuboring:</b>", reply_markup=adm_key.back())
-    return st.reklama
-
-
-def send_rek_all_users(update: Update, context: CallbackContext):
-    counter = 0
-    for user in User.objects.all():
-        update.message.copy(chat_id=user.chat_id)
-        counter += 1
-    all_user_count = User.objects.all().count()
-    update.message.reply_html(
-        text=f"<b>Reklama muvaffaqiyatli yuborildi! </b>    Aktivlar soni: {counter}, Barchasi: {all_user_count}",
-        reply_markup=adm_key.base())
-    return st.admin_menu
+def change_user_role(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_type = UserTypes.objects.get(title='ADMIN')
+    if user_type.id in user.roles.values_list('id', flat=True):
+        user_lang = user.language if user.language else 'uz'
+        user_id = context.chat_data['user_id']
+        user = User.objects.get(chat_id=user_id)
+        if update.message.text == T().adm_roles[user_lang][0]:
+            user.roles.clear()
+            user.roles.add(UserTypes.objects.get(title='ADMIN'))
+            user.save()
+            update.message.reply_text('Adminga o\'zgartirildi', reply_markup=K().get_menu(user_lang))
+        elif update.message.text == T().adm_roles[user_lang][1]:
+            user.roles.clear()
+            user.roles.add(UserTypes.objects.get(title='KASSIR'))
+            user.save()
+            update.message.reply_text('Kassirga o\'zgartirildi', reply_markup=K().get_menu(user_lang))
+        elif update.message.text == T().adm_roles[user_lang][2]:
+            user.roles.add(UserTypes.objects.get(title='KASSIR'))
+            user.roles.add(UserTypes.objects.get(title='ADMIN'))
+            user.save()
+            update.message.reply_text('Admin va Kassir roliga o\'zgartirildi', reply_markup=K().get_menu(user_lang))
+        elif update.message.text == T().adm_roles[user_lang][4]:
+            user.delete()
+            update.message.reply_text('O\'chirildi bu foydalanuvchi', reply_markup=K().get_menu(user_lang))
+        else:
+            update.message.reply_text('Xatolik')
+        return S.ADMIN

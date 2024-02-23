@@ -16,7 +16,7 @@ TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
-    get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type
+    get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, get_fuel_column_num, get_fuel_column
 from states import States as st
 from datetime import datetime, time
 
@@ -32,7 +32,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=17, minute=35, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=15, minute=10, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -106,7 +106,25 @@ handler = ConversationHandler(
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][0] + ')$'), get_start),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][1] + ')$'), back_to_data_type),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][2] + ')$'), get_data_type_first),
-        ]
+        ],
+        st.CHOOSE_FUEL_COLUMN: [
+            CommandHandler('start', start),
+            CallbackQueryHandler(get_fuel_column),
+        ],
+        st.ADD_FUEL_COLUMN_NUM: [
+            CommandHandler('start', start),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][0] + ')$'), get_start),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][2] + ')$'), get_data_type_first),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][0] + ')$'), get_start),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), get_data_type_first),
+
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][0] + ')$'), get_start),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][2] + ')$'), get_data_type_first),
+            MessageHandler(Filters.text, get_fuel_column_num)
+        ],
     },
     fallbacks=[
         CommandHandler('start', start),
