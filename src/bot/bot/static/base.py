@@ -1,8 +1,8 @@
 class Button:
     adm_menu = {
-        'uz': ["👤 Foydalanuvchi Boshqaruvi", "⚙️ Sozlamalar"],
-        'ru': ["👤 Управление Пользователями", "⚙️ Настройки"],
-        'en': ["👤 User Management", "⚙️ Settings"]
+        'uz': ["👤 Foydalanuvchi boshqaruvi", "Tashkilot qo'shish", "⚙️ Sozlamalar"],
+        'ru': ["👤 Управление Пользователями", "Tashkilot qo'shish", "⚙️ Настройки"],
+        'en': ["👤 User Management", "Tashkilot qo'shish", "⚙️ Settings"]
     }
     adm_user_menu = {
         'uz': ["✳️ Aktivlashtirish", "⛔️ Tahrirlash", "⬅️ Orqaga"],

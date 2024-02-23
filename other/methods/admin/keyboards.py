@@ -1,11 +1,11 @@
 from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
-from ..dictionary import AdminKeyboardMessage as adm_key, AdminButton as bt
+from ..dictionary import AdminButton as bt
 
 
 class AdminKeyboards:
     @staticmethod
     def base():
-        msg = adm_key.base
+        msg = bt.base
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [msg[0], msg[1]],
@@ -18,7 +18,7 @@ class AdminKeyboards:
 
     @staticmethod
     def back():
-        msg = adm_key.back
+        msg = bt.back
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [msg[0]],
@@ -29,7 +29,7 @@ class AdminKeyboards:
 
     @staticmethod
     def message():
-        msg = adm_key.message
+        msg = bt.message
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [msg[0]],
@@ -56,7 +56,8 @@ class KeyboardsAdmin:
         bt_txt = bt.adm_menu[lang]
         keyboard = [
             [KeyboardButton(bt_txt[0])],
-            [KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[1]), KeyboardButton(bt_txt[2])],
+            [KeyboardButton(bt_txt[3])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 

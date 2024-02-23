@@ -2,7 +2,7 @@ from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
 from states import States as S
 from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelColumnPointer
-from methods.admin.keyboards import KeyboardsAdmin as K
+from .keyboards import KeyboardsAdmin as K
 from ..dictionary import AdmTexts as T
 
 
@@ -15,6 +15,65 @@ def admin(update: Update, context: CallbackContext):
     update.message.reply_text(T().start[user_lang].format(tg_user.full_name), reply_markup=K().get_menu(user_lang))
     return S.ADMIN
 
+
+def add_organization(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    update.message.reply_html(T().add_organization[user_lang], reply_markup=K().back(user_lang))
+    return S.ADD_ORGANIZATION
+
+
+def get_organization_name(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    context.chat_data['organ_name'] = update.message.text
+    update.message.reply_html(T().add_organ_phone[user_lang], reply_markup=K().back(user_lang))
+    return S.ADD_ORGANIZATION_PHONE
+
+
+def get_organization_phone(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    context.chat_data['organ_phone'] = update.message.text
+    update.message.reply_html(T().add_organ_address[user_lang], reply_markup=K().back(user_lang))
+    return S.ADD_ORGANIZATION_ADDRESS
+
+
+def get_organization_address(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    context.chat_data['organ_address'] = update.message.text
+    update.message.reply_html(T().add_organ_leader[user_lang], reply_markup=K().back(user_lang))
+    return S.ADD_ORGANIZATION_LEADER
+
+
+def get_organization_leader(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    context.chat_data['organ_leader'] = update.message.text
+    organ, _ = Organization.objects.get_or_create(
+        title=context.chat_data['organ_name'],
+        phone=context.chat_data['organ_phone'],
+        address=context.chat_data['organ_address'],
+        leader=context.chat_data['organ_leader']
+    )
+    update.message.reply_html(T().organization_added[user_lang], reply_markup=K().back(user_lang))
+    return S.ADD_ORGANIZATION_LEADER
 
 def get_users(update: Update, context: CallbackContext):
     tg_user = update.message.from_user

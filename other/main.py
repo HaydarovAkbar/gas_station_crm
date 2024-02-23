@@ -15,13 +15,18 @@ import logging, pytz
 TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
-from methods.admin.views import admin
+from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
+    get_organization_address, get_organization_leader
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
-    get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, get_fuel_column_num, get_fuel_column
+    get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
+    get_fuel_column_num, get_fuel_column
 from states import States as st
 from datetime import datetime, time
 
 from methods.kassir.texts import KeyboardsTexts as kas_txt
+from methods.dictionary import AdminButton as bt
+
+bt = bt()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -126,6 +131,61 @@ handler = ConversationHandler(
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][2] + ')$'), get_data_type_first),
             MessageHandler(Filters.text, get_fuel_column_num)
         ],
+
+        st.ADMIN: [
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][0] + ')$'), add_user),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][1] + ')$'), add_organization),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][3] + ')$'), admin),
+
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][0] + ')$'), add_user),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][1] + ')$'), add_organization),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][3] + ')$'), admin),
+
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][0] + ')$'), add_user),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][1] + ')$'), add_organization),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][3] + ')$'), admin),
+        ],
+        st.ADD_ORGANIZATION: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            MessageHandler(Filters.text, get_organization_name),
+        ],
+        st.ADD_ORGANIZATION_PHONE: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            MessageHandler(Filters.text, get_organization_phone),
+        ],
+        st.ADD_ORGANIZATION_ADDRESS: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            MessageHandler(Filters.text, get_organization_address),
+        ],
+        st.ADD_ORGANIZATION_LEADER: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            MessageHandler(Filters.text, get_organization_leader),
+        ],
+
     },
     fallbacks=[
         CommandHandler('start', start),

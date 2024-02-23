@@ -24,6 +24,7 @@ class KeyboardsAdmin:
         keyboard = [
             [KeyboardButton(bt_txt[0])],
             [KeyboardButton(bt_txt[1])],
+            [KeyboardButton(bt_txt[2])],
         ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
