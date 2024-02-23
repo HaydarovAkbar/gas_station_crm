@@ -75,6 +75,18 @@ def get_organization_leader(update: Update, context: CallbackContext):
     update.message.reply_html(T().organization_added[user_lang], reply_markup=K().back(user_lang))
     return S.ADD_ORGANIZATION_LEADER
 
+
+def delete_organization(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
+    if not user.is_admin:
+        return 1
+    user_lang = user.language if user.language else 'uz'
+    organization = Organization.objects.all()
+    update.message.reply_html(T().delete_organization[user_lang], reply_markup=K().organization_list(organization))
+    return S.DELETE_ORGANIZATION
+
+
 def get_users(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
     user = User.objects.filter(chat_id=tg_user.id, state__id=1)
