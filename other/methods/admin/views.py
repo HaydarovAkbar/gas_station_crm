@@ -1,14 +1,14 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
 from states import States as S
-from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelPrice, FuelColumnPointer
-from methods.admin.keyboards import AdminKeyboards as K
+from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelColumnPointer
+from methods.admin.keyboards import KeyboardsAdmin as K
 from ..dictionary import AdmTexts as T
 
 
 def admin(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
-    user = User.objects.filter(chat_id=tg_user.id, is_active=True)
+    user = User.objects.get(chat_id=tg_user.id, is_active=True)
     if not user.is_admin:
         return 1
     user_lang = user.language if user.language else 'uz'

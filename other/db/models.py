@@ -260,6 +260,11 @@ class User(models.Model):
         except:
             return str(self.chat_id) + ' - ' + str(self.created_at.strftime('%d-%m-%Y %H:%M'))
 
+    def check_admin(self):
+        if self.is_admin:
+            return True
+        return False
+
     def save(self, *args, **kwargs):
         self.updated_at = now()
         super(User, self).save(*args, **kwargs)

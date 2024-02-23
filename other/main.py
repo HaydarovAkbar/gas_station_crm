@@ -15,6 +15,7 @@ import logging, pytz
 TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
+from methods.admin.views import admin
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
     get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, get_fuel_column_num, get_fuel_column
 from states import States as st
@@ -37,7 +38,7 @@ job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
 handler = ConversationHandler(
     entry_points=[
         CommandHandler('start', start),
-        # CommandHandler('admin', admin)
+        CommandHandler('admin', admin),
         MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
         MessageHandler(Filters.regex('^(' + kas_txt.start['ru'] + ')$'), get_start),
         MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
@@ -45,7 +46,7 @@ handler = ConversationHandler(
     states={
         st.NOTSTART: [
             CommandHandler('start', start),
-            # CommandHandler('admin', admin),
+            CommandHandler('admin', admin),
             MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
             MessageHandler(Filters.regex('^(' + kas_txt.start['ru'] + ')$'), get_start),
             MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),

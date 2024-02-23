@@ -18,7 +18,7 @@ def start(update: Update, context: CallbackContext):
                                          )
     print(user, _)
     if user and user.is_active:
-        update.message.reply_html(text="<b>Assalomu alaykum:</b>", )
+        update.message.reply_html(text="<b>Assalomu alaykum</b>", )
         return 1
 
 
