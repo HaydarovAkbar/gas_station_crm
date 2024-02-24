@@ -16,7 +16,7 @@ TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
-    get_organization_address, get_organization_leader
+    get_organization_address, get_organization_leader, delete_organization, get_organization_id
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
     get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
     get_fuel_column_num, get_fuel_column
@@ -136,17 +136,17 @@ handler = ConversationHandler(
             CommandHandler('admin', admin),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][0] + ')$'), add_user),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][1] + ')$'), add_organization),
-            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][2] + ')$'), delete_organization),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['uz'][3] + ')$'), admin),
 
             MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][0] + ')$'), add_user),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][1] + ')$'), add_organization),
-            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][2] + ')$'), delete_organization),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['ru'][3] + ')$'), admin),
 
             MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][0] + ')$'), add_user),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][1] + ')$'), add_organization),
-            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][2] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][2] + ')$'), delete_organization),
             MessageHandler(Filters.regex('^(' + bt.adm_menu['en'][3] + ')$'), admin),
         ],
         st.ADD_ORGANIZATION: [
@@ -185,7 +185,11 @@ handler = ConversationHandler(
 
             MessageHandler(Filters.text, get_organization_leader),
         ],
-
+        st.DELETE_ORGANIZATION: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            CallbackQueryHandler(get_organization_id),
+        ],
     },
     fallbacks=[
         CommandHandler('start', start),

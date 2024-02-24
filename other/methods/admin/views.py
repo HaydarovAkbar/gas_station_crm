@@ -89,14 +89,19 @@ def delete_organization(update: Update, context: CallbackContext):
 
 def get_organization_id(update: Update, context: CallbackContext):
     query = update.callback_query
+    user = User.objects.get(chat_id=update.effective_user.id)
+    user_lang = user.language if user.language else 'uz'
     organization_id = query.data
+    if organization_id == 'back':
+        query.delete_message()
+        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_lang].format(user.fullname),
+                                 reply_markup=K().get_menu(user_lang))
+        return S.ADMIN
     organization = Organization.objects.get(id=organization_id)
     query.delete_message()
     organization.is_active = False
     organization.save()
-    user = User.objects.get(chat_id=update.effective_user.id)
-    user_lang = user.language if user.language else 'uz'
-    query.message.reply_text(T().delete_organization_success[user_lang], reply_markup=K().get_menu())
+    query.message.reply_html(T().delete_organization_success[user_lang], reply_markup=K().get_menu())
     return S.ADMIN
 
 

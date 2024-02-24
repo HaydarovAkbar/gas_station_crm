@@ -25,7 +25,7 @@ class Organization(models.Model):
     description = models.TextField(null=True, blank=True, verbose_name=_("Tavsif"))
     leader = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Rahbar"))
 
-    status = models.BooleanField(default=True, verbose_name=_("Faol"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Faol"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Yangilangan sana"))
