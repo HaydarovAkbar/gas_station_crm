@@ -82,9 +82,22 @@ def delete_organization(update: Update, context: CallbackContext):
     if not user.is_admin:
         return 1
     user_lang = user.language if user.language else 'uz'
-    organization = Organization.objects.all()
+    organization = Organization.objects.filter(is_active=True)
     update.message.reply_html(T().delete_organization[user_lang], reply_markup=K().organization_list(organization))
     return S.DELETE_ORGANIZATION
+
+
+def get_organization_id(update: Update, context: CallbackContext):
+    query = update.callback_query
+    organization_id = query.data
+    organization = Organization.objects.get(id=organization_id)
+    query.delete_message()
+    organization.is_active = False
+    organization.save()
+    user = User.objects.get(chat_id=update.effective_user.id)
+    user_lang = user.language if user.language else 'uz'
+    query.message.reply_text(T().delete_organization_success[user_lang], reply_markup=K().get_menu())
+    return S.ADMIN
 
 
 def get_users(update: Update, context: CallbackContext):

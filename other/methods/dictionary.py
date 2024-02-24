@@ -113,6 +113,16 @@ class AdmTexts:
         'ru': "<b>Организация успешно добавлена!</b>",
         'en': "<b>Organization added successfully!</b>"
     }
+    delete_organization = {
+        'uz': "O'chiriladigan tashkilotni tanlang",
+        'ru': "Выберите удаляемую организацию",
+        'en': "Choose the organization to be deleted"
+    }
+    delete_organization_success = {
+        'uz': "<b>Tashkilot muvaffaqiyatli o'chirildi!</b>",
+        'ru': "<b>Организация успешно удалена!</b>",
+        'en': "<b>Organization successfully deleted!</b>"
+    }
 
 
 class Button:

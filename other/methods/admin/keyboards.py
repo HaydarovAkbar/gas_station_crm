@@ -142,3 +142,11 @@ class KeyboardsAdmin:
                 [KeyboardButton(bt_txt[3])],
             ]
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+    @staticmethod
+    def organization_list(org_list, lang='uz'):
+        keyboard, txt = [], bt.inline_back[lang]
+        for org in org_list:
+            keyboard.append([InlineKeyboardButton(org.title, callback_data=f'{org.id}')])
+        keyboard.append([InlineKeyboardButton(txt, callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)
