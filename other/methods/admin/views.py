@@ -175,17 +175,14 @@ def back(update: Update, context: CallbackContext):
 
 def add_user(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
-    user = User.objects.filter(chat_id=tg_user.id, state__id=1)
+    user = User.objects.filter(chat_id=tg_user.id, is_active=True)
     if not user.exists():
         return 1
-    user = user.first()
-    user_type = UserTypes.objects.get(title='ADMIN')
-    if user_type.id in user.roles.values_list('id', flat=True):
-        user_lang = user.language if user.language else 'uz'
-        user_list = User.objects.filter(state__id=2).order_by('-created_at')[0:10]
-        update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())
-        update.message.reply_html(T().add_user[user_lang], reply_markup=K().user_list(user_list))
-        return S.ADD_USER
+    user_lang = user.language if user.language else 'uz'
+    user_list = User.objects.filter(is_active=False).order_by('-created_at')[0:10]
+    update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())
+    update.message.reply_html(T().add_user[user_lang], reply_markup=K().user_list(user_list))
+    return S.ADD_USER
 
 
 def get_user_id(update: Update, context: CallbackContext):

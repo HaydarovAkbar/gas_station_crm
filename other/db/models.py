@@ -127,11 +127,12 @@ class FuelColumn(models.Model):
 
 
 class FuelStorage(models.Model):
-    size = models.IntegerField(verbose_name=_("Hajmi [litr]"))
-    input_price = models.FloatField(verbose_name=_("Kirim narxi"))
-    output_price = models.FloatField(verbose_name=_("Chiqim narxi"))
+    remainder = models.IntegerField(verbose_name=_("Kirim Hajmi [litr]"))
+    residual = models.IntegerField(verbose_name=_("Qoldiq [litr]"))
+    price = models.FloatField(verbose_name=_("Kirim narxi"))
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+    is_over = models.BooleanField(default=False, verbose_name=_("Tugaganmi"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
@@ -139,7 +140,7 @@ class FuelStorage(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return str(self.size)
+        return str(self.remainder)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -153,10 +154,8 @@ class FuelStorage(models.Model):
 
 
 class Fuel(models.Model):
-    day = models.DateField(verbose_name=_("Kun"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
 
-    purchase = models.FloatField(verbose_name=_("Xarid"), null=True, blank=True)
     sale = models.FloatField(verbose_name=_("Sotish"), null=True, blank=True)
     balance = models.FloatField(verbose_name=_("Qoldiq"), null=True, blank=True)
 
@@ -166,7 +165,7 @@ class Fuel(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return str(self.day)
+        return str(self.created_at)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -189,7 +188,6 @@ class FuelColumnPointer(models.Model):
     size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
 
     objects = models.Manager()
 
@@ -207,46 +205,24 @@ class FuelColumnPointer(models.Model):
         db_table = 'fuel_column_pointer'
 
 
-class UserTypes(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
-
-    is_active = models.BooleanField(default=True, verbose_name=_("Faol"))
-
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-
-    objects = models.Manager()
-
-    def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        self.title = self.title.upper() if self.title else self.title
-        self.updated_at = now()
-        super(UserTypes, self).save(*args, **kwargs)
-        return self
-
-    class Meta:
-        verbose_name_plural = _('Foydalanuvchi turlari')
-        verbose_name = _('Foydalanuvchi turi')
-        db_table = 'user_types'
-
-
 class User(models.Model):
     username = models.CharField(max_length=255, verbose_name=_("Foydalanuvchi nomi"), null=True, blank=True)
     chat_id = models.BigIntegerField(verbose_name=_("Chat ID"))
     fullname = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("To'liq ismi"))
     language = models.CharField(max_length=2, default='uz', verbose_name=_("Til"), choices=LANGUAGES)
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    phone = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Telefon"))
-    position = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Lavozimi"))
+    phone = models.CharField(max_length=255, null=True, blank=True)
+    position = models.CharField(max_length=255, null=True, blank=True)
 
-    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
-    is_active = models.BooleanField(default=True, verbose_name=_("Faol"))
-    is_admin = models.BooleanField(default=False, verbose_name=_("Admin"))
+    is_active = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_lider = models.BooleanField(default=False)
+    is_cashier = models.BooleanField(default=False)
 
     objects = models.Manager()
 
