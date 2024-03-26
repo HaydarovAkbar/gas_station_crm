@@ -11,7 +11,7 @@ class KeyboardsTexts:
         'en': "⬅️ Back"
     }
     start = {
-        'uz': "🚀 Boshlash",
+        'uz': "🚀 Kiritish",
         'ru': "🚀 Начать",
         'en': "🚀 Start"
     }
@@ -39,7 +39,7 @@ class KeyboardsTexts:
 
 class MessageTexts:
     start_notification = {
-        'uz': "Bugungi ma'lumotlarni kiritishni boshlang!",
+        'uz': "Bugungi hisobotlarni kiriting!",
         'ru': "Начните вводить данные за сегодня!",
         'en': "Start entering data for today!"
     }
@@ -77,6 +77,12 @@ class MessageTexts:
         'en': "Qaysi to'lov turida kiritmoqchisiz!",
     }
 
+    choose_fuel_column = {
+        'uz': "Kiritmoqchi bo'lgan kalonka ko'rsatgizni tanlang!",
+        'ru': "Kiritmoqchi bo'lgan kalonka ko'rsatgizni tanlang!",
+        'en': "Kiritmoqchi bo'lgan kalonka ko'rsatgizni tanlang!",
+    }
+
     fuel_price_today = {
         'uz': "Bugungi sotilgan yoqilg'i narxini kiriting (Misol uchun 8500)",
         'ru': "Qaysi to'lov turida kiritmoqchisiz!",
@@ -91,9 +97,9 @@ class MessageTexts:
     }
 
     choose_back_type = {
-        'uz': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
-        'ru': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
-        'en': "Orqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+        'uz': "Muvaffaqiyatli qo'shildi!!!\n\nOrqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+        'ru': "Muvaffaqiyatli qo'shildi!!!\n\nOrqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
+        'en': "Muvaffaqiyatli qo'shildi!!!\n\nOrqaga qaytish uchun o'zingiz xoxlagan menyuga qaytishingiz mumkin \n\n👇 pastdagi menyulardan birini tanlang",
     }
 
     add_the_column_numbers = {

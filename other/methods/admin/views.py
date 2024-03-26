@@ -8,9 +8,10 @@ from ..dictionary import AdmTexts as T
 
 def admin(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
-    user = User.objects.get(chat_id=tg_user.id, is_active=True)
-    if not user.is_admin:
+    user = User.objects.filter(chat_id=tg_user.id, is_active=True)
+    if not user.exists() or not user.first().is_admin:
         return 1
+    user = user.first()
     user_lang = user.language if user.language else 'uz'
     update.message.reply_text(T().start[user_lang].format(tg_user.full_name), reply_markup=K().get_menu(user_lang))
     return S.ADMIN
@@ -178,6 +179,7 @@ def add_user(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=tg_user.id, is_active=True)
     if not user.exists():
         return 1
+    user = user.first()
     user_lang = user.language if user.language else 'uz'
     user_list = User.objects.filter(is_active=False).order_by('-created_at')[0:10]
     update.message.reply_text('...', reply_markup=ReplyKeyboardRemove())

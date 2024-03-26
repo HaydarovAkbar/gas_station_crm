@@ -9,7 +9,7 @@ from states import States as st
 
 
 def send_night_notification(context: CallbackContext):
-    users = User.objects.filter(is_active=True)  # , position__icontains='KASSIR'
+    users = User.objects.filter(is_active=True, is_cashier=True)
     for user in users:
         context.bot.send_message(
             chat_id=user.chat_id,
@@ -119,7 +119,7 @@ def get_data_type_last(update: Update, context: CallbackContext):
     update.message.reply_text('-_-',
                               reply_markup=ReplyKeyboardRemove())
     columns = FuelColumn.objects.filter(is_active=True)
-    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
+    update.message.reply_text(msg_txt.choose_fuel_column.get(user.language),
                               reply_markup=kb.fuel_columns(columns, user.language))
     return st.CHOOSE_FUEL_COLUMN
 

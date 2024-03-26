@@ -38,7 +38,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=15, minute=31, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=13, minute=45, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -49,7 +49,7 @@ handler = ConversationHandler(
         MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
     ],
     states={
-        st.NOTSTART: [
+        st.NOTSTART:[
             CommandHandler('start', start),
             CommandHandler('admin', admin),
             MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),

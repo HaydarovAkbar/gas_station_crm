@@ -100,14 +100,11 @@ class FuelType(models.Model):
 
 class FuelColumn(models.Model):
     title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
-    attr = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Qisqa nomi"))
 
     is_active = models.BooleanField(default=True, verbose_name=_("Faol"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
-
-    organ = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
 
     objects = models.Manager()
 
@@ -177,7 +174,8 @@ class Fuel(models.Model):
         verbose_name = _('Yoqilg\'i')
         db_table = 'fuel'
         indexes = [
-            models.Index(fields=['day', 'fuel_type']),
+            models.Index(fields=['fuel_type']),
+            models.Index(fields=['created_at']),
         ]
 
 
@@ -186,6 +184,7 @@ class FuelColumnPointer(models.Model):
     day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
     size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"), null=True, blank=True)
     size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
+    organ = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
 
@@ -281,3 +280,27 @@ class SaleFuel(models.Model):
         indexes = [
             models.Index(fields=['day', 'fuel_type', 'payment_type']),
         ]
+
+
+class OrganizationCriteria(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
+    description = models.TextField(null=True, blank=True, verbose_name=_("Tavsif"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana")
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.updated_at = now()
+        super(OrganizationCriteria, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Tashkilot kriteriyalari')
+        verbose_name = _('Tashkilot kriteriyasi')
+        db_table = 'organization_criteria'
