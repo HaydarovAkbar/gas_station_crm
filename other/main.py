@@ -16,7 +16,8 @@ TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import start
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
-    get_organization_address, get_organization_leader, delete_organization, get_organization_id
+    get_organization_address, get_organization_leader, delete_organization, get_organization_id, \
+    organization_fuel_types, organization_fuel_columns
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
     get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
     get_fuel_column_num, get_fuel_column
@@ -49,7 +50,7 @@ handler = ConversationHandler(
         MessageHandler(Filters.regex('^(' + kas_txt.start['en'] + ')$'), get_start),
     ],
     states={
-        st.NOTSTART:[
+        st.NOTSTART: [
             CommandHandler('start', start),
             CommandHandler('admin', admin),
             MessageHandler(Filters.regex('^(' + kas_txt.start['uz'] + ')$'), get_start),
@@ -184,6 +185,24 @@ handler = ConversationHandler(
             MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
 
             MessageHandler(Filters.text, get_organization_leader),
+        ],
+        st.ORGANIZATION_FUEL_TYPE: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            CallbackQueryHandler(organization_fuel_types),
+        ],
+        st.ORGANIZATION_FUEL_COLUMN: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            CallbackQueryHandler(organization_fuel_columns),
         ],
         st.DELETE_ORGANIZATION: [
             CommandHandler('start', start),

@@ -52,7 +52,7 @@ class KeyboardsAdmin:
         return InlineKeyboardMarkup(keyboard)
 
     @staticmethod
-    def get_menu(lang='uz'):
+    def get_admin_menu(lang='uz'):
         bt_txt = bt.adm_menu[lang]
         keyboard = [
             [KeyboardButton(bt_txt[0])],
@@ -149,4 +149,15 @@ class KeyboardsAdmin:
         for org in org_list:
             keyboard.append([InlineKeyboardButton(org.title, callback_data=f'{org.id}')])
         keyboard.append([InlineKeyboardButton(txt, callback_data='back')])
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
+    def organ_fuel_column(fuel_types, selected):
+        keyboard = []
+        for fuel in fuel_types:
+            if str(fuel.id) in selected:
+                keyboard.append([InlineKeyboardButton(f'{fuel.title} - ✅', callback_data=f'{fuel.id}')])
+            else:
+                keyboard.append([InlineKeyboardButton(fuel.title, callback_data=f'{fuel.id}')])
+        keyboard.append([InlineKeyboardButton('✅ Tasdiqlash ✅', callback_data='confirm')])
         return InlineKeyboardMarkup(keyboard)

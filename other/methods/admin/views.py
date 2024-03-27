@@ -1,19 +1,21 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
 from states import States as S
-from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelColumnPointer
+from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelColumnPointer, \
+    OrganizationFuelTypes, OrganizationFuelColumns
 from .keyboards import KeyboardsAdmin as K
 from ..dictionary import AdmTexts as T
 
 
 def admin(update: Update, context: CallbackContext):
     tg_user = update.message.from_user
-    user = User.objects.filter(chat_id=tg_user.id, is_active=True)
-    if not user.exists() or not user.first().is_admin:
+    user = User.objects.filter(chat_id=tg_user.id, is_active=True, is_admin=True)
+    if not user.exists():
         return 1
     user = user.first()
     user_lang = user.language if user.language else 'uz'
-    update.message.reply_text(T().start[user_lang].format(tg_user.full_name), reply_markup=K().get_menu(user_lang))
+    update.message.reply_text(T().start[user_lang].format(tg_user.full_name),
+                              reply_markup=K().get_admin_menu(user_lang))
     return S.ADMIN
 
 
@@ -73,8 +75,67 @@ def get_organization_leader(update: Update, context: CallbackContext):
         address=context.chat_data['organ_address'],
         leader=context.chat_data['organ_leader']
     )
-    update.message.reply_html(T().organization_added[user_lang], reply_markup=K().back(user_lang))
-    return S.ADD_ORGANIZATION_LEADER
+    fuel_types = FuelType.objects.filter(is_active=True)
+    context.chat_data['organization'] = organ
+    context.chat_data['selected'] = []
+    update.message.reply_html(T().organization_added[user_lang],
+                              reply_markup=K().organ_fuel_column(fuel_types, []))
+    return S.ORGANIZATION_FUEL_TYPE
+
+
+def organization_fuel_types(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_db = User.objects.get(chat_id=query.from_user.id)
+    if query.data == 'confirm':
+        query.delete_message()
+        selected = context.chat_data.get('selected', [])
+        organization = context.chat_data.get('organization')
+        for fuel in selected:
+            fuel_type = FuelType.objects.get(id=fuel)
+            OrganizationFuelTypes.objects.create(organization=organization, fuel_type=fuel_type)
+        fuel_columns = FuelColumn.objects.filter(is_active=True)
+        context.chat_data['selected'] = []
+        query.message.reply_html(T().add_organ_fuel_column[user_db.language],
+                                 reply_markup=K().organ_fuel_column(fuel_columns, []))
+        return S.ORGANIZATION_FUEL_COLUMN
+    selected = context.chat_data.get('selected', [])
+    if query.data in selected:
+        selected.remove(query.data)
+    else:
+        selected.append(query.data)
+    fuel_types = FuelType.objects.filter(is_active=True)
+    context.chat_data['selected'] = selected
+    query.edit_message_text(text=T().add_organ_fuel_column[user_db.language], parse_mode='HTML',
+                            reply_markup=K().organ_fuel_column(fuel_types, selected))
+
+    return S.ORGANIZATION_FUEL_TYPE
+
+
+def organization_fuel_columns(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_db = User.objects.get(chat_id=query.from_user.id)
+    if query.data == 'confirm':
+        query.delete_message()
+        selected = context.chat_data.get('selected', [])
+        organization = context.chat_data.get('organization')
+        for fuel in selected:
+            fuel_column = FuelColumn.objects.get(id=fuel)
+            OrganizationFuelColumns.objects.create(organization=organization, fuel_column=fuel_column)
+        context.chat_data['selected'] = []
+        query.message.reply_html(T().added_organization[user_db.language],
+                                 reply_markup=K().get_admin_menu(user_db.language))
+        return S.ADMIN
+    selected = context.chat_data.get('selected', [])
+    if query.data in selected:
+        selected.remove(query.data)
+    else:
+        selected.append(query.data)
+    fuel_columns = FuelColumn.objects.filter(is_active=True)
+    context.chat_data['selected'] = selected
+    query.edit_message_text(text=T().add_organ_fuel_column[user_db.language], parse_mode='HTML',
+                            reply_markup=K().organ_fuel_column(fuel_columns, selected))
+
+    return S.ORGANIZATION_FUEL_COLUMN
 
 
 def delete_organization(update: Update, context: CallbackContext):

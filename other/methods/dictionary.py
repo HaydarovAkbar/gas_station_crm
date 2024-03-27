@@ -109,7 +109,7 @@ class AdmTexts:
     }
 
     organization_added = {
-        'uz': "<b>Tashkilot muvaffaqiyatli qo'shildi!</b>",
+        'uz': "<b>Tashkilot muvaffaqiyatli qo'shildi!</b>\n\n<code>Tashkilot foydalanadigan yoqilg'i turlarini tanlang 👇</code>",
         'ru': "<b>Организация успешно добавлена!</b>",
         'en': "<b>Organization added successfully!</b>"
     }
@@ -122,6 +122,21 @@ class AdmTexts:
         'uz': "<b>Tashkilot muvaffaqiyatli o'chirildi!</b>",
         'ru': "<b>Организация успешно удалена!</b>",
         'en': "<b>Organization successfully deleted!</b>"
+    }
+    add_organ_fuel_column = {
+        'uz': "<b>Tashkilot yoqilg'i turlari muvafaqiyatli kiritildi</b>\n\nTashkilot uchun yoqilg'i ustunlarini tanlang",
+        'ru': "Выберите колонки топлива для организации",
+        'en': "Choose fuel columns for the organization"
+    }
+    again_enter_fuel_type = {
+        'uz': "<b>Qaytadan yoqilg'i turlarini tanlang</b>",
+        'ru': "<b>Выберите топливо снова</b>",
+        'en': "<b>Choose fuel again</b>"
+    }
+    added_organization = {
+        'uz': "<code>Tashkilot barcha ma'lumotlari muvaffaqiyatli kiritildi. ✅✅✅</code>",
+        'ru': "<b>Все данные организации успешно введены.</b>",
+        'en': "<b>All organization data entered successfully.</b>"
     }
 
 

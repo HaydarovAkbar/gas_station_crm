@@ -50,4 +50,6 @@ class States(Enum):
     ADD_ORGANIZATION_PHONE = auto()
     ADD_ORGANIZATION_ADDRESS = auto()
     ADD_ORGANIZATION_LEADER = auto()
+    ORGANIZATION_FUEL_TYPE = auto()
+    ORGANIZATION_FUEL_COLUMN = auto()
     DELETE_ORGANIZATION = auto()

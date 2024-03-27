@@ -282,25 +282,45 @@ class SaleFuel(models.Model):
         ]
 
 
-class OrganizationCriteria(models.Model):
+class OrganizationFuelColumns(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
-    title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
-    description = models.TextField(null=True, blank=True, verbose_name=_("Tavsif"))
+    fuel_column = models.ForeignKey(FuelColumn, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i ustuni"))
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
 
     objects = models.Manager()
 
     def __str__(self):
-        return self.title
+        return str(self.organization)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
-        super(OrganizationCriteria, self).save(*args, **kwargs)
+        super(OrganizationFuelColumns, self).save(*args, **kwargs)
         return self
 
     class Meta:
-        verbose_name_plural = _('Tashkilot kriteriyalari')
-        verbose_name = _('Tashkilot kriteriyasi')
-        db_table = 'organization_criteria'
+        verbose_name_plural = _('Tashkilotlar yoqilg\'i ustunlari')
+        verbose_name = _('Tashkilotlar yoqilg\'i ustuni')
+        db_table = 'organization_fuel_columns'
+
+
+class OrganizationFuelTypes(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return str(self.organization)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = now()
+        super(OrganizationFuelTypes, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Tashkilotlar yoqilg\'i turlari')
+        verbose_name = _('Tashkilotlar yoqilg\'i turi')
+        db_table = 'organization_fuel_types'
