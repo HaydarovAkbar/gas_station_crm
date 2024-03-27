@@ -287,7 +287,7 @@ class OrganizationCriteria(models.Model):
     title = models.CharField(max_length=255, verbose_name=_("To'liq nomi"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Tavsif"))
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
 
     objects = models.Manager()
