@@ -254,11 +254,11 @@ class User(models.Model):
 
 
 class SaleFuel(models.Model):
-    day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
-    size = models.FloatField(verbose_name=_("Hajmi [litr]"), null=True, blank=True)
-    payment_type = models.ForeignKey(PaymentType, on_delete=models.SET_NULL, null=True, verbose_name=_("To'lov turi"))
     price = models.FloatField(verbose_name=_("Narxi"), null=True, blank=True)
+
+    cash_size = models.FloatField(verbose_name=_("Naxt hajmi [litr]"), null=True, blank=True)
+    card_size = models.FloatField(verbose_name=_("Plastig hajmi [litr]"), null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
@@ -266,7 +266,7 @@ class SaleFuel(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return str(self.day)
+        return str(self.created_at)
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
@@ -278,7 +278,7 @@ class SaleFuel(models.Model):
         verbose_name = _('Sotilgan yoqilg\'i')
         db_table = 'sale_fuel'
         indexes = [
-            models.Index(fields=['day', 'fuel_type', 'payment_type']),
+            models.Index(fields=['fuel_type']),
         ]
 
 

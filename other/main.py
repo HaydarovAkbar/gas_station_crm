@@ -20,8 +20,8 @@ from methods.admin.views import admin, add_organization, get_organization_name, 
     organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, \
     change_user_role, delete_user, get_user_id_delete
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
-    get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
-    get_fuel_column_num, get_fuel_column
+    get_data_type_last, get_fuel_price_today, get_sell_fuel_size, get_naxt_data, \
+    get_fuel_column_num, get_plastig_data, get_today_fuel_column
 from states import States as st
 from datetime import datetime, time
 
@@ -40,7 +40,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=14, minute=18, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=23, minute=24, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -72,9 +72,9 @@ handler = ConversationHandler(
             MessageHandler(Filters.regex('^(' + kas_txt.data_types['en'][0] + ')$'), get_data_type_first),
             MessageHandler(Filters.regex('^(' + kas_txt.data_types['en'][1] + ')$'), get_data_type_last),
         ],
-        st.CHOOSE_PAYMENT_TYPE: [
+        st.ADD_TODAY_FUEL_COLUMN: [
             CommandHandler('start', start),
-            CallbackQueryHandler(get_payment_type),
+            CallbackQueryHandler(get_today_fuel_column),
         ],
         st.ADD_FUEL_PRICE_TODAY: [
             CommandHandler('start', start),
@@ -100,37 +100,30 @@ handler = ConversationHandler(
 
             MessageHandler(Filters.text, get_sell_fuel_size)
         ],
+        st.NAXT_DATA: [
+            CommandHandler('start', start),
+            MessageHandler(Filters.text, get_naxt_data)
+        ],
+        st.PLASTIG_DATA: [
+            CommandHandler('start', start),
+            MessageHandler(Filters.text, get_plastig_data)
+        ],
         st.SUCCES: [
 
             CommandHandler('start', start),
 
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][0] + ')$'), get_start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][1] + ')$'), get_naxt_data),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][2] + ')$'), get_data_type_first),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), get_naxt_data),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][0] + ')$'), get_start),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), get_data_type_first),
 
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][0] + ')$'), get_start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][1] + ')$'), back_to_data_type),
+            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][1] + ')$'), get_naxt_data),
             MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][2] + ')$'), get_data_type_first),
-        ],
-        st.CHOOSE_FUEL_COLUMN: [
-            CommandHandler('start', start),
-            CallbackQueryHandler(get_fuel_column),
         ],
         st.ADD_FUEL_COLUMN_NUM: [
-            CommandHandler('start', start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][0] + ')$'), get_start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][1] + ')$'), back_to_data_type),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['uz'][2] + ')$'), get_data_type_first),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), back_to_data_type),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][0] + ')$'), get_start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['ru'][1] + ')$'), get_data_type_first),
-
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][0] + ')$'), get_start),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][1] + ')$'), back_to_data_type),
-            MessageHandler(Filters.regex('^(' + kas_txt.back_types['en'][2] + ')$'), get_data_type_first),
             MessageHandler(Filters.text, get_fuel_column_num)
         ],
 

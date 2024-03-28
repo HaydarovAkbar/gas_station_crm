@@ -72,10 +72,6 @@ class MessageTexts:
         'ru': ""
     }
 
-    data_types = {
-        'uz': "Qaysi turdagi ma'lumotni kiritmoqchisiz?",
-    }
-
     choose_payment_type = {
         'uz': "Qaysi to'lov turida kiritmoqchisiz!",
         'ru': "Qaysi to'lov turida kiritmoqchisiz!",

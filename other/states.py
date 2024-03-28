@@ -44,7 +44,10 @@ class States(Enum):
     ADD_FUEL_PRICE_TODAY = auto()
     SELL_FUEL_SIZE = auto()
     SUCCES = auto()
+    NAXT_DATA = auto()
     CHOOSE_FUEL_COLUMN = auto()
+    PLASTIG_DATA = auto()
+    ADD_TODAY_FUEL_COLUMN = auto()
 
     ADD_ORGANIZATION = auto()
     ADD_ORGANIZATION_PHONE = auto()
