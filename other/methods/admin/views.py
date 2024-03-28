@@ -342,3 +342,30 @@ def change_user_role(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=query.from_user.id, text=T().user_added[user_lang], parse_mode='HTML',
                              reply_markup=K().get_admin_menu(user_lang))
     return S.ADMIN
+
+
+def delete_user(update: Update, context: CallbackContext):
+    tg_user = update.message.from_user
+    user = User.objects.filter(chat_id=tg_user.id, is_active=True, is_admin=True)
+    if not user.exists():
+        return 1
+    user = user.first()
+    user_lang = user.language if user.language else 'uz'
+    update.message.reply_html(T().delete_user[user_lang], reply_markup=K().back(user_lang))
+    return S.DELETE_USER
+
+
+def get_user_id_delete(update: Update, context: CallbackContext):
+    user_id = update.message.text
+    user_db = User.objects.get(chat_id=update.effective_user.id)
+    if not user_id.isdigit() or not User.objects.filter(chat_id=user_id).exists():
+        update.message.reply_html(T().wrong_id[user_db.language], reply_markup=K().back(user_db.language))
+        return S.DELETE_USER
+    context.chat_data['user_id'] = user_id
+    user_fullname = User.objects.get(chat_id=user_id).fullname
+    user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
+    user_lang = user_db.language
+    context.bot.send_message(chat_id=user_db.chat_id,
+                             text=T().change_user[user_lang].format(user_fullname),
+                             reply_markup=K().user_change(user_roles, user_lang))
+    return S.USER_CONF

@@ -54,3 +54,4 @@ class States(Enum):
     ORGANIZATION_FUEL_COLUMN = auto()
     DELETE_ORGANIZATION = auto()
     CHOOSE_ORGANIZATION = auto()
+    DELETE_USER = auto()

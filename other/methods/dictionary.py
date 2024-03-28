@@ -1,8 +1,11 @@
 class AdminButton:
     adm_menu = {
-        'uz': ["👤 Foydalanuvchi boshqaruvi", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Sozlamalar"],
-        'ru': ["👤 Управление Пользователями", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Настройки"],
-        'en': ["👤 User Management", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Settings"]
+        'uz': ["👤 Foydalanuvchi qo'shish", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Sozlamalar",
+               "Foydalanuvchi o'chirish"],
+        'ru': ["👤 Foydalanuvchi qo'shish", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Настройки",
+               "Foydalanuvchi o'chirish"],
+        'en': ["👤 Foydalanuvchi qo'shish", "Tashkilot qo'shish", "Tashkilot o'chirish", "⚙️ Settings",
+               "Foydalanuvchi o'chirish"]
     }
     adm_user_menu = {
         'uz': ["✳️ Aktivlashtirish", "⛔️ Tahrirlash", "⬅️ Orqaga"],
@@ -148,6 +151,16 @@ class AdmTexts:
         'uz': "<b>Foydalanuvchi muvaffaqiyatli o'chirildi!</b>",
         'ru': "<b>Пользователь успешно удален!</b>",
         'en': "<b>User successfully deleted!</b>"
+    }
+    delete_user = {
+        'uz': "<b>O'chiriladigan foydalanuvchini [CHAT_ID] telegram id raqamini kiriting</b>",
+        'ru': "<b>Введите telegram id номер удаляемого пользователя</b>",
+        'en': "<b>Enter the telegram id number of the user to be deleted</b>"
+    }
+    wrong_id = {
+        'uz': "<b>Telegram id raqam noto'g'ri kiritildi yoki bunday foydalanuvchi topilmadi! \n\nQaytadan urinib ko'ring</b>",
+        'ru': "<b>Неверно введен номер telegram id или такой пользователь не найден! Попробуйте еще раз</b>",
+        'en': "<b>Telegram id number entered incorrectly or such user not found! Try again</b>"
     }
 
 

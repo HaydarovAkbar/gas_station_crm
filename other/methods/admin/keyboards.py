@@ -55,7 +55,7 @@ class KeyboardsAdmin:
     def get_admin_menu(lang='uz'):
         bt_txt = bt.adm_menu[lang]
         keyboard = [
-            [KeyboardButton(bt_txt[0])],
+            [KeyboardButton(bt_txt[0]), KeyboardButton(bt_txt[4])],
             [KeyboardButton(bt_txt[1]), KeyboardButton(bt_txt[2])],
             [KeyboardButton(bt_txt[3])],
         ]
