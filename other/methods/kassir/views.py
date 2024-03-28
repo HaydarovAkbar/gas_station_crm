@@ -6,6 +6,7 @@ from .keryboards import KassirKeyboards as kb
 
 from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes
 from states import States as st
+from django.utils import timezone
 
 
 def send_night_notification(context: CallbackContext):
@@ -32,15 +33,21 @@ def get_start(update: Update, context: CallbackContext):
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg = ""
         for org_fuel_type in organization_fuel_types:
-            msg += f"{org_fuel_type.fuel_type.title}\n"
+            fuel_data = Fuel.objects.filter(fuel_type=org_fuel_type.fuel_type, created_at__date=timezone.now().date())
+            if fuel_data:
+                msg += f"{org_fuel_type.fuel_type.title} - ✅\n"
+            else:
+                msg += f"{org_fuel_type.fuel_type.title} ❗️\n"
         user_fuel_type_txt = f"""
-<b>{user.fullname}</b> - {user.organization.title} tashkiloti uchun:
+<b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
-<i> Bugungi hisobotlarni kiriting</i>
+<i>Bugungi hisobotlarni kiriting</i>
 
 {msg}
+
+Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
 """
-        update.message.reply_html(text=msg_txt.add_fuel_type[user.language].format(user.fullname),
+        update.message.reply_html(text=user_fuel_type_txt,
                                   reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
         return st.ADD_TODAY_DATA
 
