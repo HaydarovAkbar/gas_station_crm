@@ -30,6 +30,16 @@ def get_start(update: Update, context: CallbackContext):
     if user and user.is_active:
         update.message.reply_html(msg_txt.lets_start[user.language], reply_markup=ReplyKeyboardRemove())
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
+        msg = ""
+        for org_fuel_type in organization_fuel_types:
+            msg += f"{org_fuel_type.fuel_type.title}\n"
+        user_fuel_type_txt = f"""
+<b>{user.fullname}</b> - {user.organization.title} tashkiloti uchun:
+
+<i> Bugungi hisobotlarni kiriting</i>
+
+{msg}
+"""
         update.message.reply_html(text=msg_txt.add_fuel_type[user.language].format(user.fullname),
                                   reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
         return st.ADD_TODAY_DATA
