@@ -290,23 +290,23 @@ def change_user(update: Update, context: CallbackContext):
     return S.CHANGED_USER
 
 
-def change_user_id(update: Update, context: CallbackContext):
-    query = update.callback_query
-    user_id = query.data
-    user_db = User.objects.get(chat_id=query.from_user.id)
-    query.delete_message()
-    if user_id == 'back':
-        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
-                                 reply_markup=K().get_admin_menu(user_db.language))
-        return S.ADMIN
-    context.chat_data['user_id'] = user_id
-    user_fullname = User.objects.get(chat_id=user_id).fullname
-    user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
-    user_lang = User.objects.get(chat_id=query.from_user.id).language
-    context.bot.send_message(chat_id=query.from_user.id,
-                             text=T().change_user[user_lang].format(user_fullname),
-                             reply_markup=K().user_change(user_roles, user_lang))
-    return S.USER_CONF
+# def change_user_id(update: Update, context: CallbackContext):
+#     query = update.callback_query
+#     user_id = query.data
+#     user_db = User.objects.get(chat_id=query.from_user.id)
+#     query.delete_message()
+#     if user_id == 'back':
+#         context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
+#                                  reply_markup=K().get_admin_menu(user_db.language))
+#         return S.ADMIN
+#     context.chat_data['user_id'] = user_id
+#     user_fullname = User.objects.get(chat_id=user_id).fullname
+#     user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
+#     user_lang = User.objects.get(chat_id=query.from_user.id).language
+#     context.bot.send_message(chat_id=query.from_user.id,
+#                              text=T().change_user[user_lang].format(user_fullname),
+#                              reply_markup=K().user_change(user_roles, user_lang))
+#     return S.USER_CONF
 
 
 def change_user_role(update: Update, context: CallbackContext):
@@ -362,10 +362,16 @@ def get_user_id_delete(update: Update, context: CallbackContext):
         update.message.reply_html(T().wrong_id[user_db.language], reply_markup=K().back(user_db.language))
         return S.DELETE_USER
     context.chat_data['user_id'] = user_id
-    user_fullname = User.objects.get(chat_id=user_id).fullname
-    user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
+    user_new = User.objects.get(chat_id=user_id)
     user_lang = user_db.language
+    user_role = ''
+    if user_new.is_leader and user_new.is_cashier:
+        user_role = 'leader_cashier'
+    elif user_new.is_leader:
+        user_role = 'leader'
+    elif user_new.is_cashier:
+        user_role = 'cashier'
     context.bot.send_message(chat_id=user_db.chat_id,
-                             text=T().change_user[user_lang].format(user_fullname),
-                             reply_markup=K().user_change(user_roles, user_lang))
-    return S.USER_CONF
+                             text=T().change_user[user_lang].format(user_new.fullname), parse_mode='HTML',
+                             reply_markup=K().roles(user_role, user_lang))
+    return S.USER_ROLE

@@ -67,7 +67,7 @@ class AdmTexts:
     }
 
     user_added = {
-        'uz': '<code>Foydalanuvchi ro\'yxatga qo\'shildi!</code>\n\n<b>Qo\'shilgan foydalanuvchi guruhga kiradi</b>',
+        'uz': '<code>Foydalanuvchiga role ham biriktirildi!</code>',
         'ru': '<code>Пользователь добавлен в список!</code> \n\n<b>Добавленный пользователь войдет в группу</b>',
         'en': '<code>User added to the list!</code> \n\n<b>The added user will enter the group</b>'
     }
@@ -91,7 +91,7 @@ class AdmTexts:
     }
 
     change_user = {
-        'uz': "{} - foydalanuvchisini qaysi parametrlarini o'zgartirmoqchisiz tanlang",
+        'uz': "<code>{}</code> - foydalanuvchisini qaysi parametrlarini o'zgartirmoqchisiz tanlang",
         'ru': "Выберите, какие параметры пользователя {} хотите изменить",
         'en': "Choose which parameters of user {} you want to change"
     }

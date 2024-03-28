@@ -97,12 +97,12 @@ class KeyboardsAdmin:
         return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 
     @staticmethod
-    def roles(lang='uz'):
+    def roles(user_role='', lang='uz'):
         bt_txt = bt.adm_roles[lang]
         keyboard = InlineKeyboardMarkup([
-            [InlineKeyboardButton(bt_txt[0], callback_data='leader')],
-            [InlineKeyboardButton(bt_txt[1], callback_data='cashier')],
-            [InlineKeyboardButton(bt_txt[2], callback_data='leader_cashier')],
+            [InlineKeyboardButton(bt_txt[0] + (' - ✅' if user_role == 'leader' else ''), callback_data='leader')],
+            [InlineKeyboardButton(bt_txt[1] + (' - ✅' if user_role == 'cashier' else ''), callback_data='cashier')],
+            [InlineKeyboardButton(bt_txt[2] + (' - ✅' if user_role == 'leader_cashier' else ''), callback_data='leader_cashier')],
             [InlineKeyboardButton(bt_txt[4], callback_data='delete'), InlineKeyboardButton(bt_txt[3], callback_data='back')],
         ])
         return keyboard

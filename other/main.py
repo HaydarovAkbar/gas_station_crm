@@ -17,7 +17,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from methods.core.views import start
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
     get_organization_address, get_organization_leader, delete_organization, get_organization_id, \
-    organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, change_user_id, \
+    organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, \
     change_user_role, delete_user, get_user_id_delete
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
     get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
@@ -40,7 +40,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=13, minute=45, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=13, minute=17, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -231,11 +231,11 @@ handler = ConversationHandler(
                        MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
                        CallbackQueryHandler(change_user_role),
                        ],
-        st.CHANGED_USER: [CommandHandler('start', start),
-                          CommandHandler('admin', admin),
-                          # CommandHandler('leader', leader),
-                          CallbackQueryHandler(change_user_id),
-                          ],
+        # st.CHANGED_USER: [CommandHandler('start', start),
+        #                   CommandHandler('admin', admin),
+        #                   # CommandHandler('leader', leader),
+        #                   CallbackQueryHandler(change_user_id),
+        #                   ],
         st.USER_CONF: [CommandHandler('start', start),
                        CommandHandler('admin', admin),
                        # CommandHandler('leader', leader),

@@ -220,7 +220,7 @@ class User(models.Model):
 
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    is_lider = models.BooleanField(default=False)
+    is_leader = models.BooleanField(default=False)
     is_cashier = models.BooleanField(default=False)
 
     objects = models.Manager()
