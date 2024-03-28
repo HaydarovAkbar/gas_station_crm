@@ -27,6 +27,14 @@ class KassirKeyboards:
         return InlineKeyboardMarkup(keyboard)
 
     @staticmethod
+    def organ_fuel_types(organ_fuel_types, lang='uz'):
+        keyboard = []
+        for org_fuel_types in organ_fuel_types:
+            keyboard.append(
+                [InlineKeyboardButton(org_fuel_types.fuel_type.title, callback_data=f'{org_fuel_types.fuel_type.id}')])
+        return InlineKeyboardMarkup(keyboard)
+
+    @staticmethod
     def fuel_columns(columns, lang='uz'):
         keyboard = []
         for column in columns:

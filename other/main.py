@@ -40,7 +40,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=13, minute=17, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=13, minute=26, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[

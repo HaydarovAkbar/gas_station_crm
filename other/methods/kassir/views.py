@@ -4,18 +4,21 @@ from telegram import Update, ReplyKeyboardRemove
 from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 
-from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType, PaymentType
+from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes
 from states import States as st
 
 
 def send_night_notification(context: CallbackContext):
     users = User.objects.filter(is_active=True, is_cashier=True)
     for user in users:
-        context.bot.send_message(
-            chat_id=user.chat_id,
-            text=msg_txt.start_notification[user.language],
-            reply_markup=kb.start(user.language)
-        )
+        try:
+            context.bot.send_message(
+                chat_id=user.chat_id,
+                text=msg_txt.start_notification[user.language],
+                reply_markup=kb.start(user.language)
+            )
+        except Exception:
+            pass
     return st.NOTSTART
 
 
@@ -26,9 +29,9 @@ def get_start(update: Update, context: CallbackContext):
                                                    })
     if user and user.is_active:
         update.message.reply_html(msg_txt.lets_start[user.language], reply_markup=ReplyKeyboardRemove())
-        fuel_type = FuelType.objects.filter(is_active=True)
+        organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         update.message.reply_html(text=msg_txt.add_fuel_type[user.language].format(user.fullname),
-                                  reply_markup=kb.fuel_types(fuel_type, user.language))
+                                  reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
         return st.ADD_TODAY_DATA
 
 
