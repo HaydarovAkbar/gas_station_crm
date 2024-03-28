@@ -17,7 +17,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from methods.core.views import start
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
     get_organization_address, get_organization_leader, delete_organization, get_organization_id, \
-    organization_fuel_types, organization_fuel_columns, get_user_id, get_user_role, change_user_id, change_user_role
+    organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, change_user_id, \
+    change_user_role
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_data_type_first, \
     get_data_type_last, get_payment_type, get_fuel_price_today, get_sell_fuel_size, back_to_data_type, \
     get_fuel_column_num, get_fuel_column
@@ -214,6 +215,10 @@ handler = ConversationHandler(
                       # CommandHandler('leader', leader),
                       CallbackQueryHandler(get_user_id),
                       ],
+        st.CHOOSE_ORGANIZATION: [CommandHandler('start', start),
+                                 CommandHandler('admin', admin),
+                                 CallbackQueryHandler(get_user_organization),
+                                 ],
 
         st.USER_ROLE: [CommandHandler('start', start),
                        CommandHandler('admin', admin),
@@ -221,7 +226,7 @@ handler = ConversationHandler(
                        MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
                        MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
                        MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
-                       MessageHandler(Filters.text, get_user_role),
+                       CallbackQueryHandler(change_user_role),
                        ],
         st.CHANGED_USER: [CommandHandler('start', start),
                           CommandHandler('admin', admin),

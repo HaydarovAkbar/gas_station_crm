@@ -99,12 +99,13 @@ class KeyboardsAdmin:
     @staticmethod
     def roles(lang='uz'):
         bt_txt = bt.adm_roles[lang]
-        keyboard = [
-            [KeyboardButton(bt_txt[0]), KeyboardButton(bt_txt[1])],
-            [KeyboardButton(bt_txt[2])],
-            [KeyboardButton(bt_txt[3])],
-        ]
-        return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+        keyboard = InlineKeyboardMarkup([
+            [InlineKeyboardButton(bt_txt[0], callback_data='leader')],
+            [InlineKeyboardButton(bt_txt[1], callback_data='cashier')],
+            [InlineKeyboardButton(bt_txt[2], callback_data='leader_cashier')],
+            [InlineKeyboardButton(bt_txt[4], callback_data='delete'), InlineKeyboardButton(bt_txt[3], callback_data='back')],
+        ])
+        return keyboard
 
     @staticmethod
     def user_list(users, lang='uz'):

@@ -15,9 +15,9 @@ class AdminButton:
         'en': ["Change language 🌐", "⬅️ Orqaga"]
     }
     adm_roles = {
-        'uz': ["Admin 👮‍♀️", "Kassir 👨🏻‍💻", "Admin va Kassir", "⬅️ Orqaga", "O'chirish 🪓"],
-        'ru': ["Админ 👮‍♀️", "Кассир 👨🏻‍💻", "Админ️ и Кассир", "⬅️ Назад", "Удалить 🪓"],
-        'en': ["Admin 👮‍♀️", "Cashier 👨🏻‍💻", "Admin and Cashier", "⬅️ Back", "Delete 🪓"]
+        'uz': ["Rahbar 👮‍♀️", "Kassir 👨🏻‍💻", "Rahbar va Kassir", "⬅️ Orqaga", "O'chirish 🪓"],
+        'ru': ["Rahbar 👮‍♀️", "Кассир 👨🏻‍💻", "Rahbar и Кассир", "⬅️ Назад", "Удалить 🪓"],
+        'en': ["Rahbar 👮‍♀️", "Cashier 👨🏻‍💻", "Rahbar and Cashier", "⬅️ Back", "Delete 🪓"]
     }
 
     inline_back = {
@@ -81,6 +81,12 @@ class AdmTexts:
         'en': 'Choose which role to add the user'
     }
 
+    choose_organization = {
+        'uz': "<b>Foydalanuvchini qaysi tashkilotga qo'shmoqchisiz tanlang</b>",
+        'ru': "<b>Выберите, в какую организацию добавить пользователя</b>",
+        'en': "<b>Choose which organization to add the user</b>"
+    }
+
     change_user = {
         'uz': "{} - foydalanuvchisini qaysi parametrlarini o'zgartirmoqchisiz tanlang",
         'ru': "Выберите, какие параметры пользователя {} хотите изменить",
@@ -137,6 +143,11 @@ class AdmTexts:
         'uz': "<code>Tashkilot barcha ma'lumotlari muvaffaqiyatli kiritildi. ✅✅✅</code>",
         'ru': "<b>Все данные организации успешно введены.</b>",
         'en': "<b>All organization data entered successfully.</b>"
+    }
+    user_deleted = {
+        'uz': "<b>Foydalanuvchi muvaffaqiyatli o'chirildi!</b>",
+        'ru': "<b>Пользователь успешно удален!</b>",
+        'en': "<b>User successfully deleted!</b>"
     }
 
 

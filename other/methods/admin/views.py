@@ -250,44 +250,31 @@ def get_user_id(update: Update, context: CallbackContext):
                                  reply_markup=K().get_admin_menu(user_db.language))
         return S.ADMIN
     context.chat_data['user_id'] = user_id
+    organizations = Organization.objects.filter(is_active=True)
     context.bot.send_message(chat_id=query.from_user.id,
-                             text=T().roles[user_db.language],
-                             reply_markup=K().roles())
+                             text=T().choose_organization[user_db.language],
+                             parse_mode='HTML',
+                             reply_markup=K().organization_list(organizations))
+    return S.CHOOSE_ORGANIZATION
+
+
+def get_user_organization(update: Update, context: CallbackContext):
+    query = update.callback_query
+    user_db = User.objects.get(chat_id=update.effective_user.id)
+    user_lang = user_db.language if user_db.language else 'uz'
+    organization_id = query.data
+    if organization_id == 'back':
+        query.delete_message()
+        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_lang].format(user_db.fullname),
+                                 reply_markup=K().get_admin_menu(user_lang))
+        return S.ADMIN
+    organization = Organization.objects.get(id=organization_id)
+    user = User.objects.get(chat_id=context.chat_data['user_id'])
+    user.organization = organization
+    user.save()
+    query.delete_message()
+    query.message.reply_html(T().roles[user_lang], reply_markup=K().roles(user_lang))
     return S.USER_ROLE
-
-
-def get_user_role(update: Update, context: CallbackContext):
-    user = update.message.from_user
-    tg_user = User.objects.filter(chat_id=user.id, is_active=True, is_admin=True)
-    if not tg_user.exists():
-        return 1
-    tg_user = tg_user.first()
-    user_lang = tg_user.language if tg_user.language else 'uz'
-    user_id = context.chat_data['user_id']
-    user = User.objects.get(chat_id=user_id)
-    organization = tg_user.organization.first()
-    if update.message.text == T().adm_roles[user_lang][0]:
-        user.is_active = True
-        user.is_admin = True
-        user.organization = organization
-        user.save()
-        update.message.reply_text('Admin roliga qo\'shildi', reply_markup=K().get_admin_menu(user_lang))
-    elif update.message.text == T().adm_roles[user_lang][1]:
-        user.is_active = True
-        user.is_cashier = True
-        user.organization = organization
-        user.save()
-        update.message.reply_text('Kassir roliga qo\'shildi', reply_markup=K().get_admin_menu(user_lang))
-    elif update.message.text == T().adm_roles[user_lang][2]:
-        user.is_active = True
-        user.is_admin = True
-        user.is_cashier = True
-        user.organization = organization
-        user.save()
-        update.message.reply_text('Admin va Kassir roliga qo\'shildi', reply_markup=K().get_admin_menu(user_lang))
-    else:
-        update.message.reply_text('Xatolik')
-    return S.ADMIN
 
 
 def change_user(update: Update, context: CallbackContext):
@@ -323,34 +310,35 @@ def change_user_id(update: Update, context: CallbackContext):
 
 
 def change_user_role(update: Update, context: CallbackContext):
-    tg_user = update.message.from_user
-    user = User.objects.filter(chat_id=tg_user.id, is_active=True, is_admin=True)
-    if not user.exists():
-        return 1
-    user = user.first()
-    user_lang = user.language if user.language else 'uz'
+    query = update.callback_query
+    user_db = User.objects.get(chat_id=query.from_user.id)
+    user_lang = user_db.language if user_db.language else 'uz'
     user_id = context.chat_data['user_id']
     user = User.objects.get(chat_id=user_id)
-    if update.message.text == T().adm_roles[user_lang][0]:
-        user.is_active = True
-        user.is_admin = True
-        user.save()
-        update.message.reply_text('Adminga o\'zgartirildi', reply_markup=K().get_admin_menu(user_lang))
-    elif update.message.text == T().adm_roles[user_lang][1]:
-        user.is_active = True
-        user.is_cashier = True
-        user.save()
-        update.message.reply_text('Kassirga o\'zgartirildi', reply_markup=K().get_admin_menu(user_lang))
-    elif update.message.text == T().adm_roles[user_lang][2]:
-        user.is_active = True
-        user.is_admin = True
-        user.is_cashier = True
-        user.save()
-        update.message.reply_text('Admin va Kassir roliga o\'zgartirildi',
-                                  reply_markup=K().get_admin_menu(user_lang))
-    elif update.message.text == T().adm_roles[user_lang][4]:
+    if query.data == 'back':
+        query.delete_message()
+        context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_lang].format(user_db.fullname),
+                                 reply_markup=K().get_admin_menu(user_lang))
+        return S.ADMIN
+    if query.data == 'delete':
         user.delete()
-        update.message.reply_text('O\'chirildi bu foydalanuvchi', reply_markup=K().get_admin_menu(user_lang))
-    else:
-        update.message.reply_text('Xatolik')
+        query.delete_message()
+        context.bot.send_message(chat_id=query.from_user.id, text=T().user_deleted[user_lang], parse_mode='HTML',
+                                 reply_markup=K().get_admin_menu(user_lang))
+        return S.ADMIN
+    role = query.data
+    if role == 'leader':
+        user.is_leader = True
+        user.is_active = True
+    elif role == 'cashier':
+        user.is_cashier = True
+        user.is_active = True
+    elif role == 'leader_cashier':
+        user.is_leader = True
+        user.is_cashier = True
+        user.is_active = True
+    user.save()
+    query.delete_message()
+    context.bot.send_message(chat_id=query.from_user.id, text=T().user_added[user_lang], parse_mode='HTML',
+                             reply_markup=K().get_admin_menu(user_lang))
     return S.ADMIN
