@@ -35,6 +35,11 @@ class KeyboardsTexts:
         'ru': ["Yoqilg'i turi", "Ma'lumot turi", "Kalonka turi"],
         'en': ["Yoqilg'i turi", "Ma'lumot turi", "Kalonka turi"],
     }
+    adm_settings = {
+        'uz': ["Tilni o'zgartirish 🌐", "⬅️ Orqaga"],
+        'ru': ["Изменить язык 🌐", "⬅️ Orqaga"],
+        'en': ["Change language 🌐", "⬅️ Orqaga"]
+    }
 
 
 class MessageTexts:
