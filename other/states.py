@@ -58,3 +58,8 @@ class States(Enum):
     DELETE_ORGANIZATION = auto()
     CHOOSE_ORGANIZATION = auto()
     DELETE_USER = auto()
+
+    MAIN_MENU_ADMIN = auto()
+    GET_REPORT = auto()
+    GET_REPORT_WEEK = auto()
+    GET_REPORT_MONTH = auto()

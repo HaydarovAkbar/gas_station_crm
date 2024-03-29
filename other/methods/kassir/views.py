@@ -4,11 +4,21 @@ from telegram import Update, ReplyKeyboardRemove
 from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 
-from db.models import User, FuelColumnPointer, Fuel, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
+from db.models import User, FuelColumnPointer, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
     OrganizationFuelColumns, FuelColumnPointer
 from states import States as st
 from django.utils import timezone
 
+
+def start(update: Update, context: CallbackContext):
+    user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_cashier=True)
+    if user.exists():
+        user = user.first()
+        update.message.reply_html(
+            f"Salom, {user.fullname}!\n"
+            f"Hisobot kiritish uchun. Bot sizga bildirishnoma yuborishini kuting!"
+        )
+        return 1
 
 def send_night_notification(context: CallbackContext):
     users = User.objects.filter(is_active=True, is_cashier=True)
