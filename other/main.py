@@ -23,7 +23,7 @@ from methods.kassir.views import send_night_notification, get_start, get_fuel_ty
     get_data_type_last, get_fuel_price_today, get_sell_fuel_size, get_naxt_data, \
     get_fuel_column_num, get_plastig_data, get_today_fuel_column
 from states import States as st
-from datetime import datetime, time
+from datetime import time
 
 from methods.kassir.texts import KeyboardsTexts as kas_txt
 from methods.dictionary import AdminButton as bt
@@ -40,7 +40,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=23, minute=24, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=20, minute=48, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -224,11 +224,6 @@ handler = ConversationHandler(
                        MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
                        CallbackQueryHandler(change_user_role),
                        ],
-        # st.CHANGED_USER: [CommandHandler('start', start),
-        #                   CommandHandler('admin', admin),
-        #                   # CommandHandler('leader', leader),
-        #                   CallbackQueryHandler(change_user_id),
-        #                   ],
         st.USER_CONF: [CommandHandler('start', start),
                        CommandHandler('admin', admin),
                        # CommandHandler('leader', leader),

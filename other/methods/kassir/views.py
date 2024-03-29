@@ -49,7 +49,6 @@ def get_start(update: Update, context: CallbackContext):
 <i>Bugungi hisobotlarni kiriting</i>
 
 {msg}
-
 Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
 """
         update.message.reply_html(text=user_fuel_type_txt,
@@ -91,21 +90,26 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
             text="<code>Ma'lumotlar saqlab qo'yildi</code>"
         )
         return st.FINISHED
-    msg = ""
+    msg, i = "", 0
     for fuel_col in fuel_columns:
         fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column,
                                                      created_at__date=timezone.now().date())
         if fuel_data:
+            i += 1
             msg += f"{fuel_col.fuel_column.title} - ✅\n"
         else:
             msg += f"{fuel_col.fuel_column.title} ❗️\n"
+    if i == fuel_columns.count():
+        update.message.reply_html(
+            text="<code>Yakunlandi!</code>"
+        )
+        return st.FINISHED
     user_fuel_column_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
 <i>Bugungi hisobotlarni kiriting</i>
 
 {msg}
-
 Yuqoridagi yoqilg'i ustunlari uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
                 """
     update.message.reply_html(text=user_fuel_column_txt,
@@ -115,7 +119,6 @@ Yuqoridagi yoqilg'i ustunlari uchun ma'lumotlar kiritish uchun pastdagi tugmalar
 
 def get_today_fuel_column(update: Update, context: CallbackContext):
     query = update.callback_query
-    # user = User.objects.get(chat_id=update.effective_chat.id)
     fuel_column = FuelColumn.objects.get(id=query.data)
     context.user_data['fuel_column'] = fuel_column
     query.delete_message()
@@ -131,29 +134,34 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
     if msg.isdigit() and int(msg) > 0:
         context.user_data['column_num'] = int(msg)
         fuel_column = context.user_data['fuel_column']
+        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).last()
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
             size_last=int(msg),
-            size_first=FuelColumnPointer.objects.filter(organ=user.organization,
-                                                        fuel_column=fuel_column).last().size_last
+            size_first=last_pointer.size_last if last_pointer else 0
         )
         fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization)
-        msg = ""
+        msg, i = "", 0
         for fuel_col in fuel_columns:
             fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column,
                                                          created_at__date=timezone.now().date())
             if fuel_data:
+                i += 1
                 msg += f"{fuel_col.fuel_column.title} - ✅\n"
             else:
                 msg += f"{fuel_col.fuel_column.title} ❗️\n"
+        if i == fuel_columns.count():
+            update.message.reply_html(
+                text="<code>Yakunlandi!</code>"
+            )
+            return st.FINISHED
         user_fuel_column_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
 <i>Bugungi hisobotlarni kiriting</i>
 
 {msg}
-
 Yuqoridagi yoqilg'i ustunlari uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
 
         """
@@ -197,7 +205,6 @@ def get_plastig_data(update: Update, context: CallbackContext):
 <i>Bugungi hisobotlarni kiriting</i>
 
 {msg}
-
 Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
         """
         update.message.reply_html(text=user_fuel_type_txt,
