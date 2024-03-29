@@ -134,12 +134,12 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
     if msg.isdigit() and int(msg) > 0:
         context.user_data['column_num'] = int(msg)
         fuel_column = context.user_data['fuel_column']
-        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).last()
+        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by('-created_at').last()
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
-            size_last=int(msg),
-            size_first=last_pointer.size_last if last_pointer else 0
+            size_last=float(msg),
+            size_first=last_pointer.size_last if last_pointer else float(msg),
         )
         fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization)
         msg, i = "", 0
@@ -215,57 +215,3 @@ Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan bir
             text="<code>Bugungi plastig holatdagi savdo hajmini kiriting</code>",
             parse_mode='HTML'
         )
-
-
-def get_data_type_first(update: Update, context: CallbackContext):
-    user = User.objects.get(chat_id=update.effective_user.id)
-    update.message.reply_text('-_-',
-                              reply_markup=ReplyKeyboardRemove())
-    payment_types = PaymentType.objects.filter(is_active=True)
-    update.message.reply_text(msg_txt.choose_payment_type.get(user.language),
-                              reply_markup=kb.fuel_columns(payment_types, user.language))
-    return st.CHOOSE_PAYMENT_TYPE
-
-
-def get_fuel_price_today(update: Update, context: CallbackContext):
-    price = update.message.text
-    user = User.objects.get(chat_id=update.effective_user.id)
-    if price.isdigit() and int(price) > 0:
-        context.chat_data['price'] = int(price)
-        update.message.reply_text(
-            msg_txt.sell_fuel_size_today.get(user.language)
-        )
-        return st.SELL_FUEL_SIZE
-    else:
-        update.message.reply_text(
-            text=msg_txt.fuel_price_today.get(user.language))
-    return st.ADD_FUEL_PRICE_TODAY
-
-
-def get_sell_fuel_size(update: Update, context: CallbackContext):
-    size = update.message.text
-    user = User.objects.get(chat_id=update.effective_user.id)
-    if size.isdigit() and int(size) > 0:
-        context.chat_data['size'] = int(size)
-        update.message.reply_html(
-            text="<code>Yuborgan ma'lumotlaringiz saqlab qo'yildi</code>"
-        )
-        update.message.reply_text(
-            msg_txt.choose_back_type.get(user.language),
-            reply_markup=kb.back_types(user.language)
-        )
-        return st.SUCCES
-    else:
-        update.message.reply_text(
-            text=msg_txt.fuel_price_today.get(user.language))
-    return st.SELL_FUEL_SIZE
-
-
-def get_data_type_last(update: Update, context: CallbackContext):
-    user = User.objects.get(chat_id=update.effective_user.id)
-    update.message.reply_text('-_-',
-                              reply_markup=ReplyKeyboardRemove())
-    columns = FuelColumn.objects.filter(is_active=True)
-    update.message.reply_text(msg_txt.choose_fuel_column.get(user.language),
-                              reply_markup=kb.fuel_columns(columns, user.language))
-    return st.CHOOSE_FUEL_COLUMN

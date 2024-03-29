@@ -16,9 +16,11 @@ def start(update: Update, context: CallbackContext):
                                                    'is_active': False,
                                                    }
                                          )
-    print(user, _)
+    if _:
+        update.message.reply_html(text="<b>Assalomu alaykum</b>\n\n<code>Botdan foydalanishingiz uchun Admin sizni faollashtirishi kerak bo'ladi!</code>", )
+        return 1
     if user and user.is_active:
-        update.message.reply_html(text="<b>Assalomu alaykum</b>", )
+        update.message.reply_html(text="<b>Assalomu alaykum</b>\n\n<code>Bot o'zi sizga bildirishnoma yuborishini kutib turing</code>", )
         return 1
 
 
