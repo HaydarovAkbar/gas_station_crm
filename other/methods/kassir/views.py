@@ -5,7 +5,7 @@ from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 
 from db.models import User, FuelColumnPointer, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
-    OrganizationFuelColumns, FuelColumnPointer
+    OrganizationFuelColumns, FuelColumnPointer, FuelPrice, FuelStorage
 from states import States as st
 from django.utils import timezone
 
@@ -19,6 +19,7 @@ def start(update: Update, context: CallbackContext):
             f"Hisobot kiritish uchun. Bot sizga bildirishnoma yuborishini kuting!"
         )
         return 1
+
 
 def send_night_notification(context: CallbackContext):
     users = User.objects.filter(is_active=True, is_cashier=True)
@@ -144,7 +145,8 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
     if msg.isdigit() and int(msg) > 0:
         context.user_data['column_num'] = int(msg)
         fuel_column = context.user_data['fuel_column']
-        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by('-created_at').last()
+        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by(
+            '-created_at').last()
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
@@ -192,10 +194,28 @@ def get_plastig_data(update: Update, context: CallbackContext):
         context.user_data['plastig_data_size'] = int(data_size)
         naxt_data_size = context.user_data['naxt_data_size']
         fuel_type = context.user_data['fuel_type']
+        price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type,
+                                                                                      organization=user.organization).last().price
+        fuel_stroges = FuelStorage.objects.filter(fuel_type=fuel_type, is_over=False).order_by('created_at')
+        benifit, a = 0, naxt_data_size + data_size
+        for fuel_stroge in fuel_stroges:
+            if fuel_stroge.residual >= a:
+                benifit = price - fuel_stroge.price * (a)
+                fuel_stroge.residual -= a
+                fuel_stroge.save()
+                break
+            else:
+                a = a - fuel_stroge.residual
+                benifit += fuel_stroge.price * fuel_stroge.residual
+                fuel_stroge.residual = 0
+                fuel_stroge.is_over = True
+                fuel_stroge.save()
         SaleFuel.objects.create(
             fuel_type=fuel_type,
             cash_size=float(naxt_data_size),
             card_size=float(data_size),
+            price=price,
+            benifit=benifit,
         )
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg, i = "", 0

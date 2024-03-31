@@ -150,38 +150,9 @@ class FuelStorage(models.Model):
         db_table = 'fuel_storage'
 
 
-class Fuel(models.Model):
-    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
-
-    sale = models.FloatField(verbose_name=_("Sotish"), null=True, blank=True)
-    balance = models.FloatField(verbose_name=_("Qoldiq"), null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
-    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
-
-    objects = models.Manager()
-
-    def __str__(self):
-        return str(self.created_at)
-
-    def save(self, *args, **kwargs):
-        self.updated_at = now()
-        super(Fuel, self).save(*args, **kwargs)
-        return self
-
-    class Meta:
-        verbose_name_plural = _('Yoqilg\'i')
-        verbose_name = _('Yoqilg\'i')
-        db_table = 'fuel'
-        indexes = [
-            models.Index(fields=['fuel_type']),
-            models.Index(fields=['created_at']),
-        ]
-
-
 class FuelColumnPointer(models.Model):
     fuel_column = models.ForeignKey(FuelColumn, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i ustuni"))
-    day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
+    # day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
     size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"), null=True, blank=True)
     size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
     organ = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
@@ -256,6 +227,7 @@ class User(models.Model):
 class SaleFuel(models.Model):
     fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
     price = models.FloatField(verbose_name=_("Narxi"), null=True, blank=True)
+    benefit = models.FloatField(null=True, blank=True)
 
     cash_size = models.FloatField(verbose_name=_("Naxt hajmi [litr]"), null=True, blank=True)
     card_size = models.FloatField(verbose_name=_("Plastig hajmi [litr]"), null=True, blank=True)
@@ -324,3 +296,30 @@ class OrganizationFuelTypes(models.Model):
         verbose_name_plural = _('Tashkilotlar yoqilg\'i turlari')
         verbose_name = _('Tashkilotlar yoqilg\'i turi')
         db_table = 'organization_fuel_types'
+
+
+class FuelPrice(models.Model):
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+    price = models.FloatField(verbose_name=_("Narxi"))
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
+    updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return str(self.price)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = now()
+        super(FuelPrice, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Yoqilg\'i narxlari')
+        verbose_name = _('Yoqilg\'i narxi')
+        db_table = 'fuel_price'
+        indexes = [
+            models.Index(fields=['fuel_type']),
+        ]

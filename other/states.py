@@ -12,7 +12,7 @@ class States(Enum):
     FUEL_COLUMN_SALE_PT = auto()
     FUEL_SALE_SIZE = auto()
     FUEL_TYPE_PRICE = auto()
-    FUEL_PRICE_INPUT = auto()
+    # FUEL_PRICE_INPUT = auto()
     FUEL_COLUMN_SALE = auto()
     KASSIR_SETTINGS = auto()
     KASSIR_SETTINGS_CHANGE = auto()
@@ -63,3 +63,9 @@ class States(Enum):
     GET_REPORT = auto()
     GET_REPORT_WEEK = auto()
     GET_REPORT_MONTH = auto()
+
+    ADD_FUEL = auto()
+    ADD_FUEL_TYPE = auto()
+    ADD_FUEL_PRICE = auto()
+    CHANGE_FUEL_PRICE = auto()
+    FUEL_PRICE_INPUT = auto()

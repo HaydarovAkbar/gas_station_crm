@@ -1,7 +1,7 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import CallbackContext
 from states import States as S
-from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, Fuel, FuelColumnPointer, \
+from db.models import User, Organization, FuelType, FuelColumn, FuelStorage, FuelColumnPointer, \
     OrganizationFuelTypes, OrganizationFuelColumns
 from .keyboards import KeyboardsAdmin as K
 from ..dictionary import AdmTexts as T

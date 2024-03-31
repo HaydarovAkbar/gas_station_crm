@@ -1,5 +1,5 @@
 from .texts import KeyboardsTexts as msg_txt
-from telegram import KeyboardButton, WebAppInfo, ReplyKeyboardMarkup
+from telegram import KeyboardButton, WebAppInfo, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 
 class KeyboardBase:
@@ -45,3 +45,22 @@ class KeyboardBase:
             resize_keyboard=True
         )
         return kb
+
+    @staticmethod
+    def back(lang='uz'):
+        txt = msg_txt.back.get(lang)
+        kb = ReplyKeyboardMarkup(
+            [
+                [KeyboardButton(txt)],
+            ],
+            resize_keyboard=True
+        )
+        return kb
+
+    @staticmethod
+    def fuel_types(fuel_types):
+        keyboard = []
+        for fuel_type in fuel_types:
+            keyboard.append(
+                [InlineKeyboardButton(fuel_type.fuel_type.title, callback_data=f'{fuel_type.fuel_type.id}')])
+        return InlineKeyboardMarkup(keyboard)
