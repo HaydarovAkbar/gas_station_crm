@@ -48,5 +48,3 @@ def get_report_month(update: Update, context: CallbackContext):
         user = user.first()
         update.message.reply_html("Oylik hisobot turi!", reply_markup=kb.get_report_menu(user.language))
         return st.GET_REPORT_MONTH
-
-

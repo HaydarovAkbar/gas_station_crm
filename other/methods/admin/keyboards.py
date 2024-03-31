@@ -102,8 +102,10 @@ class KeyboardsAdmin:
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton(bt_txt[0] + (' - ✅' if user_role == 'leader' else ''), callback_data='leader')],
             [InlineKeyboardButton(bt_txt[1] + (' - ✅' if user_role == 'cashier' else ''), callback_data='cashier')],
-            [InlineKeyboardButton(bt_txt[2] + (' - ✅' if user_role == 'leader_cashier' else ''), callback_data='leader_cashier')],
-            [InlineKeyboardButton(bt_txt[4], callback_data='delete'), InlineKeyboardButton(bt_txt[3], callback_data='back')],
+            [InlineKeyboardButton(bt_txt[2] + (' - ✅' if user_role == 'leader_cashier' else ''),
+                                  callback_data='leader_cashier')],
+            [InlineKeyboardButton(bt_txt[4], callback_data='delete'),
+             InlineKeyboardButton(bt_txt[3], callback_data='back')],
         ])
         return keyboard
 
