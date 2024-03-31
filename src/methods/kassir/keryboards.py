@@ -39,7 +39,8 @@ class KassirKeyboards:
         keyboard = []
         for organ_fuel_col in organ_fuel_columns:
             keyboard.append(
-                [InlineKeyboardButton(organ_fuel_col.fuel_column.title, callback_data=f'{organ_fuel_col.fuel_column.id}')])
+                [InlineKeyboardButton(organ_fuel_col.fuel_column.title,
+                                      callback_data=f'{organ_fuel_col.fuel_column.id}')])
         return InlineKeyboardMarkup(keyboard)
 
     @staticmethod
