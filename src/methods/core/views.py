@@ -47,6 +47,16 @@ def add_fuel(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
     if user.exists():
         user = user.first()
+        msg, counter = "", 1
+        for fuel in FuelStorage.objects.filter(organization=user.organization, is_over=False):
+            msg += f"{counter}) {fuel.fuel_type.title}: {fuel.residual} \n"
+            counter += 1
+        fuel_strorages = f"""
+<b>Sizning tashkilotingiz uchun mavjud yoqilg'i hajmi:</b>
+
+{msg}
+"""
+        update.message.reply_html(fuel_strorages)
         update.message.reply_html("<code>Sotib olingan yoqilg'i hajmini kiriting:</code>",
                                   reply_markup=kb.back(user.language))
         return st.ADD_FUEL
@@ -67,6 +77,13 @@ def add_fuel_size(update: Update, context: CallbackContext):
 def add_fuel_type(update: Update, context: CallbackContext):
     query = update.callback_query
     user = User.objects.filter(chat_id=query.from_user.id, is_active=True, is_leader=True)
+    if query.data == 'back':
+        query.delete_message()
+        context.bot.send_message(
+            chat_id=query.from_user.id, text=f"Salom!\n Quyidagi tugmalardan birini tanlang:",
+            reply_markup=kb.get_main_menu()
+        )
+        return st.MAIN_MENU_ADMIN
     fuel_type = FuelType.objects.filter(id=query.data)
     if user.exists() and fuel_type.exists():
         user = user.first()
@@ -78,7 +95,7 @@ def add_fuel_type(update: Update, context: CallbackContext):
             text="Yoqilg'i narxini kiriting:",
             reply_markup=kb.back(user.language)
         )
-        return st.ADD_FUEL_PRICE
+    return st.ADD_FUEL_PRICE
 
 
 def add_fuel_price(update: Update, context: CallbackContext):
@@ -86,8 +103,7 @@ def add_fuel_price(update: Update, context: CallbackContext):
     fuel_price = update.message.text
     if fuel_price.isdigit() and user.exists() and int(fuel_price) > 0:
         user = user.first()
-        fuel_type = context.user_data['fuel_type']
-        fuel_size = context.user_data['fuel_size']
+        fuel_type, fuel_size = context.user_data['fuel_type'], context.user_data['fuel_size']
         FuelStorage.objects.create(
             remainder=int(fuel_size),
             fuel_type=fuel_type,
@@ -104,6 +120,16 @@ def change_fuel_price(update: Update, context: CallbackContext):
     if user.exists():
         user = user.first()
         organ_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
+        fuel_prices = f"""
+<b>Sizning tashkilotingiz uchun mavjud narxlar:</b>
+
+"""
+        fuels = []
+        for fuel_price in FuelPrice.objects.filter(organization=user.organization).order_by('-created_at')[:5]:
+            if fuel_price.fuel_type not in fuels:
+                fuel_prices += f"{fuel_price.fuel_type.title}: {fuel_price.price} so'm\n"
+                fuels.append(fuel_price.fuel_type)
+        update.message.reply_html(fuel_prices)
         update.message.reply_html("<code>Narxni o'zgartirish uchun yoqilg'i turini tanlang</code>",
                                   reply_markup=kb.fuel_types(organ_fuel_types))
         return st.CHANGE_FUEL_PRICE
@@ -112,6 +138,13 @@ def change_fuel_price(update: Update, context: CallbackContext):
 def choose_fuel_price(update: Update, context: CallbackContext):
     query = update.callback_query
     user = User.objects.filter(chat_id=query.from_user.id, is_active=True, is_leader=True)
+    if query.data == 'back':
+        query.delete_message()
+        context.bot.send_message(
+            chat_id=query.from_user.id, text=f"Salom!\n Quyidagi tugmalardan birini tanlang:",
+            reply_markup=kb.get_main_menu()
+        )
+        return st.MAIN_MENU_ADMIN
     fuel_type = FuelType.objects.filter(id=query.data)
     if user.exists() and fuel_type.exists():
         user = user.first()

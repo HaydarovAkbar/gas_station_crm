@@ -63,4 +63,5 @@ class KeyboardBase:
         for fuel_type in fuel_types:
             keyboard.append(
                 [InlineKeyboardButton(fuel_type.fuel_type.title, callback_data=f'{fuel_type.fuel_type.id}')])
+        keyboard.append([InlineKeyboardButton(msg_txt.back.get('uz'), callback_data='back')])
         return InlineKeyboardMarkup(keyboard)

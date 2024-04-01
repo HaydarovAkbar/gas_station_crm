@@ -143,7 +143,8 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
     msg = update.message.text
     if msg.isdigit() and int(msg) > 0:
-        context.user_data['column_num'] = int(msg)
+        msg = int(msg)
+        context.user_data['column_num'] = msg
         fuel_column = context.user_data['fuel_column']
         last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by(
             '-created_at').last()
@@ -191,21 +192,32 @@ def get_plastig_data(update: Update, context: CallbackContext):
     data_size = update.message.text
     user = User.objects.get(chat_id=update.effective_user.id)
     if data_size.isdigit() and int(data_size) >= 0:
-        context.user_data['plastig_data_size'] = int(data_size)
+        data_size = int(data_size)
+        context.user_data['plastig_data_size'] = data_size
         naxt_data_size = context.user_data['naxt_data_size']
         fuel_type = context.user_data['fuel_type']
-        price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type,
-                                                                                      organization=user.organization).last().price
+        if FuelPrice.objects.filter(fuel_type=fuel_type, organization=user.organization).exists():
+            price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type, organization=user.organization).last().price
+        else:
+            update.message.reply_html(
+                text="<code>Ushbu tashkilot uchun narx kiritilmagan</code>"
+            )
+            return st.FINISHED
         fuel_stroges = FuelStorage.objects.filter(fuel_type=fuel_type, is_over=False).order_by('created_at')
-        benifit, a = 0, naxt_data_size + data_size
+        if not fuel_stroges:
+            update.message.reply_html(
+                text="<code>Ushbu tashkilot uchun yoqilg'i kiritilmagan</code>"
+            )
+            return st.FINISHED
+        benifit, counter = 0, naxt_data_size + data_size
         for fuel_stroge in fuel_stroges:
-            if fuel_stroge.residual >= a:
-                benifit = price - fuel_stroge.price * (a)
-                fuel_stroge.residual -= a
+            if fuel_stroge.residual >= counter:
+                benifit = price - fuel_stroge.price * (counter)
+                fuel_stroge.residual -= counter
                 fuel_stroge.save()
                 break
             else:
-                a = a - fuel_stroge.residual
+                counter = counter - fuel_stroge.residual
                 benifit += fuel_stroge.price * fuel_stroge.residual
                 fuel_stroge.residual = 0
                 fuel_stroge.is_over = True
@@ -215,7 +227,7 @@ def get_plastig_data(update: Update, context: CallbackContext):
             cash_size=float(naxt_data_size),
             card_size=float(data_size),
             price=price,
-            benifit=benifit,
+            benefit=float(benifit),
         )
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg, i = "", 0
