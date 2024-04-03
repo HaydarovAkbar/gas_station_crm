@@ -15,7 +15,7 @@ import logging, pytz
 TOKEN = config('TOKEN')
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler, CallbackQueryHandler
 from methods.core.views import leader, get_report, get_report_week, get_report_month, add_fuel_size, add_fuel_type, \
-    add_fuel_price, add_fuel, change_fuel_price, choose_fuel_price, fuel_price_input
+    add_fuel_price, add_fuel, change_fuel_price, choose_fuel_price, fuel_price_input, get_report_fuel_type
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
     get_organization_address, get_organization_leader, delete_organization, get_organization_id, \
     organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, \
@@ -215,10 +215,10 @@ handler = ConversationHandler(
                              MessageHandler(Filters.regex('^(' + core_txt.back['ru'] + ')$'), leader),
                              MessageHandler(Filters.regex('^(' + core_txt.back['en'] + ')$'), leader),
 
-                             MessageHandler(Filters.regex('^(' + core_txt.main['uz'][0] + ')$'), get_report),
+                             MessageHandler(Filters.regex('^(' + core_txt.main['uz'][0] + ')$'), get_report_fuel_type),
                              MessageHandler(Filters.regex('^(' + core_txt.main['uz'][1] + ')$'), add_fuel),
                              MessageHandler(Filters.regex('^(' + core_txt.main['uz'][2] + ')$'), change_fuel_price),
-                             MessageHandler(Filters.regex('^(' + core_txt.main['uz'][3] + ')$'), get_report),
+                             MessageHandler(Filters.regex('^(' + core_txt.main['uz'][3] + ')$'), get_report_fuel_type),
 
                              MessageHandler(Filters.regex('^(' + core_txt.main['ru'][0] + ')$'), admin),
                              MessageHandler(Filters.regex('^(' + core_txt.main['ru'][1] + ')$'), add_fuel),
@@ -230,6 +230,13 @@ handler = ConversationHandler(
                              MessageHandler(Filters.regex('^(' + core_txt.main['en'][2] + ')$'), change_fuel_price),
                              MessageHandler(Filters.regex('^(' + core_txt.main['en'][3] + ')$'), admin),
                              ],
+        st.GET_REPORT_FUEL_TYPE: [CommandHandler('start', start),
+                                  CommandHandler('leader', leader),
+                                  MessageHandler(Filters.regex('^(' + core_txt.back['uz'] + ')$'), leader),
+                                  MessageHandler(Filters.regex('^(' + core_txt.back['ru'] + ')$'), leader),
+                                  MessageHandler(Filters.regex('^(' + core_txt.back['en'] + ')$'), leader),
+                                  CallbackQueryHandler(get_report),
+                                  ],
         st.GET_REPORT: [CommandHandler('start', start),
                         CommandHandler('admin', admin),
                         CommandHandler('leader', leader),

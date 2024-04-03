@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from .texts import KeyboardsTexts as msg_txt
 from .keyboards import KeyboardBase as kb
+from .report import get_report_1
 
 from states import States as st
 from db.models import User, OrganizationFuelTypes, FuelType, SaleFuel, FuelStorage, FuelPrice
@@ -19,11 +20,28 @@ def leader(update: Update, context: CallbackContext):
         return st.MAIN_MENU_ADMIN
 
 
+def get_report_fuel_type(update: Update, context: CallbackContext):
+    user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
+    if user.exists():
+        user = user.first()
+        organ_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
+        update.message.reply_html("Yoqilg'i turini tanlang!", reply_markup=kb.fuel_types(organ_fuel_types))
+        return st.GET_REPORT_FUEL_TYPE
+
+
 def get_report(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
     if user.exists():
         user = user.first()
-        update.message.reply_html("Hisobot turini tanlang!", reply_markup=kb.get_report_menu(user.language))
+        query = update.callback_query
+        fuel_type = query.data
+        context.user_data['fuel_type'] = fuel_type
+        query.delete_message()
+        context.bot.send_message(
+            chat_id=query.from_user.id,
+            text="Hisobot turi tanlang:",
+            reply_markup=kb.get_report_menu(user.language)
+        )
         return st.GET_REPORT
 
 
@@ -31,7 +49,8 @@ def get_report_week(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
     if user.exists():
         user = user.first()
-
+        fuel_type = context.user_data['fuel_type']
+        get_report_1(user, week=True, fuel_type=fuel_type)
         update.message.reply_html("Haftalik hisobot turi!", reply_markup=kb.get_report_menu(user.language))
         return st.GET_REPORT_WEEK
 

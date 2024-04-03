@@ -68,3 +68,5 @@ class States(Enum):
     ADD_FUEL_PRICE = auto()
     CHANGE_FUEL_PRICE = auto()
     FUEL_PRICE_INPUT = auto()
+
+    GET_REPORT_FUEL_TYPE = auto()
