@@ -111,6 +111,21 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
         else:
             msg += f"{fuel_col.fuel_column.title} ❗️\n"
     if i == fuel_columns.count():
+        leaders = User.objects.filter(organization=user.organization, is_leader=True)
+        sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date())
+        report_msg = (f"<i>Hisobotlar:</i>\n "
+                      f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}' for i, sale_fuel in enumerate(sale_fuels)])}")
+        leader_msg = f"""
+<b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
+
+{report_msg}
+"""
+        for leader in leaders:
+            try:
+                context.bot.send_message(chat_id=leader.chat_id, text=leader_msg,
+                                         reply_markup=kb.start(leader.language))
+            except Exception:
+                pass
         update.message.reply_html(
             text="<code>Yakunlandi!</code>"
         )
@@ -165,6 +180,24 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
             else:
                 msg += f"{fuel_col.fuel_column.title} ❗️\n"
         if i == fuel_columns.count():
+            leaders = User.objects.filter(organization=user.organization, is_leader=True)
+            sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date())
+            report_msg = (f"<i>Hisobotlar:</i>\n "
+                          f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}' for i, sale_fuel in enumerate(sale_fuels)])}")
+            leader_msg = f"""
+            <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
+
+            {report_msg}
+            """
+            for leader in leaders:
+                try:
+                    context.bot.send_message(chat_id=leader.chat_id, text=leader_msg,
+                                             reply_markup=kb.start(leader.language))
+                except Exception:
+                    pass
+            update.message.reply_html(
+                text="<code>Yakunlandi!</code>"
+            )
             update.message.reply_html(
                 text="<code>Yakunlandi!</code>"
             )
@@ -197,7 +230,8 @@ def get_plastig_data(update: Update, context: CallbackContext):
         naxt_data_size = context.user_data['naxt_data_size']
         fuel_type = context.user_data['fuel_type']
         if FuelPrice.objects.filter(fuel_type=fuel_type, organization=user.organization).exists():
-            price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type, organization=user.organization).last().price
+            price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type,
+                                                                                          organization=user.organization).last().price
         else:
             update.message.reply_html(
                 text="<code>Ushbu tashkilot uchun narx kiritilmagan</code>"
@@ -209,16 +243,16 @@ def get_plastig_data(update: Update, context: CallbackContext):
                 text="<code>Ushbu tashkilot uchun yoqilg'i kiritilmagan</code>"
             )
             return st.FINISHED
-        benifit, counter = 0, naxt_data_size + data_size
+        benefit, counter = 0, naxt_data_size + data_size
         for fuel_stroge in fuel_stroges:
             if fuel_stroge.residual >= counter:
-                benifit = price - fuel_stroge.price * (counter)
+                benefit = price - fuel_stroge.price * (counter)
                 fuel_stroge.residual -= counter
                 fuel_stroge.save()
                 break
             else:
                 counter = counter - fuel_stroge.residual
-                benifit += fuel_stroge.price * fuel_stroge.residual
+                benefit += fuel_stroge.price * fuel_stroge.residual
                 fuel_stroge.residual = 0
                 fuel_stroge.is_over = True
                 fuel_stroge.save()
@@ -227,7 +261,7 @@ def get_plastig_data(update: Update, context: CallbackContext):
             cash_size=float(naxt_data_size),
             card_size=float(data_size),
             price=price,
-            benefit=float(benifit),
+            benefit=float(benefit),
         )
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg, i = "", 0

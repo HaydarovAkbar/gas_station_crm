@@ -31,6 +31,7 @@ def get_report_week(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
     if user.exists():
         user = user.first()
+
         update.message.reply_html("Haftalik hisobot turi!", reply_markup=kb.get_report_menu(user.language))
         return st.GET_REPORT_WEEK
 
