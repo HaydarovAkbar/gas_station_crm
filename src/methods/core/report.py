@@ -8,7 +8,10 @@ from db.models import Organization, PaymentType, FuelType, FuelStorage, FuelColu
 
 
 def get_report_xlsx(user, week=False, fuel_type=None):
-    file_path = os.path.join(os.getcwd(), 'static', 'report.xlsx')
+    if week:
+        file_path = os.path.join(os.getcwd(), 'static', 'report_week.xlsx')
+    else:
+        file_path = os.path.join(os.getcwd(), 'static', 'report_month.xlsx')
     wb = px.load_workbook(file_path)
     ws = wb.active
     ws.title = "Ҳафталик ҳисобот" if week else "Ойлик ҳисобот"
@@ -50,19 +53,19 @@ def get_report_xlsx(user, week=False, fuel_type=None):
         ws.merge_cells(f'H{i}:H{i + organ_fuel_columns - 1}')
         ws[f'H{i}'] = (sale_fuel.first().price - sale_fuel.first().benefit) / size if sale_fuel.exists() else None
         ws.merge_cells(f'I{i}:I{i + organ_fuel_columns - 1}')
-        ws[f'I{i}'] = fuel_price_last.price if fuel_price_last else None
+        ws[f'I{i}'] = fuel_price_last.price if fuel_price_last else 0
         ws.merge_cells(f'J{i}:J{i + organ_fuel_columns - 1}')
-        ws[f'J{i}'] = sale_fuel.first().price if sale_fuel.exists() else None
+        ws[f'J{i}'] = sale_fuel.first().price if sale_fuel.exists() else 0
         ws.merge_cells(f'K{i}:K{i + organ_fuel_columns - 1}')
-        ws[f'K{i}'] = sale_fuel.first().card_size if sale_fuel.exists() else None
+        ws[f'K{i}'] = sale_fuel.first().card_size if sale_fuel.exists() else 0
         ws.merge_cells(f'L{i}:L{i + organ_fuel_columns - 1}')
-        ws[f'L{i}'] = sale_fuel.first().card_size * fuel_price_last.price if sale_fuel.exists() else None
+        ws[f'L{i}'] = sale_fuel.first().card_size * fuel_price_last.price if sale_fuel.exists() else 0
         ws.merge_cells(f'M{i}:M{i + organ_fuel_columns - 1}')
-        ws[f'M{i}'] = sale_fuel.first().cash_size if sale_fuel.exists() else None
+        ws[f'M{i}'] = sale_fuel.first().cash_size if sale_fuel.exists() else 0
         ws.merge_cells(f'N{i}:N{i + organ_fuel_columns - 1}')
-        ws[f'N{i}'] = sale_fuel.first().cash_size * fuel_price_last.price if sale_fuel.exists() else None
+        ws[f'N{i}'] = sale_fuel.first().cash_size * fuel_price_last.price if sale_fuel.exists() else 0
         ws.merge_cells(f'O{i}:O{i + organ_fuel_columns - 1}')
-        ws[f'O{i}'] = sale_fuel.first().benefit if sale_fuel.exists() else None
+        ws[f'O{i}'] = sale_fuel.first().benefit if sale_fuel.exists() else 0
         ws.merge_cells(f'P{i}:P{i + organ_fuel_columns - 1}')
         ws[f'P{i}'] = end
         i += organ_fuel_columns
