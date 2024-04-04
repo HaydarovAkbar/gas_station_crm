@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from .texts import KeyboardsTexts as msg_txt
 from .keyboards import KeyboardBase as kb
-from .report import get_report_1
+from .report import get_report_xlsx
 
 from states import States as st
 from db.models import User, OrganizationFuelTypes, FuelType, SaleFuel, FuelStorage, FuelPrice
@@ -50,8 +50,9 @@ def get_report_week(update: Update, context: CallbackContext):
     if user.exists():
         user = user.first()
         fuel_type = context.user_data['fuel_type']
-        get_report_1(user, week=True, fuel_type=fuel_type)
-        update.message.reply_html("Haftalik hisobot turi!", reply_markup=kb.get_report_menu(user.language))
+        report_path = get_report_xlsx(user, week=True, fuel_type=fuel_type)
+        with open(report_path, 'rb') as file:
+            update.message.reply_document(file, caption="Haftalik hisobot")
         return st.GET_REPORT_WEEK
 
 
@@ -59,7 +60,10 @@ def get_report_month(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_leader=True)
     if user.exists():
         user = user.first()
-        update.message.reply_html("Oylik hisobot turi!", reply_markup=kb.get_report_menu(user.language))
+        fuel_type = context.user_data['fuel_type']
+        report_path = get_report_xlsx(user, week=False, fuel_type=fuel_type)
+        with open(report_path, 'rb') as file:
+            update.message.reply_document(file, caption="Haftalik hisobot")
         return st.GET_REPORT_MONTH
 
 

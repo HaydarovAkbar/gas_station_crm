@@ -5,9 +5,11 @@ from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 
 from db.models import User, FuelColumnPointer, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
-    OrganizationFuelColumns, FuelColumnPointer, FuelPrice, FuelStorage
+    OrganizationFuelColumns, FuelColumnPointer, FuelPrice, FuelStorage, FuelStorageHistory
 from states import States as st
+
 from django.utils import timezone
+from django.db.models import Sum
 
 
 def start(update: Update, context: CallbackContext):
@@ -45,7 +47,7 @@ def get_start(update: Update, context: CallbackContext):
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg, i = "", 0
         for org_fuel_type in organization_fuel_types:
-            fuel_data = SaleFuel.objects.filter(fuel_type=org_fuel_type.fuel_type,
+            fuel_data = SaleFuel.objects.filter(fuel_type=org_fuel_type.fuel_type, organization=user.organization,
                                                 created_at__date=timezone.now().date())
             if fuel_data:
                 i += 1
@@ -112,9 +114,9 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
             msg += f"{fuel_col.fuel_column.title} ❗️\n"
     if i == fuel_columns.count():
         leaders = User.objects.filter(organization=user.organization, is_leader=True)
-        sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date())
+        sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(), organization=user.organization)
         report_msg = (f"<i>Hisobotlar:</i>\n "
-                      f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}' for i, sale_fuel in enumerate(sale_fuels)])}")
+                      f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}  ,' for i, sale_fuel in enumerate(sale_fuels)])}")
         leader_msg = f"""
 <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
 
@@ -122,8 +124,7 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
 """
         for leader in leaders:
             try:
-                context.bot.send_message(chat_id=leader.chat_id, text=leader_msg,
-                                         reply_markup=kb.start(leader.language))
+                context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
             except Exception:
                 pass
         update.message.reply_html(
@@ -181,9 +182,9 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                 msg += f"{fuel_col.fuel_column.title} ❗️\n"
         if i == fuel_columns.count():
             leaders = User.objects.filter(organization=user.organization, is_leader=True)
-            sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date())
+            sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(), organization=user.organization)
             report_msg = (f"<i>Hisobotlar:</i>\n "
-                          f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}' for i, sale_fuel in enumerate(sale_fuels)])}")
+                          f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}  ,' for i, sale_fuel in enumerate(sale_fuels)])}")
             leader_msg = f"""
             <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
 
@@ -191,15 +192,11 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
             """
             for leader in leaders:
                 try:
-                    context.bot.send_message(chat_id=leader.chat_id, text=leader_msg,
-                                             reply_markup=kb.start(leader.language))
+                    context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
                 except Exception:
                     pass
             update.message.reply_html(
-                text="<code>Yakunlandi!</code>"
-            )
-            update.message.reply_html(
-                text="<code>Yakunlandi!</code>"
+                text="<code>Yakunlandi!</code>",
             )
             return st.FINISHED
         user_fuel_column_txt = f"""
@@ -233,9 +230,7 @@ def get_plastig_data(update: Update, context: CallbackContext):
             price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type,
                                                                                           organization=user.organization).last().price
         else:
-            update.message.reply_html(
-                text="<code>Ushbu tashkilot uchun narx kiritilmagan</code>"
-            )
+            update.message.reply_html(text="<code>Ushbu tashkilot uchun narx kiritilmagan</code>")
             return st.FINISHED
         fuel_stroges = FuelStorage.objects.filter(fuel_type=fuel_type, is_over=False).order_by('created_at')
         if not fuel_stroges:
@@ -249,6 +244,12 @@ def get_plastig_data(update: Update, context: CallbackContext):
                 benefit = price - fuel_stroge.price * (counter)
                 fuel_stroge.residual -= counter
                 fuel_stroge.save()
+                FuelStorageHistory.objects.create(
+                    fuel_type=fuel_type,
+                    begin=fuel_stroges.aggregate(total=Sum('residual'))['total'],
+                    end=fuel_stroges.aggregate(total=Sum('residual'))['total'] - counter,
+                    organization=user.organization
+                )
                 break
             else:
                 counter = counter - fuel_stroge.residual
@@ -262,11 +263,12 @@ def get_plastig_data(update: Update, context: CallbackContext):
             card_size=float(data_size),
             price=price,
             benefit=float(benefit),
+            organization=user.organization
         )
         organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
         msg, i = "", 0
         for org_fuel_type in organization_fuel_types:
-            fuel_data = SaleFuel.objects.filter(fuel_type=org_fuel_type.fuel_type,
+            fuel_data = SaleFuel.objects.filter(fuel_type=org_fuel_type.fuel_type, organization=user.organization,
                                                 created_at__date=timezone.now().date())
             if fuel_data:
                 i += 1

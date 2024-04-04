@@ -235,6 +235,8 @@ class SaleFuel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Yaratilgan sana"))
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name=_("O'zgartirilgan sana"))
 
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+
     objects = models.Manager()
 
     def __str__(self):
@@ -323,3 +325,27 @@ class FuelPrice(models.Model):
         indexes = [
             models.Index(fields=['fuel_type']),
         ]
+
+
+class FuelStorageHistory(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    begin = models.IntegerField(verbose_name=_("Kun boshida [litr]"))
+    end = models.IntegerField(verbose_name=_("Kun oxirida [litr]"))
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return str(self.begin)
+
+    def save(self, *args, **kwargs):
+        super(FuelStorageHistory, self).save(*args, **kwargs)
+        return self
+
+    class Meta:
+        verbose_name_plural = _('Yoqilg\'i ombori tarixi')
+        verbose_name = _('Yoqilg\'i ombori tarixi')
+        db_table = 'fuel_storage_history'
