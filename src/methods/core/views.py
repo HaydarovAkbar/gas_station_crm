@@ -35,7 +35,7 @@ def get_report(update: Update, context: CallbackContext):
         user = user.first()
         query = update.callback_query
         fuel_type = query.data
-        context.user_data['fuel_type'] = fuel_type
+        context.user_data['fuel_type'] = FuelType.objects.get(id=fuel_type)
         query.delete_message()
         context.bot.send_message(
             chat_id=query.from_user.id,

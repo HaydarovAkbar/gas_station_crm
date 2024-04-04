@@ -152,7 +152,6 @@ class FuelStorage(models.Model):
 
 class FuelColumnPointer(models.Model):
     fuel_column = models.ForeignKey(FuelColumn, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i ustuni"))
-    # day = models.ForeignKey(Fuel, on_delete=models.SET_NULL, null=True, verbose_name=_("Kun"))
     size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"), null=True, blank=True)
     size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
     organ = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))
@@ -165,7 +164,6 @@ class FuelColumnPointer(models.Model):
         return str(self.size_first)
 
     def save(self, *args, **kwargs):
-        self.updated_at = now()
         super(FuelColumnPointer, self).save(*args, **kwargs)
         return self
 

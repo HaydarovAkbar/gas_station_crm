@@ -13,8 +13,8 @@ def get_report_xlsx(user, week=False, fuel_type=None):
     ws = wb.active
     ws.title = "Ҳафталик ҳисобот" if week else "Ойлик ҳисобот"
     organ_fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization).count()
-    # residual = FuelStorage.objects.filter(organization=user.organization, fuel_type=fuel_type, is_over=False,
-    #                                       created_at__lt=timezone.now()).aggregate(total=Sum('residual'))['total']
+    name = f""""{user.organization.title}" МЧЖга қарашли корхонанинг {fuel_type.title} ёқилғи бўйича {timezone.now().strftime('%Y.%m.%d')} хисоб тўғрисида ҳисоботи"""
+    ws['B2'] = name
     i = 6
     date_range_all = [timezone.now().date() - timezone.timedelta(days=day) for day in range(7 if week else 30)]
     storage_history = FuelStorageHistory.objects.filter(organization=user.organization, fuel_type=fuel_type,

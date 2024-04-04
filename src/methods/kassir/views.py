@@ -163,7 +163,7 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
         context.user_data['column_num'] = msg
         fuel_column = context.user_data['fuel_column']
         last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by(
-            '-created_at').last()
+            'created_at').last()
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
@@ -239,17 +239,12 @@ def get_plastig_data(update: Update, context: CallbackContext):
             )
             return st.FINISHED
         benefit, counter = 0, naxt_data_size + data_size
+        begin = fuel_stroges.aggregate(total=Sum('residual'))['total']
         for fuel_stroge in fuel_stroges:
             if fuel_stroge.residual >= counter:
                 benefit = price - fuel_stroge.price * (counter)
                 fuel_stroge.residual -= counter
                 fuel_stroge.save()
-                FuelStorageHistory.objects.create(
-                    fuel_type=fuel_type,
-                    begin=fuel_stroges.aggregate(total=Sum('residual'))['total'],
-                    end=fuel_stroges.aggregate(total=Sum('residual'))['total'] - counter,
-                    organization=user.organization
-                )
                 break
             else:
                 counter = counter - fuel_stroge.residual
@@ -257,6 +252,12 @@ def get_plastig_data(update: Update, context: CallbackContext):
                 fuel_stroge.residual = 0
                 fuel_stroge.is_over = True
                 fuel_stroge.save()
+        FuelStorageHistory.objects.create(
+            fuel_type=fuel_type,
+            begin=begin,
+            end=begin - counter,
+            organization=user.organization
+        )
         SaleFuel.objects.create(
             fuel_type=fuel_type,
             cash_size=float(naxt_data_size),
