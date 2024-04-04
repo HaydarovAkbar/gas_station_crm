@@ -13,14 +13,18 @@ def get_report_xlsx(user, week=False, fuel_type=None):
     ws = wb.active
     ws.title = "Ҳафталик ҳисобот" if week else "Ойлик ҳисобот"
     organ_fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization).count()
-    residual = FuelStorage.objects.filter(organization=user.organization, fuel_type=fuel_type, is_over=False,
-                                          created_at__lt=timezone.now()).aggregate(total=Sum('residual'))['total']
+    # residual = FuelStorage.objects.filter(organization=user.organization, fuel_type=fuel_type, is_over=False,
+    #                                       created_at__lt=timezone.now()).aggregate(total=Sum('residual'))['total']
     i = 6
     date_range_all = [timezone.now().date() - timezone.timedelta(days=day) for day in range(7 if week else 30)]
     storage_history = FuelStorageHistory.objects.filter(organization=user.organization, fuel_type=fuel_type,
                                                         created_at__date__in=date_range_all)
     begin, end = storage_history.first().begin, storage_history.first().end
     for date in date_range_all[::-1]:
+        history = FuelStorageHistory.objects.filter(organization=user.organization, fuel_type=fuel_type,
+                                                    created_at__date=date).first()
+        if history:
+            begin, end = history.begin, history.end
         ws.merge_cells(f'B{i}:B{i + organ_fuel_columns - 1}')
         ws[f'B{i}'] = f"{date.day}-{date.strftime('%B')[0:5]}"
         ws.merge_cells(f'C{i}:C{i + organ_fuel_columns - 1}')
@@ -61,10 +65,6 @@ def get_report_xlsx(user, week=False, fuel_type=None):
         ws[f'O{i}'] = sale_fuel.first().benefit if sale_fuel.exists() else None
         ws.merge_cells(f'P{i}:P{i + organ_fuel_columns - 1}')
         ws[f'P{i}'] = end
-        history = FuelStorageHistory.objects.filter(organization=user.organization, fuel_type=fuel_type,
-                                                    created_at__date=date).first()
-        if history:
-            begin, end = history.begin, history.end
         i += organ_fuel_columns
 
     path = os.path.join(os.getcwd(), 'static', 'crm_report.xlsx')
