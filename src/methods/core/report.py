@@ -2,6 +2,7 @@ import openpyxl as px
 import os
 from openpyxl.utils.dataframe import dataframe_to_rows
 from django.utils import timezone
+from django.db.models import Sum
 
 from db.models import Organization, PaymentType, FuelType, FuelStorage, FuelColumnPointer, SaleFuel, \
     OrganizationFuelColumns, OrganizationFuelTypes, FuelPrice
@@ -31,13 +32,22 @@ def get_report_1(user, week=False, fuel_type=None):
     ws = wb.active
     ws.title = "Haftalik hisobot"
     organ_fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization).count()
+    residual = FuelStorage.objects.filter(organization=user.organization, fuel_type=fuel_type, is_over=False,
+                                          created_at__lt=timezone.now()).aggregate(total=Sum('residual'))['total']
     i = 6
     date_range = [timezone.now().date() - timezone.timedelta(days=7 if week else 30), timezone.now().date()]
     for date in date_range:
         ws.merge_cells(f'B{i}:B{i + organ_fuel_columns - 1}')
         ws[f'B{i}'] = f"{date.day} - {date.strftime('%B')[0:5]}"
         ws.merge_cells(f'C{i}:C{i + organ_fuel_columns - 1}')
-        ws[f'C{i}'] = date.strftime('%Y')
+        ws[f'C{i}'] = residual
+        ws.merge_cells(f'D{i}:D{i + organ_fuel_columns - 1}')
+        ws[f'D{i}'] = FuelStorage.objects.filter(organization=user.organization, fuel_type=fuel_type, created_at__lt=date).last().remainder
+        pointer = FuelColumnPointer.objects.filter(organization=user.organization, fuel_type=fuel_type,
+                                                       created_at__lt=date)
+        ws[f'E{i}'] = pointer.size_first
+
+
     wb.save("test.xlsx")
     return file_path
 
