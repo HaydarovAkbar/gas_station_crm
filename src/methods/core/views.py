@@ -52,8 +52,9 @@ def get_report_week(update: Update, context: CallbackContext):
         fuel_type = context.user_data['fuel_type']
         report_path = get_report_xlsx(user, week=True, fuel_type=fuel_type)
         with open(report_path, 'rb') as file:
-            update.message.reply_document(file, caption="Haftalik hisobot")
-        return st.GET_REPORT_WEEK
+            update.message.reply_document(file, caption="Haftalik hisobot",
+                                          reply_markup=kb.get_main_menu(user.language))
+        return st.MAIN_MENU_ADMIN
 
 
 def get_report_month(update: Update, context: CallbackContext):
@@ -63,8 +64,9 @@ def get_report_month(update: Update, context: CallbackContext):
         fuel_type = context.user_data['fuel_type']
         report_path = get_report_xlsx(user, week=False, fuel_type=fuel_type)
         with open(report_path, 'rb') as file:
-            update.message.reply_document(file, caption="Haftalik hisobot")
-        return st.GET_REPORT_MONTH
+            update.message.reply_document(file, caption="Haftalik hisobot",
+                                          reply_markup=kb.get_main_menu(user.language))
+        return st.MAIN_MENU_ADMIN
 
 
 def add_fuel(update: Update, context: CallbackContext):
