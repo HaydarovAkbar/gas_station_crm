@@ -34,6 +34,13 @@ def get_report(update: Update, context: CallbackContext):
     if user.exists():
         user = user.first()
         query = update.callback_query
+        if query.data == 'back':
+            query.delete_message()
+            context.bot.send_message(
+                chat_id=query.from_user.id, text=f"Salom!\n Quyidagi tugmalardan birini tanlang:",
+                reply_markup=kb.get_main_menu()
+            )
+            return st.MAIN_MENU_ADMIN
         fuel_type = query.data
         context.user_data['fuel_type'] = FuelType.objects.get(id=fuel_type)
         query.delete_message()
