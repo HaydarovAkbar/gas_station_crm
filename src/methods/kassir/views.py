@@ -1,19 +1,20 @@
 from telegram.ext import CallbackContext
 from telegram import Update, ReplyKeyboardRemove
+from django.utils import timezone
+from django.db.models import Sum
 
 from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
+from .report import generate_pdf
 
 from db.models import User, FuelColumnPointer, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
     OrganizationFuelColumns, FuelColumnPointer, FuelPrice, FuelStorage, FuelStorageHistory
 from states import States as st
 
-from django.utils import timezone
-from django.db.models import Sum
-
 
 def start(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_cashier=True)
+    generate_pdf()
     if user.exists():
         user = user.first()
         update.message.reply_html(
