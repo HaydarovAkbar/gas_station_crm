@@ -1,5 +1,6 @@
 from fpdf import FPDF
 from django.utils import timezone
+from .models import Organization, UserOrganization, FuelType, FuelStorage, FuelStorageHistory, SaleFuel, FuelPrice
 
 
 def generate_pdf():
