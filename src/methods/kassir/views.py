@@ -14,12 +14,16 @@ from states import States as st
 
 def start(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_cashier=True)
-    generate_pdf()
+    generate_pdf(user.first())
     if user.exists():
         user = user.first()
         update.message.reply_html(
             f"Salom, {user.fullname}!\n"
             f"Hisobot kiritish uchun. Bot sizga bildirishnoma yuborishini kuting!"
+        )
+        update.message.reply_document(
+            document=open('static/output.pdf', 'rb'),
+            caption="Hisobot"
         )
         return 1
 
