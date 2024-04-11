@@ -39,14 +39,14 @@ def generate_pdf(user: User):
 
     pdf.set_font('Arial', size=14, style='B')
 
-    pdf.text(10, 100, txt="Yoqilg'i")
-    pdf.text(50, 100, txt="Hajmi")
-    pdf.text(100, 100, txt="Narxi")
-    pdf.text(150, 100, txt="Foydasi")
+    x, y = 20, 110
+    pdf.text(x, y-10, txt="Yoqilg'i")
+    pdf.text(x + 40, y-10, txt="Hajmi")
+    pdf.text(x + 90, y-10, txt="Narxi")
+    pdf.text(x + 140, y-10, txt="Foydasi")
 
     pdf.set_font('Arial', size=10, style='B')
 
-    x, y = 10, 110
     for item in sale_fuels:
         pdf.text(x, y, txt="{}".format(item.fuel_type.title))
         pdf.text(x + 40, y, txt="{}".format(format_number(item.card_size + item.cash_size)))
