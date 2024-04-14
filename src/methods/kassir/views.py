@@ -14,18 +14,18 @@ from states import States as st
 
 def start(update: Update, context: CallbackContext):
     user = User.objects.filter(chat_id=update.effective_user.id, is_active=True, is_cashier=True)
-    generate_pdf(user.first())
     if user.exists():
         user = user.first()
         update.message.reply_html(
             f"Salom, {user.fullname}!\n"
             f"Hisobot kiritish uchun. Bot sizga bildirishnoma yuborishini kuting!"
         )
-        update.message.reply_document(
-            document=open('static/output.pdf', 'rb'),
-            caption="Hisobot"
-        )
         return 1
+    else:
+        user, _ = User.objects.get_or_create(chat_id=update.effective_user.id,
+                                             defaults={'username': update.effective_user.username,
+                                                       'fullname': update.effective_user.full_name
+                                                       })
 
 
 def send_night_notification(context: CallbackContext):
@@ -135,6 +135,11 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
         update.message.reply_html(
             text="<code>Yakunlandi!</code>"
         )
+        generate_pdf(user)
+        update.message.reply_document(
+            document=open('static/output.pdf', 'rb'),
+            caption="Bugungi hisobot [PDF]"
+        )
         return st.FINISHED
     user_fuel_column_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
@@ -202,6 +207,11 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                     pass
             update.message.reply_html(
                 text="<code>Yakunlandi!</code>",
+            )
+            generate_pdf(user)
+            update.message.reply_document(
+                document=open('static/output.pdf', 'rb'),
+                caption="Bugungi hisobot [PDF]"
             )
             return st.FINISHED
         user_fuel_column_txt = f"""
