@@ -43,7 +43,7 @@ Jami savdo summasi: {format_number(total_price)} so'm
 Jami foyda summasi: {format_number(total_benefit)} so'm
 Jami yoqilg'i hajmi: {format_number(total_size)} litr
 """
-    Generator(qr_code_txt).generate().save(f"static/qr_{user.id}.png")
+    Generator(qr_code_txt).generate().save(f"static/qr_qr_code.png")
 
     pdf.set_font('Arial', size=14, style='B')
 
@@ -64,7 +64,7 @@ Jami yoqilg'i hajmi: {format_number(total_size)} litr
 
     pdf.set_font('Arial', size=10, style='I')
     pdf.text(10, 265, txt="* Hisobotni konfidensial bo'lishi ta'minlangan.")
-    pdf.image(f"static/qr_{user.id}.png", x=150, y=238, w=50, h=50)
+    pdf.image(f"static/qr_code.png", x=150, y=238, w=50, h=50)
     pdf.text(165, 290, txt="#{}".format(user_id))
     pdf.output(path)
     return path
