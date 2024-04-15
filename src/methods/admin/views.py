@@ -290,25 +290,6 @@ def change_user(update: Update, context: CallbackContext):
     return S.CHANGED_USER
 
 
-# def change_user_id(update: Update, context: CallbackContext):
-#     query = update.callback_query
-#     user_id = query.data
-#     user_db = User.objects.get(chat_id=query.from_user.id)
-#     query.delete_message()
-#     if user_id == 'back':
-#         context.bot.send_message(chat_id=query.from_user.id, text=T().start[user_db.language].format(user_db.fullname),
-#                                  reply_markup=K().get_admin_menu(user_db.language))
-#         return S.ADMIN
-#     context.chat_data['user_id'] = user_id
-#     user_fullname = User.objects.get(chat_id=user_id).fullname
-#     user_roles = User.objects.get(chat_id=user_id).roles.values_list('title', flat=True)
-#     user_lang = User.objects.get(chat_id=query.from_user.id).language
-#     context.bot.send_message(chat_id=query.from_user.id,
-#                              text=T().change_user[user_lang].format(user_fullname),
-#                              reply_markup=K().user_change(user_roles, user_lang))
-#     return S.USER_CONF
-
-
 def change_user_role(update: Update, context: CallbackContext):
     query = update.callback_query
     user_db = User.objects.get(chat_id=query.from_user.id)

@@ -152,6 +152,7 @@ class FuelStorage(models.Model):
 
 class FuelColumnPointer(models.Model):
     fuel_column = models.ForeignKey(FuelColumn, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i ustuni"))
+    fuel_type = models.ForeignKey(FuelType, on_delete=models.SET_NULL, null=True, verbose_name=_("Yoqilg'i turi"))
     size_first = models.FloatField(verbose_name=_("Hajmi kun boshida [litr]"), null=True, blank=True)
     size_last = models.FloatField(verbose_name=_("Hajmi kun oxirida [litr]"), null=True, blank=True)
     organ = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, verbose_name=_("Tashkilot"))

@@ -7,8 +7,8 @@ from .texts import MessageTexts as msg_txt
 from .keryboards import KassirKeyboards as kb
 from .report import generate_pdf
 
-from db.models import User, FuelColumnPointer, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
-    FuelColumnPointer, FuelPrice, FuelStorage, FuelStorageHistory, OrganizationFuelColumns
+from db.models import User, FuelColumn, FuelType, PaymentType, OrganizationFuelTypes, SaleFuel, \
+    FuelPrice, FuelStorage, FuelStorageHistory, OrganizationFuelColumns, FuelColumnPointer
 from states import States as st
 
 
@@ -105,13 +105,40 @@ def fuel_column_pointer(update: Update, context: CallbackContext):
     fuel_type = context.user_data['fuel_type']
     fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization, fuel_type=fuel_type)
     if not fuel_columns:
-        update.message.reply_html(
-            text="<code>Ma'lumotlar saqlab qo'yildi</code>"
-        )
-        return st.FINISHED
+        organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
+        msg, i = "", 0
+        for org_fuel_type in organization_fuel_types:
+            fuel_data = SaleFuel.objects.filter(fuel_type=org_fuel_type.fuel_type, organization=user.organization,
+                                                created_at__date=timezone.now().date())
+            if fuel_data:
+                i += 1
+                msg += f"{org_fuel_type.fuel_type.title} - ✅\n"
+            else:
+                msg += f"{org_fuel_type.fuel_type.title} ❗️\n"
+        if i == organization_fuel_types.count():
+            update.message.reply_html(
+                text="<code>Ma'lumotlar saqlab qo'yildi</code>"
+            )
+            generate_pdf(user)
+            update.message.reply_document(
+                document=open('static/output.pdf', 'rb'),
+                caption="Bugungi hisobot [PDF]"
+            )
+            return st.FINISHED
+        user_fuel_type_txt = f"""
+<b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
+
+<i>Bugungi hisobotlarni kiriting</i>
+
+{msg}
+Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
+        """
+        update.message.reply_html(text=user_fuel_type_txt,
+                                  reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
+        return st.ADD_TODAY_DATA
     msg, i = "", 0
     for fuel_col in fuel_columns:
-        fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column,
+        fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column, fuel_type=fuel_type,
                                                      created_at__date=timezone.now().date())
         if fuel_data:
             i += 1
@@ -173,19 +200,21 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
         msg = int(msg)
         context.user_data['column_num'] = msg
         fuel_column = context.user_data['fuel_column']
-        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column).order_by(
+        fuel_type = context.user_data['fuel_type']
+        last_pointer = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_column,  fuel_type=fuel_type).order_by(
             'created_at').last()
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
             size_last=float(msg),
+            fuel_type=fuel_type,
             size_first=last_pointer.size_last if last_pointer else float(msg),
         )
         fuel_type = context.user_data['fuel_type']
         fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization, fuel_type=fuel_type)
         msg, i = "", 0
         for fuel_col in fuel_columns:
-            fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column,
+            fuel_data = FuelColumnPointer.objects.filter(organ=user.organization, fuel_column=fuel_col.fuel_column, fuel_type=fuel_type,
                                                          created_at__date=timezone.now().date())
             if fuel_data:
                 i += 1
@@ -232,17 +261,16 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                 # return fuel_column_pointer(update, context)
 
             user_fuel_type_txt = f"""
-            <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
+<b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
-            <i>Bugungi hisobotlarni kiriting</i>
+<i>Bugungi hisobotlarni kiriting</i>
 
-            {msg}
-            Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
+{msg}
+Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
             """
             update.message.reply_html(text=user_fuel_type_txt,
-                                          reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
+                                      reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
             return st.ADD_TODAY_DATA
-
 
             # leaders = User.objects.filter(organization=user.organization, is_leader=True)
             # sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(), organization=user.organization)

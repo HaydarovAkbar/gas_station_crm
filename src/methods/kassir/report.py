@@ -43,7 +43,7 @@ Jami savdo summasi: {format_number(total_price)} so'm
 Jami foyda summasi: {format_number(total_benefit)} so'm
 Jami yoqilg'i hajmi: {format_number(total_size)} litr
 """
-    Generator(qr_code_txt).generate().save(f"static/qr_qr_code.png")
+    Generator(qr_code_txt).generate().save(f"static/qr_code.png")
 
     pdf.set_font('Arial', size=14, style='B')
 
