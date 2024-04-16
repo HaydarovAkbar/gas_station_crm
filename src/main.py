@@ -19,7 +19,7 @@ from methods.core.views import leader, get_report, get_report_week, get_report_m
 from methods.admin.views import admin, add_organization, get_organization_name, add_user, get_organization_phone, \
     get_organization_address, get_organization_leader, delete_organization, get_organization_id, \
     organization_fuel_types, organization_fuel_columns, get_user_id, get_user_organization, \
-    change_user_role, delete_user, get_user_id_delete
+    change_user_role, delete_user, get_user_id_delete, add_organization_fuel_column
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_naxt_data, \
     get_fuel_column_num, get_plastig_data, get_today_fuel_column, start
 from states import States as st
@@ -41,7 +41,7 @@ app = updater.dispatcher
 job = updater.job_queue
 
 job.run_daily(send_night_notification, days=(0, 1, 2, 3, 4, 5, 6),
-              time=time(hour=17, minute=50, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
+              time=time(hour=11, minute=21, second=00, tzinfo=pytz.timezone('Asia/Tashkent')), )
 
 handler = ConversationHandler(
     entry_points=[
@@ -166,6 +166,16 @@ handler = ConversationHandler(
             MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
 
             CallbackQueryHandler(organization_fuel_columns),
+        ],
+        st.ORGANIZATION_FUEL_COLUMN2: [
+            CommandHandler('start', start),
+            CommandHandler('admin', admin),
+            CommandHandler('leader', leader),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['uz'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['ru'] + ')$'), admin),
+            MessageHandler(Filters.regex('^(' + kas_txt.back['en'] + ')$'), admin),
+
+            CallbackQueryHandler(add_organization_fuel_column),
         ],
         st.DELETE_ORGANIZATION: [
             CommandHandler('start', start),

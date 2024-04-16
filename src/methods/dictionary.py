@@ -133,9 +133,9 @@ class AdmTexts:
         'en': "<b>Organization successfully deleted!</b>"
     }
     add_organ_fuel_column = {
-        'uz': "<b>Tashkilot yoqilg'i turlari muvafaqiyatli kiritildi</b>\n\nTashkilot uchun yoqilg'i ustunlarini tanlang",
-        'ru': "Выберите колонки топлива для организации",
-        'en': "Choose fuel columns for the organization"
+        'uz': "<b>Tashkilot yoqilg'i turlari muvafaqiyatli kiritildi</b>\n\n{} - yoqilg'i uchun ustunlarni tanlang",
+        'ru': "<b>Топливо успешно введено</b>\n\n{} - выберите столбцы для топлива",
+        'en': "<b>Fuel successfully entered</b>\n\n{} - choose columns for fuel"
     }
     again_enter_fuel_type = {
         'uz': "<b>Qaytadan yoqilg'i turlarini tanlang</b>",
