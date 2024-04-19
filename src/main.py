@@ -22,6 +22,7 @@ from methods.admin.views import admin, add_organization, get_organization_name, 
     change_user_role, delete_user, get_user_id_delete, add_organization_fuel_column
 from methods.kassir.views import send_night_notification, get_start, get_fuel_type, get_naxt_data, \
     get_fuel_column_num, get_plastig_data, get_today_fuel_column, start
+
 from states import States as st
 from datetime import time
 
