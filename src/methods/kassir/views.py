@@ -145,30 +145,6 @@ Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan bir
             msg += f"{fuel_col.fuel_column.title} - ✅\n"
         else:
             msg += f"{fuel_col.fuel_column.title} ❗️\n"
-    # if i == fuel_columns.count():
-    #     leaders = User.objects.filter(organization=user.organization, is_leader=True)
-    #     sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(), organization=user.organization)
-    #     report_msg = (f"<i>Hisobotlar:</i>\n "
-    #                   f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}  ,' for i, sale_fuel in enumerate(sale_fuels)])}")
-    #         leader_msg = f"""
-    # <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
-    #
-    # {report_msg}
-    # """
-    #         for leader in leaders:
-    #             try:
-    #                 context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
-    #             except Exception:
-    #                 pass
-    #         update.message.reply_html(
-    #             text="<code>Yakunlandi!</code>"
-    #         )
-    #         generate_pdf(user)
-    #         update.message.reply_document(
-    #             document=open('static/output.pdf', 'rb'),
-    #             caption="Bugungi hisobot [PDF]"
-    #         )
-    #         return st.FINISHED
     user_fuel_column_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
@@ -271,30 +247,6 @@ Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan bir
             update.message.reply_html(text=user_fuel_type_txt,
                                       reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
             return st.ADD_TODAY_DATA
-
-            # leaders = User.objects.filter(organization=user.organization, is_leader=True)
-            # sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(), organization=user.organization)
-            # report_msg = (f"<i>Hisobotlar:</i>\n "
-            #               f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}  ,' for i, sale_fuel in enumerate(sale_fuels)])}")
-            # leader_msg = f"""
-            # <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
-            #
-            # {report_msg}
-            # """
-            # for leader in leaders:
-            #     try:
-            #         context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
-            #     except Exception:
-            #         pass
-            # update.message.reply_html(
-            #     text="<code>Yakunlandi!</code>",
-            # )
-            # generate_pdf(user)
-            # update.message.reply_document(
-            #     document=open('static/output.pdf', 'rb'),
-            #     caption="Bugungi hisobot [PDF]"
-            # )
-            # return st.FINISHED
         user_fuel_column_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
 
