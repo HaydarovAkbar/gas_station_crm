@@ -172,8 +172,15 @@ def get_today_fuel_column(update: Update, context: CallbackContext):
 def get_fuel_column_num(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
     msg = update.message.text
-    print(msg, msg.isdigit())
-    if msg.isdigit() and int(msg) > 0:
+    try:
+        float(msg)
+    except ValueError:
+        update.message.reply_text(
+            text="<code>Kun oxiridagi kolonka raqamini noto'g'ri kiritdingiz!!!</code>",
+            parse_mode='HTML'
+        )
+        return st.ADD_FUEL_COLUMN_NUM
+    if float(msg) > 0:
         msg = int(msg)
         context.user_data['column_num'] = msg
         fuel_column = context.user_data['fuel_column']
@@ -198,7 +205,6 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                 msg += f"{fuel_col.fuel_column.title} - ✅\n"
             else:
                 msg += f"{fuel_col.fuel_column.title} ❗️\n"
-        print(i == fuel_columns.count(), i, fuel_columns.count())
         if i == fuel_columns.count():
             organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
             msg, i = "", 0
@@ -270,7 +276,15 @@ Yuqoridagi yoqilg'i ustunlari uchun ma'lumotlar kiritish uchun pastdagi tugmalar
 def get_plastig_data(update: Update, context: CallbackContext):
     data_size = update.message.text
     user = User.objects.get(chat_id=update.effective_user.id)
-    if data_size.isdigit() and int(data_size) >= 0:
+    try:
+        float(data_size)
+    except ValueError:
+        update.message.reply_text(
+            text="<code>Bugungi plastig holatdagi savdo hajmini noto'g'ri kiritdingiz!!!</code>",
+            parse_mode='HTML'
+        )
+        return st.PLASTIG_DATA
+    if float(data_size) >= 0:
         data_size = int(data_size)
         context.user_data['plastig_data_size'] = data_size
         naxt_data_size = context.user_data['naxt_data_size']
@@ -327,23 +341,3 @@ def get_plastig_data(update: Update, context: CallbackContext):
                 msg += f"{org_fuel_type.fuel_type.title} ❗️\n"
 
         return fuel_column_pointer(update, context)
-
-        # if i == organization_fuel_types.count():
-        #     return fuel_column_pointer(update, context)
-
-#         user_fuel_type_txt = f"""
-# <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
-#
-# <i>Bugungi hisobotlarni kiriting</i>
-#
-# {msg}
-# Yuqoridagi yoqilg'ilar uchun ma'lumotlar kiritish uchun pastdagi tugmalardan birini tanlang 👇
-#         """
-#         update.message.reply_html(text=user_fuel_type_txt,
-#                                   reply_markup=kb.organ_fuel_types(organization_fuel_types, user.language))
-#         return st.ADD_TODAY_DATA
-#     else:
-#         update.message.reply_text(
-#             text="<code>Bugungi plastig holatdagi savdo hajmini kiriting</code>",
-#             parse_mode='HTML'
-#         )
