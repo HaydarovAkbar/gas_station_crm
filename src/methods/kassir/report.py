@@ -7,7 +7,6 @@ from db.models import Organization, FuelType, FuelStorage, FuelStorageHistory, S
     OrganizationFuelColumns, OrganizationFuelTypes, FuelColumnPointer, User
 
 
-# 1234556 format of number to 1 234 556
 def format_number(number: int):
     return "{:,}".format(number).replace(",", " ")
 
@@ -19,7 +18,7 @@ def generate_pdf(user: User):
     total_benefit = sale_fuels.aggregate(total=Sum('benefit'))['total'] or 0
     total_cash_size = sale_fuels.aggregate(total=Sum('cash_size'))['total'] or 0
     total_card_size = sale_fuels.aggregate(total=Sum('card_size'))['total'] or 0
-    total_size = total_cash_size + total_card_size if total_cash_size and total_card_size else 0
+    total_size = total_cash_size + total_card_size
     path = f'static/output.pdf'
     pdf = FPDF()
     pdf.add_page()

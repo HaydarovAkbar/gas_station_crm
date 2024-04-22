@@ -181,7 +181,7 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
         )
         return st.ADD_FUEL_COLUMN_NUM
     if float(msg) > 0:
-        msg = int(msg)
+        msg = float(msg)
         context.user_data['column_num'] = msg
         fuel_column = context.user_data['fuel_column']
         fuel_type = context.user_data['fuel_type']
@@ -190,9 +190,9 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
         FuelColumnPointer.objects.create(
             organ=user.organization,
             fuel_column=fuel_column,
-            size_last=float(msg),
+            size_last=msg,
             fuel_type=fuel_type,
-            size_first=last_pointer.size_last if last_pointer else float(msg),
+            size_first=last_pointer.size_last if last_pointer else msg,
         )
         fuel_type = context.user_data['fuel_type']
         fuel_columns = OrganizationFuelColumns.objects.filter(organization=user.organization, fuel_type=fuel_type)
@@ -221,27 +221,23 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                 sale_fuels = SaleFuel.objects.filter(created_at__date=timezone.now().date(),
                                                      organization=user.organization)
                 report_msg = (f"<i>Hisobotlar:</i>\n "
-                              f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price}  ,' for i, sale_fuel in enumerate(sale_fuels)])}")
+                              f"{''.join([f'{i + 1}) {sale_fuel.fuel_type.title}: {sale_fuel.price},  ' for i, sale_fuel in enumerate(sale_fuels)])}")
                 leader_msg = f"""
-                            <b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
+<b>{user.organization.title}</b> tashkiloti uchun bugungi hisobotlar kiritildi.
 
-                            {report_msg}
+{report_msg}
                             """
                 for leader in leaders:
                     try:
                         context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
                     except Exception:
                         pass
-                # update.message.reply_html(
-                #     text="<code>Yakunlandi!</code>",
-                # )
                 generate_pdf(user)
                 update.message.reply_document(
                     document=open('static/output.pdf', 'rb'),
                     caption="Bugungi hisobot [PDF]"
                 )
                 return st.FINISHED
-                # return fuel_column_pointer(update, context)
 
             user_fuel_type_txt = f"""
 <b>{user.fullname}</b> - <code>{user.organization.title}</code> tashkiloti uchun:
@@ -285,12 +281,12 @@ def get_plastig_data(update: Update, context: CallbackContext):
         )
         return st.PLASTIG_DATA
     if float(data_size) >= 0:
-        data_size = int(data_size)
+        data_size = float(data_size)
         context.user_data['plastig_data_size'] = data_size
         naxt_data_size = context.user_data['naxt_data_size']
         fuel_type = context.user_data['fuel_type']
         if FuelPrice.objects.filter(fuel_type=fuel_type, organization=user.organization).exists():
-            price = (float(naxt_data_size) + float(data_size)) * FuelPrice.objects.filter(fuel_type=fuel_type,
+            price = (float(naxt_data_size) + data_size) * FuelPrice.objects.filter(fuel_type=fuel_type,
                                                                                           organization=user.organization).last().price
         else:
             update.message.reply_html(text="<code>Ushbu tashkilot uchun narx kiritilmagan</code>")
