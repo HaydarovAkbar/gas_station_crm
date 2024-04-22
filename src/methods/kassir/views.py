@@ -172,6 +172,7 @@ def get_today_fuel_column(update: Update, context: CallbackContext):
 def get_fuel_column_num(update: Update, context: CallbackContext):
     user = User.objects.get(chat_id=update.effective_user.id)
     msg = update.message.text
+    print(msg, msg.isdigit())
     if msg.isdigit() and int(msg) > 0:
         msg = int(msg)
         context.user_data['column_num'] = msg
@@ -197,8 +198,8 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                 msg += f"{fuel_col.fuel_column.title} - ✅\n"
             else:
                 msg += f"{fuel_col.fuel_column.title} ❗️\n"
+        print(i == fuel_columns.count(), i, fuel_columns.count())
         if i == fuel_columns.count():
-
             organization_fuel_types = OrganizationFuelTypes.objects.filter(organization=user.organization)
             msg, i = "", 0
             for org_fuel_type in organization_fuel_types:
@@ -225,9 +226,9 @@ def get_fuel_column_num(update: Update, context: CallbackContext):
                         context.bot.send_message(chat_id=leader.chat_id, text=leader_msg, parse_mode='HTML')
                     except Exception:
                         pass
-                update.message.reply_html(
-                    text="<code>Yakunlandi!</code>",
-                )
+                # update.message.reply_html(
+                #     text="<code>Yakunlandi!</code>",
+                # )
                 generate_pdf(user)
                 update.message.reply_document(
                     document=open('static/output.pdf', 'rb'),
